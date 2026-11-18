@@ -40,6 +40,12 @@ struct MenuBarLabel: View {
 
     var menuBarContent: some View {
         return HStack(spacing: hStackSpacing) {
+            Text("SP")
+                .font(.system(size: 19, weight: .bold, design: .rounded))
+                .foregroundStyle(finalColor.opacity(0.75))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(finalColor.opacity(0.10), in: Capsule())
             if viewModel.lastReloadConfigContainedWarnings {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .resizable()
@@ -84,6 +90,10 @@ struct MenuBarLabel: View {
                     .frame(width: itemSize, height: itemSize)
             }
         }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(finalColor.opacity(0.07), in: Capsule())
+        .overlay(Capsule().strokeBorder(finalColor.opacity(0.12), lineWidth: 1))
     }
 
     private func getText(for design: Font.Design) -> some View {

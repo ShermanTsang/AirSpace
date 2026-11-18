@@ -57,10 +57,22 @@ enum AxPermissionStatus: Equatable {
             default: ""
         }
         let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
+        let root = $0.children.filterIsInstance(of: TilingContainer.self).first
+        let layout = root?.layout ?? config.defaultRootContainerLayout
+        let orientation = root.map { $0.orientation == .h ? "Horizontal" : "Vertical" } ?? {
+            switch config.defaultRootContainerOrientation {
+                case .horizontal: "Horizontal"
+                case .vertical: "Vertical"
+                case .auto: "Auto"
+            }
+        }()
         return WorkspaceViewModel(
             name: $0.name,
             suffix: suffix,
             apps: workspaceApps,
+            layoutName: layout == .tiles ? "Tiles" : "Accordion",
+            orientationName: orientation,
+            usesDefaultLayout: root == nil,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,
@@ -97,6 +109,9 @@ struct WorkspaceViewModel {
     let name: String
     let suffix: String
     let apps: [WorkspaceApp]
+    let layoutName: String
+    let orientationName: String
+    let usesDefaultLayout: Bool
     let isFocused: Bool
     let isEffectivelyEmpty: Bool
     let isVisible: Bool

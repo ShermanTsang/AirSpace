@@ -27,13 +27,16 @@ private struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
     @Environment(\.openWindow) private var openWindow
 
-    private let tileHeight: CGFloat = 92
+    private let tileHeight: CGFloat = 76
     private let spacing: CGFloat = 8
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Spaces").font(.headline)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Spaces").font(.title3.weight(.semibold))
+                    Text("Select a space to focus").font(.caption).foregroundStyle(.secondary)
+                }
                 Spacer()
                 Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
                     .help("Settings")
@@ -52,15 +55,8 @@ private struct WorkspaceMenu: View {
                 } else {
                     ScrollView(.vertical) {
                         VStack(spacing: spacing) {
-                            ForEach(workspaceRows) { row in
-                                HStack(spacing: spacing) {
-                                    ForEach(row.workspaces, id: \.name) { workspace in
-                                        workspaceButton(workspace)
-                                    }
-                                    if row.workspaces.count == 1 {
-                                        Color.clear.frame(maxWidth: .infinity, maxHeight: 1)
-                                    }
-                                }
+                            ForEach(viewModel.workspaces, id: \.name) { workspace in
+                                workspaceButton(workspace)
                             }
                         }
                     }
@@ -87,22 +83,10 @@ private struct WorkspaceMenu: View {
         .buttonStyle(.plain)
     }
 
-    private var workspaceRows: [WorkspaceRow] {
-        stride(from: 0, to: viewModel.workspaces.count, by: 2).map { start in
-            let end = min(start + 2, viewModel.workspaces.count)
-            return WorkspaceRow(workspaces: Array(viewModel.workspaces[start..<end]))
-        }
-    }
-
     private var gridHeight: CGFloat {
-        let rows = CGFloat(workspaceRows.count)
+        let rows = CGFloat(viewModel.workspaces.count)
         return min(rows * tileHeight + max(0, rows - 1) * spacing, 420)
     }
-}
-
-private struct WorkspaceRow: Identifiable {
-    let workspaces: [WorkspaceViewModel]
-    var id: String { workspaces.first?.name ?? "" }
 }
 
 private struct WorkspaceTile: View {
@@ -111,41 +95,46 @@ private struct WorkspaceTile: View {
     private static let maxVisibleApps = 3
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(workspace.name).font(.headline).lineLimit(1)
-                Spacer(minLength: 2)
-                if workspace.isFocused {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint)
-                } else if workspace.isVisible {
-                    Image(systemName: "display").foregroundStyle(.secondary)
+        HStack(spacing: 12) {
+            Image(systemName: workspace.layoutName == "Tiles" ? "rectangle.split.2x1" : "rectangle.stack")
+                .font(.system(size: 17, weight: .medium))
+                .foregroundStyle(workspace.isFocused ? Color.accentColor : Color.secondary)
+                .frame(width: 42, height: 42)
+                .background(Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 6) {
+                    Text(workspace.name).font(.headline).lineLimit(1)
+                    if workspace.isFocused {
+                        Text("Current").font(.caption2.weight(.medium)).foregroundStyle(.tint)
+                    } else if workspace.isVisible {
+                        Image(systemName: "display").font(.caption).foregroundStyle(.secondary)
+                    }
                 }
+                Text("\(workspace.layoutName) · \(workspace.orientationName)\(workspace.usesDefaultLayout ? " · Default" : "")")
+                    .font(.caption).foregroundStyle(.secondary).lineLimit(1)
             }
-            if workspace.apps.isEmpty {
-                Text("Empty").font(.caption).foregroundStyle(.secondary)
-            } else {
+            Spacer(minLength: 4)
+            HStack(spacing: 3) {
                 ForEach(Array(workspace.apps.prefix(Self.maxVisibleApps).enumerated()), id: \.offset) { _, app in
-                    HStack(spacing: 5) {
+                    Group {
                         if let icon = app.icon {
-                            Image(nsImage: icon).resizable().interpolation(.high).frame(width: 16, height: 16)
+                            Image(nsImage: icon).resizable().interpolation(.high)
                         } else {
-                            Image(systemName: "app").frame(width: 16, height: 16)
+                            Image(systemName: "app").resizable().scaledToFit()
                         }
-                        Text(app.name).lineLimit(1)
-                    }.font(.caption)
+                    }
+                    .frame(width: 20, height: 20)
+                    .help(app.name)
                 }
                 if workspace.apps.count > Self.maxVisibleApps {
-                    Text("+\(workspace.apps.count - Self.maxVisibleApps) more app(s)")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                    Text("+\(workspace.apps.count - Self.maxVisibleApps)").font(.caption2).foregroundStyle(.secondary)
                 }
             }
-            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(10)
-        .background(workspace.isFocused ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(workspace.isFocused ? Color.accentColor : Color.clear, lineWidth: 1))
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .background(workspace.isFocused ? Color.accentColor.opacity(0.10) : Color.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(workspace.isFocused ? Color.accentColor.opacity(0.35) : Color.primary.opacity(0.06), lineWidth: 1))
         .contentShape(Rectangle())
     }
 }
