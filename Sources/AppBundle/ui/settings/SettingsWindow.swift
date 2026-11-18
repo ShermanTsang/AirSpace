@@ -32,6 +32,19 @@ private struct SettingsView: View {
             mouseSection
             structuredSections
             configFileSection
+            Section("About") {
+                Text("\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)")
+                Button("Copy version information") { "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)".copyToClipboard() }
+                Button("Sponsor upstream AeroSpace on GitHub") {
+                    NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
+                }
+                Button("Quit \(aeroSpaceAppName)") {
+                    Task.startUnstructured {
+                        terminationHandler?.beforeTermination()
+                        terminateApp()
+                    }
+                }
+            }
             if let lastError = model.lastError {
                 Section {
                     Label(lastError, systemImage: "exclamationmark.triangle.fill")
@@ -45,6 +58,13 @@ private struct SettingsView: View {
 
     private var generalSection: some View {
         Section {
+            Button(trayModel.isEnabled ? "Pause AirSpace" : "Enable AirSpace") {
+                Task.startUnstructured {
+                    try await runLightSession(.menuBarButton, .forceRun) {
+                        _ = await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle)).run(.defaultEnv, .emptyStdin)
+                    }
+                }
+            }
             Toggle(
                 "Start at login",
                 isOn: model.binding(\.startAtLogin) { .bool(["start-at-login"], $0) },
@@ -160,6 +180,17 @@ private struct SettingsView: View {
                     .truncationMode(.middle)
             }
             ConfigSectionButton(section: .version)
+            if trayModel.lastReloadConfigContainedWarnings {
+                Button("Show configuration warnings") {
+                    guard let token: RunSessionGuard = .isServerEnabled else { return }
+                    Task.startUnstructured {
+                        try await runLightSession(.menuBarButton, token) {
+                            let args = ReloadConfigCmdArgs(rawArgs: []).with(\.warningsAsErrors, true)
+                            _ = await reloadConfig_nonCancellable(args: args)
+                        }
+                    }
+                }
+            }
             HStack {
                 Button("Open in Editor") { openConfigInTextEditor() }
                 Button("Reload Now") { reloadConfig() }

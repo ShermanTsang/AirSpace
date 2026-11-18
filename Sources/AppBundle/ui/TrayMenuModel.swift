@@ -43,7 +43,13 @@ enum AxPermissionStatus: Equatable {
         }
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
-        let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
+        var seenPids = Set<Int32>()
+        let workspaceApps = $0.allLeafWindowsRecursive.compactMap { window -> WorkspaceApp? in
+            guard seenPids.insert(window.app.pid).inserted else { return nil }
+            let runningApp = NSRunningApplication(processIdentifier: window.app.pid)
+            return WorkspaceApp(name: window.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app", icon: runningApp?.icon)
+        }.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        let apps = Set(workspaceApps.map(\.name))
         let dash = " - "
         let suffix = switch true {
             case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
@@ -54,11 +60,15 @@ enum AxPermissionStatus: Equatable {
         return WorkspaceViewModel(
             name: $0.name,
             suffix: suffix,
+            apps: workspaceApps,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,
             hasFullscreenWindows: hasFullscreenWindows,
         )
+    }.sorted { lhs, rhs in
+        if lhs.isEffectivelyEmpty != rhs.isEffectivelyEmpty { return !lhs.isEffectivelyEmpty }
+        return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
     }
     var items = sortedMonitors.map {
         let hasFullscreenWindows = $0.visibleWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
@@ -78,9 +88,15 @@ enum AxPermissionStatus: Equatable {
     TrayMenuModel.shared.trayItems = items
 }
 
-struct WorkspaceViewModel: Hashable {
+struct WorkspaceApp {
+    let name: String
+    let icon: NSImage?
+}
+
+struct WorkspaceViewModel {
     let name: String
     let suffix: String
+    let apps: [WorkspaceApp]
     let isFocused: Bool
     let isEffectivelyEmpty: Bool
     let isVisible: Bool

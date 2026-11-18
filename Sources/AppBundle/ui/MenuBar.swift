@@ -5,73 +5,7 @@ import SwiftUI
 @MainActor
 public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
-        let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
-        let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
-        Text(shortIdentification)
-        Button("Copy to clipboard") { identification.copyToClipboard() }
-            .keyboardShortcut("C", modifiers: .command)
-        Divider()
-
-        if viewModel.axPermissionStatus == .granted {
-            if let token: RunSessionGuard = .isServerEnabled, viewModel.lastReloadConfigContainedWarnings {
-                Button {
-                    Task.startUnstructured {
-                        try await runLightSession(.menuBarButton, token) {
-                            let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).with(\.warningsAsErrors, true)
-                            _ = await reloadConfig_nonCancellable(args: args)
-                        }
-                    }
-                } label: {
-                    Label("Config contains warnings...", systemImage: "exclamationmark.triangle.fill")
-                }
-                Divider()
-            }
-            if let token: RunSessionGuard = .isServerEnabled {
-                Text("Workspaces:")
-                ForEach(viewModel.workspaces, id: \.name) { workspace in
-                    Button {
-                        Task.startUnstructured {
-                            try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
-                        }
-                    } label: {
-                        Toggle(isOn: .constant(workspace.isFocused)) {
-                            Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
-                        }
-                    }
-                }
-                Divider()
-            }
-            Button {
-                NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
-                viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
-            } label: {
-                Text("Sponsor upstream AeroSpace on GitHub")
-                Text(viewModel.sponsorshipMessage)
-            }
-            Divider()
-            Button(viewModel.isEnabled ? "Disable" : "Enable") {
-                Task.startUnstructured {
-                    try await runLightSession(.menuBarButton, .forceRun) {
-                        _ = await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
-                            .run(.defaultEnv, .emptyStdin)
-                    }
-                }
-            }.keyboardShortcut("E", modifiers: .command)
-            quickSettingsMenu()
-            getExperimentalUISettingsMenu(viewModel: viewModel)
-            openConfigButton()
-            reloadConfigButton(warningsAsErrors: false)
-        } else {
-            Button("AirSpace requires accessibility permission to move windows") {
-                viewModel.axPermissionStatus = .waitingWithPrompt
-            }
-        }
-        Button("Quit \(aeroSpaceAppName)") {
-            Task.startUnstructured {
-                terminationHandler?.beforeTermination()
-                terminateApp()
-            }
-        }.keyboardShortcut("Q", modifiers: .command)
+        WorkspaceMenu(viewModel: viewModel)
     } label: {
         switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
             case (.granted, true):
@@ -85,6 +19,91 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                     .resizable()
                     .aspectRatio(contentMode: .fit)
         }
+    }
+    .menuBarExtraStyle(.window)
+}
+
+private struct WorkspaceMenu: View {
+    @ObservedObject var viewModel: TrayMenuModel
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Spaces").font(.headline)
+                Spacer()
+                Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
+                    .help("Settings")
+            }
+            if viewModel.axPermissionStatus != .granted {
+                Button("Grant accessibility permission") { viewModel.axPermissionStatus = .waitingWithPrompt }
+            } else if !viewModel.isEnabled {
+                Text("AirSpace is paused. Enable it in Settings.").foregroundStyle(.secondary)
+            } else {
+                if viewModel.lastReloadConfigContainedWarnings {
+                    Button("Configuration contains warnings") { openWindow(id: settingsWindowId) }
+                        .foregroundStyle(.orange)
+                }
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+                        ForEach(viewModel.workspaces, id: \.name) { workspace in
+                            Button {
+                                guard let token: RunSessionGuard = .isServerEnabled else { return }
+                                Task.startUnstructured {
+                                    try await runLightSession(.menuBarButton, token) {
+                                        _ = Workspace.get(byName: workspace.name).focusWorkspace()
+                                    }
+                                }
+                            } label: {
+                                WorkspaceTile(workspace: workspace)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+                .frame(maxHeight: 400)
+            }
+        }
+        .padding(14)
+        .frame(width: 360)
+    }
+}
+
+private struct WorkspaceTile: View {
+    let workspace: WorkspaceViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(workspace.name).font(.headline).lineLimit(1)
+                Spacer(minLength: 2)
+                if workspace.isFocused {
+                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint)
+                } else if workspace.isVisible {
+                    Image(systemName: "display").foregroundStyle(.secondary)
+                }
+            }
+            if workspace.apps.isEmpty {
+                Text("Empty").font(.caption).foregroundStyle(.secondary)
+            } else {
+                ForEach(Array(workspace.apps.enumerated()), id: \.offset) { _, app in
+                    HStack(spacing: 5) {
+                        if let icon = app.icon {
+                            Image(nsImage: icon).resizable().frame(width: 16, height: 16)
+                        } else {
+                            Image(systemName: "app").frame(width: 16, height: 16)
+                        }
+                        Text(app.name).lineLimit(1)
+                    }.font(.caption)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, minHeight: 62, alignment: .topLeading)
+        .padding(10)
+        .background(workspace.isFocused ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(workspace.isFocused ? Color.accentColor : Color.clear, lineWidth: 1))
+        .contentShape(Rectangle())
     }
 }
 
