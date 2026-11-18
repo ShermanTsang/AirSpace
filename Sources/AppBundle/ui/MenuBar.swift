@@ -27,6 +27,9 @@ private struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
     @Environment(\.openWindow) private var openWindow
 
+    private let tileHeight: CGFloat = 92
+    private let spacing: CGFloat = 8
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -44,36 +47,71 @@ private struct WorkspaceMenu: View {
                     Button("Configuration contains warnings") { openWindow(id: settingsWindowId) }
                         .foregroundStyle(.orange)
                 }
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                        ForEach(viewModel.workspaces, id: \.name) { workspace in
-                            Button {
-                                guard let token: RunSessionGuard = .isServerEnabled else { return }
-                                Task.startUnstructured {
-                                    try await runLightSession(.menuBarButton, token) {
-                                        _ = Workspace.get(byName: workspace.name).focusWorkspace()
+                if viewModel.workspaces.isEmpty {
+                    Text("No spaces yet. Open a window to create one.").foregroundStyle(.secondary)
+                } else {
+                    ScrollView(.vertical) {
+                        VStack(spacing: spacing) {
+                            ForEach(workspaceRows) { row in
+                                HStack(spacing: spacing) {
+                                    ForEach(row.workspaces, id: \.name) { workspace in
+                                        workspaceButton(workspace)
+                                    }
+                                    if row.workspaces.count == 1 {
+                                        Color.clear.frame(maxWidth: .infinity, maxHeight: 1)
                                     }
                                 }
-                            } label: {
-                                WorkspaceTile(workspace: workspace)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
+                    .frame(height: gridHeight)
                 }
-                .frame(maxHeight: 400)
             }
         }
         .padding(14)
-        .frame(width: 360)
+        .frame(width: 380)
     }
+
+    private func workspaceButton(_ workspace: WorkspaceViewModel) -> some View {
+        Button {
+            guard let token: RunSessionGuard = .isServerEnabled else { return }
+            Task.startUnstructured {
+                try await runLightSession(.menuBarButton, token) {
+                    _ = Workspace.get(byName: workspace.name).focusWorkspace()
+                }
+            }
+        } label: {
+            WorkspaceTile(workspace: workspace)
+                .frame(height: tileHeight)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var workspaceRows: [WorkspaceRow] {
+        stride(from: 0, to: viewModel.workspaces.count, by: 2).map { start in
+            let end = min(start + 2, viewModel.workspaces.count)
+            return WorkspaceRow(workspaces: Array(viewModel.workspaces[start..<end]))
+        }
+    }
+
+    private var gridHeight: CGFloat {
+        let rows = CGFloat(workspaceRows.count)
+        return min(rows * tileHeight + max(0, rows - 1) * spacing, 420)
+    }
+}
+
+private struct WorkspaceRow: Identifiable {
+    let workspaces: [WorkspaceViewModel]
+    var id: String { workspaces.first?.name ?? "" }
 }
 
 private struct WorkspaceTile: View {
     let workspace: WorkspaceViewModel
 
+    private static let maxVisibleApps = 3
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(workspace.name).font(.headline).lineLimit(1)
                 Spacer(minLength: 2)
@@ -86,20 +124,25 @@ private struct WorkspaceTile: View {
             if workspace.apps.isEmpty {
                 Text("Empty").font(.caption).foregroundStyle(.secondary)
             } else {
-                ForEach(Array(workspace.apps.enumerated()), id: \.offset) { _, app in
+                ForEach(Array(workspace.apps.prefix(Self.maxVisibleApps).enumerated()), id: \.offset) { _, app in
                     HStack(spacing: 5) {
                         if let icon = app.icon {
-                            Image(nsImage: icon).resizable().frame(width: 16, height: 16)
+                            Image(nsImage: icon).resizable().interpolation(.high).frame(width: 16, height: 16)
                         } else {
                             Image(systemName: "app").frame(width: 16, height: 16)
                         }
                         Text(app.name).lineLimit(1)
                     }.font(.caption)
                 }
+                if workspace.apps.count > Self.maxVisibleApps {
+                    Text("+\(workspace.apps.count - Self.maxVisibleApps) more app(s)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
             }
             Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, minHeight: 62, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
         .background(workspace.isFocused ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
         .overlay(RoundedRectangle(cornerRadius: 8).stroke(workspace.isFocused ? Color.accentColor : Color.clear, lineWidth: 1))
