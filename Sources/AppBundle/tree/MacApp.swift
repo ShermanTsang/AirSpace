@@ -174,6 +174,13 @@ final class MacApp: AbstractApp {
     func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: Point?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
+            // Avoid feeding our own move/resize notifications back into another identical layout.
+            if (topLeft == nil || window.get(Ax.topLeftCornerAttr) == topLeft),
+               (size == nil || window.get(Ax.sizeAttr) == size)
+            {
+                return
+            }
+            try job.checkCancellation()
             try disableAnimations(app: axApp.threadGuarded, job) {
                 try setFrame(window, topLeft, size, job)
             }
