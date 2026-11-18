@@ -57,6 +57,7 @@ struct ReloadConfigResult {
         syncStartAtLogin()
         syncFocusFollowsMouse(config)
         syncConfigFileWatcher()
+        TrayMenuModel.shared.configReloadEpoch += 1
     }
 
     if warningsAsErrors {

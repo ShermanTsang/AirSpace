@@ -15,6 +15,9 @@ public final class TrayMenuModel: ObservableObject {
     @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
     @Published var lastReloadConfigContainedWarnings: Bool = false
     @Published var axPermissionStatus: AxPermissionStatus = .waitingWithPrompt
+    /// Incremented every time the config is successfully reloaded. Used by the Settings UI
+    /// (see `SettingsViewModel`) to re-sync itself with the config that is actually active
+    @Published var configReloadEpoch: Int = 0
 }
 
 enum AxPermissionStatus: Equatable {

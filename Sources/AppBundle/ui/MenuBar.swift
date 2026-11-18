@@ -57,6 +57,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                     }
                 }
             }.keyboardShortcut("E", modifiers: .command)
+            quickSettingsMenu()
             getExperimentalUISettingsMenu(viewModel: viewModel)
             openConfigButton()
             reloadConfigButton(warningsAsErrors: false)
@@ -91,20 +92,28 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 func openConfigButton(showShortcutGroup: Bool = false) -> some View {
     let editor = getTextEditorToOpenConfig()
     let button = Button("Open config in '\(editor.lastPathComponent)'") {
-        let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
-        switch findCustomConfigUrl() {
-            case .file(let url):
-                url.open(with: editor)
-            case .noCustomConfigExists:
-                _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
-                fallbackConfig.open(with: editor)
-            case .ambiguousConfigError:
-                fallbackConfig.open(with: editor)
-        }
+        openConfigInTextEditor()
     }.keyboardShortcut(",", modifiers: .command)
     switch showShortcutGroup {
         case true: shortcutGroup(label: Text("⌘ ,"), content: button)
         case false: button
+    }
+}
+
+/// Opens the config file that the user actually edits in a text editor.
+/// Copies the default config to `~/.aerospace.toml` when there is no custom config yet
+@MainActor
+func openConfigInTextEditor() {
+    let editor = getTextEditorToOpenConfig()
+    let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
+    switch findCustomConfigUrl() {
+        case .file(let url):
+            url.open(with: editor)
+        case .noCustomConfigExists:
+            _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
+            fallbackConfig.open(with: editor)
+        case .ambiguousConfigError:
+            fallbackConfig.open(with: editor)
     }
 }
 
