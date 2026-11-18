@@ -12,6 +12,7 @@ enum ConfigFileEditor {
         case writeFailure(URL, underlying: String)
         case patcherFailure(String)
         case reloadFailed(String)
+        case configChanged
 
         var errorDescription: String? {
             switch self {
@@ -25,30 +26,72 @@ enum ConfigFileEditor {
                     "Can't patch the config file: \(description)"
                 case .reloadFailed(let description):
                     description.isEmpty ? "AeroSpace failed to apply the new config" : description
+                case .configChanged:
+                    "This section or the config file location changed while you were editing it. Reopen the editor to load the latest version."
             }
         }
     }
 
+    struct SectionSnapshot {
+        let url: URL
+        let value: OrderedJson?
+    }
+
+    static func readSection(_ key: String) throws -> SectionSnapshot {
+        let url = try sourceUrl()
+        return SectionSnapshot(url: url, value: try TomlPatcher.configTable(read(url))[key])
+    }
+
+    static func saveSection(_ key: String, value: OrderedJson?, original: SectionSnapshot) async throws {
+        let url = try sourceUrl()
+        guard url == original.url else { throw EditError.configChanged }
+        let raw = try read(url)
+        guard try TomlPatcher.configTable(raw)[key] == original.value else { throw EditError.configChanged }
+        let patched = try TomlPatcher.replaceRoot(key, with: value, in: raw)
+        try await validateWriteAndReload(patched, original: raw, source: url)
+    }
+
     static func applyEdits(_ edits: [TomlPatcher.Edit]) async throws {
-        let url = try resolveConfigUrl()
-        let raw: String
-        do {
-            raw = try String(contentsOf: url, encoding: .utf8)
-        } catch {
-            throw EditError.readFailure(url, underlying: error.localizedDescription)
-        }
+        let url = try sourceUrl()
+        let raw = try read(url)
         let patched: String
         do {
             patched = try TomlPatcher.apply(edits: edits, to: raw)
         } catch {
             throw EditError.patcherFailure("\(error)")
         }
-        if patched != raw {
-            do {
-                try patched.write(to: url, atomically: true, encoding: .utf8)
-            } catch {
-                throw EditError.writeFailure(url, underlying: error.localizedDescription)
-            }
+        try await validateWriteAndReload(patched, original: raw, source: url)
+    }
+
+    private static func read(_ url: URL) throws -> String {
+        do {
+            return try String(contentsOf: url, encoding: .utf8)
+        } catch {
+            throw EditError.readFailure(url, underlying: error.localizedDescription)
+        }
+    }
+
+    private static func sourceUrl() throws -> URL {
+        switch findCustomConfigUrl() {
+            case .file(let url): return url
+            case .noCustomConfigExists: return defaultConfigUrl
+            case .ambiguousConfigError(let candidates): throw EditError.ambiguousConfigLocation(candidates: candidates)
+        }
+    }
+
+    private static func validateWriteAndReload(_ patched: String, original: String, source: URL) async throws {
+        guard patched != original else { return }
+        let errors = parseConfig(patched).errors
+        guard errors.isEmpty else {
+            throw EditError.patcherFailure(errors.map { $0.description(.error) }.joined(separator: "\n\n"))
+        }
+        guard try sourceUrl() == source else { throw EditError.configChanged }
+        let url = try resolveConfigUrl()
+        guard try read(url) == original else { throw EditError.configChanged }
+        do {
+            try patched.write(to: url, atomically: true, encoding: .utf8)
+        } catch {
+            throw EditError.writeFailure(url, underlying: error.localizedDescription)
         }
         let reloadResult = await reloadConfig_nonCancellable()
         if !reloadResult.isOk {

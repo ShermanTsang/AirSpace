@@ -2,6 +2,72 @@ import Testing
 @testable import AppBundle
 
 @Suite struct TomlPatcherTest {
+    @Test func rewriteWindowRulesDoesNotTouchNeighboringTables() throws {
+        let prefix = "config-version = 2\n# Keep this comment\n"
+        let rules = """
+            [["on-window-detected"]]
+            'if'.app-id = 'com.example.App'
+            run = ['layout floating']
+
+            [[on-window-detected]]
+            if = 'true'
+            run = 'layout tiling'
+
+            """
+        let suffix = "[mode.main.binding]\nalt-h = 'focus left' # existing binding\n"
+        let raw = prefix + rules + suffix
+        let oldRules = try #require(TomlPatcher.configTable(raw)["on-window-detected"]?.asArrayOrNil)
+        let updated = OrderedJson.array(Array(oldRules.reversed()))
+        let patched = try TomlPatcher.replaceRoot("on-window-detected", with: updated, in: raw)
+        #expect(patched.hasPrefix(prefix))
+        #expect(patched.hasSuffix(suffix))
+        #expect(try TomlPatcher.configTable(patched)["on-window-detected"] == updated)
+    }
+
+    @Test func rewriteModeTableSupportsQuotedKeysAndEmptyBindings() throws {
+        let raw = "mode.main.binding = { alt-h = 'focus left' }\n[gaps]\ninner.vertical = 8\n"
+        let updated = OrderedJson.dict(["main": .dict(["binding": .dict([:])]), "my.mode": .dict(["binding": .dict([:])])])
+        let patched = try TomlPatcher.replaceRoot("mode", with: updated, in: raw)
+        #expect(patched.contains("[mode.\"my.mode\".binding]"))
+        #expect(patched.contains("[gaps]\ninner.vertical = 8\n"))
+        #expect(try TomlPatcher.configTable(patched)["mode"] == updated)
+        let removed = try TomlPatcher.replaceRoot("mode", with: nil, in: patched)
+        #expect(try TomlPatcher.configTable(removed)["mode"] == nil)
+    }
+
+    @Test func rewriteGapsPreservesCRLFAndUnrelatedMultilineString() throws {
+        let untouched = "after-startup-command = '''\r\n[gaps]\r\nnot-a-header\r\n'''\r\n"
+        let raw = untouched + "[gaps]\r\ninner.vertical = 8\r\n"
+        let updated = OrderedJson.dict([
+            "inner": .dict(["vertical": .array([.dict(["monitor": .dict(["Built-in.*": .int(12)])]), .int(4)])]),
+        ])
+        let patched = try TomlPatcher.replaceRoot("gaps", with: updated, in: raw)
+        #expect(patched.hasPrefix(untouched))
+        #expect(patched.allSatisfy { $0 != "\n" })
+        #expect(try TomlPatcher.configTable(patched)["gaps"] == updated)
+    }
+
+    @MainActor @Test func structuredSectionsProduceValidAeroSpaceConfiguration() throws {
+        var raw = "config-version = 2\n"
+        let edits: [(String, OrderedJson)] = [
+            ("on-window-detected", .array([.dict([
+                "if": .dict(["app-id": .string("com.apple.Safari")]),
+                "run": .string("layout floating"),
+            ])])),
+            ("mode", .dict(["main": .dict(["binding": .dict(["alt-h": .string("focus left")])])])),
+            ("persistent-workspaces", .array([.string("Web")])),
+            ("workspace-to-monitor-force-assignment", .dict(["Web": .array([.int(2), .string("main")])])),
+            ("on-focus-changed", .array([.string("move-mouse window-lazy-center")])),
+        ]
+        for (key, value) in edits {
+            raw = try TomlPatcher.replaceRoot(key, with: value, in: raw)
+        }
+        let parsed = parseConfig(raw)
+        #expect(parsed.errors.isEmpty)
+        #expect(parsed.config.onWindowDetected.count == 1)
+        #expect(parsed.config.modes["main"]?.bindings["alt-h"] != nil)
+    }
+
     @Test func replaceRootBoolPreservesInlineComment() throws {
         let result = try TomlPatcher.apply(
             edits: [.bool(["start-at-login"], true)],

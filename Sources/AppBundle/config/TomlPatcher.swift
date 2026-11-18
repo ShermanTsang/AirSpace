@@ -1,4 +1,5 @@
 import Foundation
+import TOMLDecoder
 
 /// Comment-preserving patcher for TOML config files.
 ///
@@ -9,10 +10,8 @@ import Foundation
 ///
 /// Supported TOML subset (enough for AeroSpace config files):
 ///  - comments (`#`) outside of strings;
-///  - tables defined via `[dotted.header]` with bare keys. Headers with quoted keys and
-///    arrays of tables (`[[header]]`) make the region opaque: assignments inside can't be
-///    edited, but they are never corrupted;
-///  - assignments with bare keys, dotted or plain, e.g. `inner.vertical = 8`;
+///  - regular tables and assignments with quoted or bare dotted keys;
+///  - arrays of tables (rewritable as a section, not editable by individual key);
 ///  - single-line and multi-line values (arrays, multiline strings). A replaced value is
 ///    always written back as a single line.
 enum TomlPatcher {
@@ -75,6 +74,103 @@ enum TomlPatcher {
         }
     }
 
+    /// Rewrites one top-level section, regardless of whether it uses tables, dotted keys,
+    /// an inline value, or arrays of tables. Other sections are not reformatted.
+    static func replaceRoot(_ key: String, with value: OrderedJson?, in raw: String) throws -> String {
+        let before = try configTable(raw)
+        guard before[key] != value else { return raw }
+        var expected = before
+        expected[key] = value
+
+        var doc = Document(raw)
+        var kept: [[Character]] = []
+        var removing = false
+        var firstHeader: Int?
+        var i = 0
+        while i < doc.lines.count {
+            let line = doc.lines[i]
+            if let header = scanHeader(line) {
+                firstHeader = firstHeader ?? kept.count
+                removing = header.path.first == key
+                if !removing { kept.append(line) }
+                i += 1
+            } else if let (path, end) = assignmentRange(doc.lines, at: i) {
+                if !removing && !(firstHeader == nil && path.first == key) {
+                    kept.append(contentsOf: doc.lines[i...end])
+                }
+                i = end + 1
+            } else {
+                // Leave standalone comments and spacing alone, even inside the edited section.
+                kept.append(line)
+                i += 1
+            }
+        }
+        if let value {
+            if case .dict(let dict) = value {
+                if kept.last?.isEmpty == false { kept.append([]) }
+                try appendTable([key], dict, to: &kept)
+            } else {
+                kept.insert(Array(formatKey(key) + " = " + (try literal(value))), at: firstHeader ?? kept.count)
+            }
+        }
+        doc.lines = kept
+        let result = doc.render()
+        // Fail closed if a representation the scanner doesn't understand was encountered.
+        guard try configTable(result) == canonical(.dict(expected)).asDictOrNil else {
+            throw PatcherError.invalidEdit(reason: "Could not safely rewrite the '\(key)' section")
+        }
+        return result
+    }
+
+    static func configTable(_ raw: String) throws -> OrderedJson.JsonDict {
+        let table: [String: Any] = try .init(try TOMLTable(source: raw))
+        var errors: [ConfigParseDiagnostic] = []
+        let value = tomlAnyToOrderedJsonRecursive(any: table, .emptyRoot, &errors)
+        if let error = errors.first { throw error }
+        return value?.asDictOrNil ?? [:]
+    }
+
+    private static func canonical(_ value: OrderedJson) -> OrderedJson {
+        switch value {
+            case .dict(let dict): .dict(.init(uniqueKeysWithValues: dict.sorted { $0.key < $1.key }.map { ($0.key, canonical($0.value)) }))
+            case .array(let array): .array(array.map(canonical))
+            default: value
+        }
+    }
+
+    private static func appendTable(_ path: [String], _ dict: OrderedJson.JsonDict, to lines: inout [[Character]]) throws {
+        lines.append(Array("[" + path.map(formatKey).joined(separator: ".") + "]"))
+        for (key, value) in dict {
+            if case .dict = value { continue }
+            lines.append(Array(formatKey(key) + " = " + (try literal(value))))
+        }
+        for (key, value) in dict {
+            guard case .dict(let child) = value else { continue }
+            lines.append([])
+            try appendTable(path + [key], child, to: &lines)
+        }
+    }
+
+    private static func literal(_ value: OrderedJson) throws -> String {
+        switch value {
+            case .string(let string): formatTomlString(string)
+            case .int(let int): int.description
+            case .bool(let bool): bool ? "true" : "false"
+            case .dict(let dict): "{ " + (try dict.map { try formatKey($0.key) + " = " + literal($0.value) }.joined(separator: ", ")) + " }"
+            case .array(let array): "[" + (try array.map(literal).joined(separator: ", ")) + "]"
+            case .null: throw PatcherError.invalidEdit(reason: "TOML does not have a null value")
+        }
+    }
+
+    private static func formatKey(_ key: String) -> String {
+        isBareKey(key) ? key : formatTomlString(key)
+    }
+
+    private static func assignmentRange(_ lines: [[Character]], at i: Int) -> (path: [String], end: Int)? {
+        guard let (path, eq) = scanDottedKey(lines[i], from: 0), eq < lines[i].count, lines[i][eq] == "=" else { return nil }
+        return (path, scanValue(lines, valueLine: i, valueStart: eq + 1).endLine)
+    }
+
     // MARK: document model
 
     private struct Document {
@@ -83,21 +179,24 @@ enum TomlPatcher {
         /// Whether the original text ended with a newline
         var hasFinalNewline: Bool
 
+        let newline: Character
+
         init(_ raw: String) {
-            hasFinalNewline = raw.hasSuffix("\n")
+            newline = raw.first(where: { $0 == "\n" || $0 == "\r\n" }) ?? "\n"
+            hasFinalNewline = raw.last == newline
             // An empty document has no lines. (Splitting "" would produce one phantom empty line)
             guard !raw.isEmpty else {
                 lines = []
                 return
             }
-            var split = raw.split(omittingEmptySubsequences: false, whereSeparator: { $0 == "\n" }).map { Array($0) }
+            var split = raw.split(separator: newline, omittingEmptySubsequences: false).map { Array($0) }
             // "a\n" splits into ["a", ""]; drop the phantom element produced by the final separator
             if hasFinalNewline, !split.isEmpty { split.removeLast() }
             lines = split
         }
 
         func render() -> String {
-            lines.map { String($0) }.joined(separator: "\n") + (hasFinalNewline && !lines.isEmpty ? "\n" : "")
+            lines.map { String($0) }.joined(separator: String(newline)) + (hasFinalNewline && !lines.isEmpty ? String(newline) : "")
         }
     }
 
@@ -133,28 +232,29 @@ enum TomlPatcher {
 
     private static func classify(_ lines: [[Character]]) throws -> Classification {
         var result = Classification()
-        var context: [String]? = [] // Root table. `nil` inside an opaque region
+        var context: [String]? = [] // Root table. `nil` inside arrays of tables.
+        var arrayPaths: [[String]] = []
         var i = 0
         while i < lines.count {
             if let headerScan = scanHeader(lines[i]) {
                 result.headerLines.insert(i)
-                switch headerScan {
-                    case .header(let path):
-                        if result.headers[path] != nil {
-                            throw PatcherError.duplicateKey(path: path)
-                        }
-                        result.headers[path] = i
-                        context = path
-                    case .opaqueHeader:
-                        context = nil
+                let path = headerScan.path
+                if headerScan.isArray { arrayPaths.append(path) }
+                if arrayPaths.contains(where: { path.starts(with: $0) }) {
+                    context = nil
+                } else {
+                    if result.headers[path] != nil { throw PatcherError.duplicateKey(path: path) }
+                    result.headers[path] = i
+                    context = path
                 }
                 i += 1
-            } else if context != nil, let record = scanAssignment(lines[i], context: context!, lineIndex: i, lines: lines) {
-                if result.assignments[record.path] != nil {
-                    throw PatcherError.duplicateKey(path: record.path)
+            } else if let (path, end) = assignmentRange(lines, at: i) {
+                if let context {
+                    let fullPath = context + path
+                    if result.assignments[fullPath] != nil { throw PatcherError.duplicateKey(path: fullPath) }
+                    result.assignments[fullPath] = AssignmentRecord(path: fullPath, line: i, endLine: end)
                 }
-                result.assignments[record.path] = record
-                i = record.endLine + 1
+                i = end + 1
             } else {
                 i += 1
             }
@@ -164,7 +264,7 @@ enum TomlPatcher {
 
     private static func replaceAssignment(_ record: AssignmentRecord, with value: String, in doc: inout Document) throws {
         let chars = doc.lines[record.line]
-        guard let (_, afterKey) = scanDottedBareKey(chars, from: 0) else {
+        guard let (_, afterKey) = scanDottedKey(chars, from: 0) else {
             throw PatcherError.invalidEdit(reason: "Can't re-scan the assignment on line \(record.line + 1)")
         }
         let eqIndex = skipWhitespace(chars, from: afterKey)
@@ -280,16 +380,12 @@ enum TomlPatcher {
 
     // MARK: line scanners
 
-    private enum HeaderScan {
-        /// A regular `[a.b.c]` header
-        case header(path: [String])
-        /// A header whose path can't be modeled (quoted keys, `[[array-of-tables]]`).
-        /// Assignments below it are ignored, and edits never go into its body
-        case opaqueHeader
+    private struct HeaderScan {
+        let path: [String]
+        let isArray: Bool
     }
 
-    /// Outer `nil` means the line is not a header at all. Arrays of tables are reported opaque:
-    /// several `[[t]]` headers share the same path, which the patcher doesn't model
+    /// Outer `nil` means the line is not a recognized header.
     private static func scanHeader(_ chars: [Character]) -> HeaderScan? {
         var i = skipWhitespace(chars, from: 0)
         guard i < chars.count, chars[i] == "[" else { return nil }
@@ -297,7 +393,7 @@ enum TomlPatcher {
         let isArray = i < chars.count && chars[i] == "["
         if isArray { i += 1 }
         i = skipWhitespace(chars, from: i)
-        guard let (path, afterKey) = scanDottedBareKey(chars, from: i) else { return nil }
+        guard let (path, afterKey) = scanDottedKey(chars, from: i) else { return nil }
         i = skipWhitespace(chars, from: afterKey)
         guard i < chars.count, chars[i] == "]" else { return nil }
         i += 1
@@ -307,27 +403,33 @@ enum TomlPatcher {
         }
         i = skipWhitespace(chars, from: i)
         guard i >= chars.count || chars[i] == "#" else { return nil }
-        return isArray ? .opaqueHeader : .header(path: path)
+        return HeaderScan(path: path, isArray: isArray)
     }
 
-    private static func scanAssignment(_ chars: [Character], context: [String], lineIndex: Int, lines: [[Character]]) -> AssignmentRecord? {
-        guard let (keyComponents, afterKey) = scanDottedBareKey(chars, from: 0) else { return nil }
-        var i = skipWhitespace(chars, from: afterKey)
-        guard i < chars.count, chars[i] == "=" else { return nil }
-        i += 1
-        let valueScan = scanValue(lines, valueLine: lineIndex, valueStart: i)
-        return AssignmentRecord(path: context + keyComponents, line: lineIndex, endLine: valueScan.endLine)
-    }
-
-    /// Scans a bare dotted key like `gaps.inner.vertical`. Whitespace around dots is tolerated
-    private static func scanDottedBareKey(_ chars: [Character], from start: Int) -> ([String], Int)? {
+    /// Scans quoted or bare dotted keys, tolerating whitespace around dots.
+    private static func scanDottedKey(_ chars: [Character], from start: Int) -> ([String], Int)? {
         var components: [String] = []
         var i = skipWhitespace(chars, from: start)
         while true {
+            guard i < chars.count else { return nil }
             let keyStart = i
-            while i < chars.count, isBareKeyChar(chars[i]) { i += 1 }
-            guard i > keyStart else { return nil }
-            components.append(String(chars[keyStart..<i]))
+            if chars[i] == "\"" || chars[i] == "'" {
+                let quote = chars[i]
+                i += 1
+                while i < chars.count, chars[i] != quote {
+                    if quote == "\"", chars[i] == "\\" { i += 1 }
+                    i += 1
+                }
+                guard i < chars.count else { return nil }
+                i += 1
+                guard let table = try? [String: Any](TOMLTable(source: "k = " + String(chars[keyStart..<i]))),
+                      let key = table["k"] as? String else { return nil }
+                components.append(key)
+            } else {
+                while i < chars.count, isBareKeyChar(chars[i]) { i += 1 }
+                guard i > keyStart else { return nil }
+                components.append(String(chars[keyStart..<i]))
+            }
             let afterKey = skipWhitespace(chars, from: i)
             if afterKey < chars.count, chars[afterKey] == "." {
                 i = skipWhitespace(chars, from: afterKey + 1)

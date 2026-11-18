@@ -21,13 +21,16 @@ public func getSettingsWindow(viewModel: TrayMenuModel) -> some Scene {
 
 private struct SettingsView: View {
     @ObservedObject private var model = SettingsViewModel.shared
+    @EnvironmentObject private var trayModel: TrayMenuModel
 
     var body: some View {
         Form {
             generalSection
+            menuBarSection
             layoutSection
             gapsSection
             mouseSection
+            structuredSections
             configFileSection
             if let lastError = model.lastError {
                 Section {
@@ -56,6 +59,24 @@ private struct SettingsView: View {
             )
         } header: {
             Text("General")
+        }
+    }
+
+    private var menuBarSection: some View {
+        Section {
+            Picker("Workspace display style", selection: Binding(
+                get: { trayModel.experimentalUISettings.displayStyle },
+                set: { trayModel.experimentalUISettings.displayStyle = $0 },
+            )) {
+                ForEach(MenuBarStyle.allCases) { style in
+                    Text(style.title).tag(style)
+                }
+            }
+            Text("The focused workspace shows up to three window icons on macOS 14 or later.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        } header: {
+            Text("Menu bar")
         }
     }
 
@@ -102,10 +123,9 @@ private struct SettingsView: View {
             gapRow("Outer top", \.gapsOuterTop, ["gaps", "outer", "top"], -500...500)
             gapRow("Outer bottom", \.gapsOuterBottom, ["gaps", "outer", "bottom"], -500...500)
             gapRow("Outer right", \.gapsOuterRight, ["gaps", "outer", "right"], -500...500)
+            ConfigSectionButton(section: .gaps)
         } header: {
             Text("Gaps (pixels)")
-        } footer: {
-            Text("Per-monitor gaps can be edited in the config file.")
         }
     }
 
@@ -120,6 +140,15 @@ private struct SettingsView: View {
         }
     }
 
+    private var structuredSections: some View {
+        Group {
+            Section("Applications") { ConfigSectionButton(section: .windowRules) }
+            Section("Keyboard") { ForEach(ConfigSection.shortcuts) { ConfigSectionButton(section: $0) } }
+            Section("Workspaces and Monitors") { ForEach(ConfigSection.workspaces) { ConfigSectionButton(section: $0) } }
+            Section("Automation") { ForEach(ConfigSection.automation) { ConfigSectionButton(section: $0) } }
+        }
+    }
+
     private var configFileSection: some View {
         Section {
             LabeledContent("File") {
@@ -130,6 +159,7 @@ private struct SettingsView: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
             }
+            ConfigSectionButton(section: .version)
             HStack {
                 Button("Open in Editor") { openConfigInTextEditor() }
                 Button("Reload Now") { reloadConfig() }
@@ -137,7 +167,7 @@ private struct SettingsView: View {
         } header: {
             Text("Config file")
         } footer: {
-            Text("Changes are applied immediately. The editor patches your config file in place, keeping comments and the settings it doesn't manage.")
+            Text("Quick changes apply immediately. In detailed editors, select Save & Apply to commit your changes.")
         }
     }
 
@@ -176,7 +206,7 @@ private struct IntSettingRow: View {
             Text(title)
             Spacer()
             if isPerMonitor {
-                Text("Set per monitor in the config file")
+                Text("Set per monitor using Gaps by Monitor")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {

@@ -8,6 +8,7 @@ public final class TrayMenuModel: ObservableObject {
 
     @Published var trayText: String = ""
     @Published var trayItems: [TrayItem] = []
+    @Published var focusedWorkspaceIcons: [NSImage] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
@@ -29,6 +30,9 @@ enum AxPermissionStatus: Equatable {
 @MainActor func updateTrayText() {
     let sortedMonitors = globalSortedMonitorInfos
     let focus = globalFocus
+    TrayMenuModel.shared.focusedWorkspaceIcons = Array(focus.workspace.allLeafWindowsRecursive.lazy.compactMap {
+        NSRunningApplication(processIdentifier: $0.app.pid)?.icon
+    }.prefix(3))
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
         .lazy

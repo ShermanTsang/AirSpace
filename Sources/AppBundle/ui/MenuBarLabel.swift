@@ -77,6 +77,12 @@ struct MenuBarLabel: View {
                             .opacity(item.isVisible ? 1 : 0.5)
                     }
             }
+            ForEach(Array(viewModel.focusedWorkspaceIcons.enumerated()), id: \.offset) { _, icon in
+                Image(nsImage: icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: itemSize, height: itemSize)
+            }
         }
     }
 
