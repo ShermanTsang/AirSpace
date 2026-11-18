@@ -4,7 +4,7 @@ source ./script/setup.sh
 
 build_info_file='' # mandatory
 build_version="0.0.0-SNAPSHOT"
-codesign_identity="aerospace-codesign-certificate"
+codesign_identity="airspace-codesign-certificate"
 while test $# -gt 0; do
     case $1 in
         --build-info-file) build_info_file="$2"; shift 2;;
@@ -20,7 +20,7 @@ cd ./xcode
     xcode_configuration="Release"
     /usr/bin/xcrun xcodebuild -version
     /usr/bin/xcrun xcodebuild clean build \
-        -scheme AeroSpace \
+        -scheme AirSpace \
         -destination "generic/platform=macOS" \
         -configuration "$xcode_configuration" \
         -derivedDataPath .xcode-build \
@@ -29,4 +29,4 @@ cd ./xcode
         AEROSPACE_BUILD_INFO_LDFLAGS="-sectcreate __TEXT __aero_build $build_info_file"
 cd -
 
-cp -r "xcode/.xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
+cp -r "xcode/.xcode-build/Build/Products/$xcode_configuration/AirSpace.app" .release

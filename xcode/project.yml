@@ -1,11 +1,11 @@
 # Xcode project configuration. Managed by https://github.com/yonaskolb/XcodeGen
 # Xcode is only used to build the release App Bundle. Debug builds only use Swift Package Manager
 
-name: AeroSpace
+name: AirSpace
 
 packages:
-  AeroSpacePackage:
-    path: aerospace-package-symlink
+  AirSpacePackage:
+    path: airspace-package-symlink
 
 configs:
   Debug: debug
@@ -22,34 +22,34 @@ settings:
     # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
     # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
     INFOPLIST_KEY_LSUIElement: YES
-    AEROSPACE_CODE_SIGN_IDENTITY: aerospace-codesign-certificate
+    AEROSPACE_CODE_SIGN_IDENTITY: airspace-codesign-certificate
     CODE_SIGN_IDENTITY: $(AEROSPACE_CODE_SIGN_IDENTITY)
 
 targets:
-  AeroSpace:
+  AirSpace:
     type: application
     platform: macOS
     deploymentTarget: ${XCODEGEN_DEPLOYMENT_TARGET}
     sources:
-      - "../Sources/AeroSpaceApp"
+      - "../Sources/AirSpaceApp"
       - "../resources"
       - "../docs/config-examples/default-config.toml"
     dependencies:
-      - package: AeroSpacePackage
+      - package: AirSpacePackage
         product: AppBundle
     settings:
       configs:
         Debug:
-          PRODUCT_NAME: AeroSpace-Debug
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.debug
+          PRODUCT_NAME: AirSpace-Debug
+          PRODUCT_BUNDLE_IDENTIFIER: com.github.shermantsang.airspace.debug
         Release:
-          PRODUCT_NAME: AeroSpace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+          PRODUCT_NAME: AirSpace
+          PRODUCT_BUNDLE_IDENTIFIER: com.github.shermantsang.airspace
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
           OTHER_LDFLAGS: $(inherited) $(AEROSPACE_BUILD_INFO_LDFLAGS)
     entitlements:
-      path: ../resources/AeroSpace.entitlements
+      path: ../resources/AirSpace.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false

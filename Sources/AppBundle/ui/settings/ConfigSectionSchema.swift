@@ -26,7 +26,7 @@ struct ConfigSection: Identifiable, Sendable {
     )
 
     static let shortcuts: [ConfigSection] = [
-        .init(id: "mode", title: "Keyboard Shortcuts", help: "The main mode is required. Add bindings using key names such as alt-h and AeroSpace commands such as focus left.",
+        .init(id: "mode", title: "Keyboard Shortcuts", help: "The main mode is required. Add bindings using key names such as alt-h and AirSpace commands such as focus left.",
               schema: .map("Mode name", .fields([
                   .init("binding", "Bindings", .map("Shortcut", .commands("focus left"), initialKey: "alt-h")),
               ], defaults: ["binding"]), initialKey: "main")),
@@ -51,12 +51,12 @@ struct ConfigSection: Identifiable, Sendable {
     ]
 
     static let automation: [ConfigSection] = [
-        .init(id: "after-startup-command", title: "After Startup", help: "AeroSpace commands run after the app starts.", schema: .commands("")),
-        .init(id: "on-focus-changed", title: "On Focus Change", help: "AeroSpace commands run when focus changes.", schema: .commands("")),
-        .init(id: "on-focused-monitor-changed", title: "On Focused Monitor Change", help: "AeroSpace commands run when the focused monitor changes.", schema: .commands("")),
-        .init(id: "on-mode-changed", title: "On Mode Change", help: "AeroSpace commands run when the binding mode changes.", schema: .commands("")),
+        .init(id: "after-startup-command", title: "After Startup", help: "AirSpace commands run after the app starts.", schema: .commands("")),
+        .init(id: "on-focus-changed", title: "On Focus Change", help: "AirSpace commands run when focus changes.", schema: .commands("")),
+        .init(id: "on-focused-monitor-changed", title: "On Focused Monitor Change", help: "AirSpace commands run when the focused monitor changes.", schema: .commands("")),
+        .init(id: "on-mode-changed", title: "On Mode Change", help: "AirSpace commands run when the binding mode changes.", schema: .commands("")),
         .init(id: "exec-on-workspace-change", title: "On Workspace Change", help: "Enter the absolute executable path first, then one argument per entry.", schema: .list("Argument", .text(""))),
-        .init(id: "exec", title: "Command Environment", help: "Set environment variables for commands launched by AeroSpace.", schema: .fields([
+        .init(id: "exec", title: "Command Environment", help: "Set environment variables for commands launched by AirSpace.", schema: .fields([
             .init("inherit-env-vars", "Inherit environment variables", .toggle(true)),
             .init("env-vars", "Variable overrides", .map("Variable name", .text(""), initialKey: "VARIABLE")),
         ], defaults: ["inherit-env-vars"])),
@@ -72,7 +72,7 @@ struct ConfigSection: Identifiable, Sendable {
         ], defaults: ["left", "top", "bottom", "right"])),
     ], defaults: ["inner", "outer"]))
 
-    static let version = ConfigSection(id: "config-version", title: "Configuration Version", help: "Changing the version changes how AeroSpace interprets existing settings. It does not migrate existing settings.", schema: .integer(2))
+    static let version = ConfigSection(id: "config-version", title: "Configuration Version", help: "Changing the version changes how AirSpace interprets existing settings. It does not migrate existing settings.", schema: .integer(2))
 }
 
 indirect enum ConfigFieldSchema: Sendable {

@@ -9,9 +9,9 @@ The main and the most important rule: **read the room!**
 
 ## Submiting bugs and feature ideas
 
-Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+Submit bugs to https://github.com/ShermanTsang/AirSpace/discussions/categories/potential-bugs
 
-Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
+Submit feature ideas to https://github.com/ShermanTsang/AirSpace/discussions/categories/feature-ideas
 
 Rules:
 * Search for duplicates (in GitHub Issues and Discussions) before creating a new discussion
@@ -19,12 +19,12 @@ Rules:
 
 **Consider including in bug reports**
 
-* `aerospace debug-windows` output, if the problem is about handling some windows
+* `airspace debug-windows` output, if the problem is about handling some windows
 * Screenshots of problematic windows
 * Videos of problematic windows
 * What did you try to resolve the issue?
 * Your config
-* AeroSpace version
+* AirSpace version (or AeroSpace version, if the bug reproduces with upstream AeroSpace)
 * macOS version
 
 **Consider including in feature request**
@@ -47,18 +47,18 @@ Maintainers can apply your patch with arbitrary modifications.
 
 ## Spread the word
 
-Do you like the project? Does AeroSpace finally fix your problems with windows management on macOS? Good to hear it!
+Do you like the project? Does AirSpace finally fix your problems with windows management on macOS? Good to hear it!
 
 * Spread the word in social networks! (Don't forget to share the link :) )
-* Talk about AeroSpace to your colleagues and friends
+* Talk about AirSpace to your colleagues and friends
 * Write a blogpost about your workflows
 * Record a YouTube video
 
 ## Share your workflow and tips
 
-Submit your tips to [the Goodies page](https://nikitabobko.github.io/AeroSpace/goodies). The source code of the page can be found in `./docs` directory
+Submit your tips to [the upstream Goodies page](https://nikitabobko.github.io/AeroSpace/goodies). That page describes upstream AeroSpace; the fork keeps its own copy of the page source in `./docs` directory
 
 ## Support the project financially
 
 Supporting the project financially counts as a contribution (even if it's just a $1/month).
-You can sponsor the project on GitHub Sponsors page: https://github.com/sponsors/nikitabobko
+Upstream AeroSpace, which AirSpace derives from, can be sponsored on its GitHub Sponsors page: https://github.com/sponsors/nikitabobko

@@ -5,7 +5,7 @@ import Network
 
 let usage =
     """
-    USAGE: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <subcommand> [<args>...]
+    USAGE: \(CommandLine.arguments.first ?? "airspace") [-h|--help] [-v|--version] <subcommand> [<args>...]
 
     SUBCOMMANDS:
     \(subcommandDescriptions.sortedBy { $0[0] }.toPaddingTable(columnSeparator: "   ").joined(separator: "\n"))
@@ -39,16 +39,16 @@ struct Main {
             }
             print(
                 """
-                aerospace CLI client version: \(cliClientVersionAndHash)
-                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not responding")
+                airspace CLI client version: \(cliClientVersionAndHash)
+                AirSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not responding")
                 """,
             )
             if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
                 eprint(
                     """
-                    Warning: AeroSpace client/server versions don't match. Possible fixes:
-                      - Restart AeroSpace.app (server restart is required after each update)
-                      - Reinstall and restart AeroSpace (corrupted installation)
+                    Warning: AirSpace client/server versions don't match. Possible fixes:
+                      - Restart AirSpace.app (server restart is required after each update)
+                      - Reinstall and restart AirSpace (corrupted installation)
                     """,
                 )
             }
@@ -75,7 +75,7 @@ struct Main {
             case .customError(let msg):
                 exit(failExitCode, err: msg)
             case .nwError(let e):
-                exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+                exit(failExitCode, err: "Can't connect to AirSpace server. Is AirSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -122,12 +122,12 @@ struct Main {
         if ans.exitCode != EXIT_CODE_ZERO && ans.serverVersionAndHash != cliClientVersionAndHash {
             eprint(
                 """
-                Warning: AeroSpace client/server versions don't match
-                  - aerospace CLI client version: \(cliClientVersionAndHash)
-                  - AeroSpace.app server version: \(ans.serverVersionAndHash)
+                Warning: AirSpace client/server versions don't match
+                  - airspace CLI client version: \(cliClientVersionAndHash)
+                  - AirSpace.app server version: \(ans.serverVersionAndHash)
                   Possible fixes:
-                  - Restart AeroSpace.app (server restart is required after each update)
-                  - Reinstall and restart AeroSpace (corrupted installation)
+                  - Restart AirSpace.app (server restart is required after each update)
+                  - Reinstall and restart AirSpace (corrupted installation)
                 """,
             )
         }

@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 source ./script/setup.sh
 
 build_version="0.0.0-SNAPSHOT"
-codesign_identity="aerospace-codesign-certificate"
+codesign_identity="airspace-codesign-certificate"
 while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
@@ -67,22 +67,22 @@ set +m
 ### PACK ###
 ############
 
-mkdir -p ".release/AeroSpace-v$build_version/manpage" && cp .man/*.1 ".release/AeroSpace-v$build_version/manpage"
-cp -r ./legal ".release/AeroSpace-v$build_version/legal"
-cp -r .shell-completion ".release/AeroSpace-v$build_version/shell-completion"
+mkdir -p ".release/AirSpace-v$build_version/manpage" && cp .man/*.1 ".release/AirSpace-v$build_version/manpage"
+cp -r ./legal ".release/AirSpace-v$build_version/legal"
+cp -r .shell-completion ".release/AirSpace-v$build_version/shell-completion"
 cd .release
-    mkdir -p "AeroSpace-v$build_version/bin" && cp -r aerospace "AeroSpace-v$build_version/bin"
-    cp -r AeroSpace.app "AeroSpace-v$build_version"
-    zip -r "AeroSpace-v$build_version.zip" "AeroSpace-v$build_version"
+    mkdir -p "AirSpace-v$build_version/bin" && cp -r airspace "AirSpace-v$build_version/bin"
+    cp -r AirSpace.app "AirSpace-v$build_version"
+    zip -r "AirSpace-v$build_version.zip" "AirSpace-v$build_version"
 cd -
 
 #################
 ### Brew Cask ###
 #################
-for cask_name in aerospace aerospace-dev; do
+for cask_name in airspace airspace-dev; do
     ./script/build-brew-cask.sh \
         --cask-name "$cask_name" \
-        --zip-uri ".release/AeroSpace-v$build_version.zip" \
+        --zip-uri ".release/AirSpace-v$build_version.zip" \
         --build-version "$build_version"
 done
 

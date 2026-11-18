@@ -24,15 +24,15 @@ let targetMacosVersion: Int = env["SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap
     ?? ProcessInfo.processInfo.operatingSystemVersion.majorVersion
 
 let package = Package(
-    name: "AeroSpacePackage",
+    name: "AirSpacePackage",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
     // And it specifies deploymentTarget for CLI
     platforms: [.macOS("\(targetMacosVersion).0")],
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
-        .executable(name: "aerospace", targets: ["Cli"]),
+        .executable(name: "airspace", targets: ["Cli"]),
         // Don't use this build for release, use xcode instead
-        .executable(name: "AeroSpaceApp", targets: ["AeroSpaceApp"]),
+        .executable(name: "AirSpaceApp", targets: ["AirSpaceApp"]),
         // We only need to expose this as a product for xcode
         .library(name: "AppBundle", targets: ["AppBundle"]),
     ],
@@ -79,7 +79,7 @@ let package = Package(
             swiftSettings: swiftSettings,
         ),
         .executableTarget(
-            name: "AeroSpaceApp",
+            name: "AirSpaceApp",
             dependencies: [
                 .target(name: "AppBundle"),
                 .target(name: "Macros"),

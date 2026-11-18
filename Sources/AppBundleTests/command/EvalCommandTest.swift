@@ -9,7 +9,7 @@ struct EvalCommandTest {
 
     @Test func testParse() {
         testParseSingleCommandSucc("eval 'workspace foo'", EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("workspace foo")))
-        assertEquals(parseCommand("eval").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
+        assertEquals(parseCommand("eval").errorOrNil, "ERROR: Argument '<airspace-shell-expr>' is mandatory")
     }
 
     @Test func testParseDoubleDash() {
@@ -17,7 +17,7 @@ struct EvalCommandTest {
             "eval -- '--anything'",
             EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("--anything")),
         )
-        assertEquals(parseCommand("eval --").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
+        assertEquals(parseCommand("eval --").errorOrNil, "ERROR: Argument '<airspace-shell-expr>' is mandatory")
     }
 
     @Test func testRunSimpleCommand() async {

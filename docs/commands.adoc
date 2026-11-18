@@ -1,4 +1,4 @@
-= AeroSpace Commands
+= AirSpace Commands
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
@@ -7,318 +7,318 @@ Commands documentation is also available as manpages.
 
 == balance-sizes
 ----
-include::aerospace-balance-sizes.adoc[tags=synopsis]
+include::airspace-balance-sizes.adoc[tags=synopsis]
 ----
-include::aerospace-balance-sizes.adoc[tags=purpose]
-include::aerospace-balance-sizes.adoc[tags=body]
+include::airspace-balance-sizes.adoc[tags=purpose]
+include::airspace-balance-sizes.adoc[tags=body]
 
 == close
 ----
-include::aerospace-close.adoc[tags=synopsis]
+include::airspace-close.adoc[tags=synopsis]
 ----
-include::aerospace-close.adoc[tags=purpose]
-include::aerospace-close.adoc[tags=body]
+include::airspace-close.adoc[tags=purpose]
+include::airspace-close.adoc[tags=body]
 
 == close-all-windows-but-current
 ----
-include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
+include::airspace-close-all-windows-but-current.adoc[tags=synopsis]
 ----
-include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
-include::aerospace-close-all-windows-but-current.adoc[tags=body]
+include::airspace-close-all-windows-but-current.adoc[tags=purpose]
+include::airspace-close-all-windows-but-current.adoc[tags=body]
 
 == config
 ----
-include::aerospace-config.adoc[tags=synopsis]
+include::airspace-config.adoc[tags=synopsis]
 ----
-include::aerospace-config.adoc[tags=purpose]
-include::aerospace-config.adoc[tags=body]
+include::airspace-config.adoc[tags=purpose]
+include::airspace-config.adoc[tags=body]
 
 == debug-windows
 ----
-include::aerospace-debug-windows.adoc[tags=synopsis]
+include::airspace-debug-windows.adoc[tags=synopsis]
 ----
-include::aerospace-debug-windows.adoc[tags=purpose]
-include::aerospace-debug-windows.adoc[tags=body]
+include::airspace-debug-windows.adoc[tags=purpose]
+include::airspace-debug-windows.adoc[tags=body]
 
 == echo
 ----
-include::aerospace-echo.adoc[tags=synopsis]
+include::airspace-echo.adoc[tags=synopsis]
 ----
-include::aerospace-echo.adoc[tags=purpose]
-include::aerospace-echo.adoc[tags=body]
+include::airspace-echo.adoc[tags=purpose]
+include::airspace-echo.adoc[tags=body]
 
 == enable
 ----
-include::aerospace-enable.adoc[tags=synopsis]
+include::airspace-enable.adoc[tags=synopsis]
 ----
-include::aerospace-enable.adoc[tags=purpose]
-include::aerospace-enable.adoc[tags=body]
+include::airspace-enable.adoc[tags=purpose]
+include::airspace-enable.adoc[tags=body]
 
 == eval
 ----
-include::aerospace-eval.adoc[tags=synopsis]
+include::airspace-eval.adoc[tags=synopsis]
 ----
-include::aerospace-eval.adoc[tags=purpose]
-include::aerospace-eval.adoc[tags=body]
+include::airspace-eval.adoc[tags=purpose]
+include::airspace-eval.adoc[tags=body]
 
 == exec-and-forget
 ----
-include::aerospace-exec-and-forget.adoc[tags=synopsis]
+include::airspace-exec-and-forget.adoc[tags=synopsis]
 ----
-include::aerospace-exec-and-forget.adoc[tags=purpose]
-include::aerospace-exec-and-forget.adoc[tags=body]
+include::airspace-exec-and-forget.adoc[tags=purpose]
+include::airspace-exec-and-forget.adoc[tags=body]
 
 == false
 ----
-include::aerospace-false.adoc[tags=synopsis]
+include::airspace-false.adoc[tags=synopsis]
 ----
-include::aerospace-false.adoc[tags=purpose]
-include::aerospace-false.adoc[tags=body]
+include::airspace-false.adoc[tags=purpose]
+include::airspace-false.adoc[tags=body]
 
 == flatten-workspace-tree
 ----
-include::aerospace-flatten-workspace-tree.adoc[tags=synopsis]
+include::airspace-flatten-workspace-tree.adoc[tags=synopsis]
 ----
-include::aerospace-flatten-workspace-tree.adoc[tags=purpose]
-include::aerospace-flatten-workspace-tree.adoc[tags=body]
+include::airspace-flatten-workspace-tree.adoc[tags=purpose]
+include::airspace-flatten-workspace-tree.adoc[tags=body]
 
 == focus
 ----
-include::aerospace-focus.adoc[tags=synopsis]
+include::airspace-focus.adoc[tags=synopsis]
 ----
-include::aerospace-focus.adoc[tags=purpose]
-include::aerospace-focus.adoc[tags=body]
+include::airspace-focus.adoc[tags=purpose]
+include::airspace-focus.adoc[tags=body]
 
 == focus-back-and-forth
 ----
 
-include::./aerospace-focus-back-and-forth.adoc[tags=synopsis]
+include::./airspace-focus-back-and-forth.adoc[tags=synopsis]
 ----
-include::./aerospace-focus-back-and-forth.adoc[tags=purpose]
-include::./aerospace-focus-back-and-forth.adoc[tags=body]
+include::./airspace-focus-back-and-forth.adoc[tags=purpose]
+include::./airspace-focus-back-and-forth.adoc[tags=body]
 
 == focus-monitor
 ----
-include::aerospace-focus-monitor.adoc[tags=synopsis]
+include::airspace-focus-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-focus-monitor.adoc[tags=purpose]
-include::aerospace-focus-monitor.adoc[tags=body]
+include::airspace-focus-monitor.adoc[tags=purpose]
+include::airspace-focus-monitor.adoc[tags=body]
 
 == fullscreen
 ----
-include::aerospace-fullscreen.adoc[tags=synopsis]
+include::airspace-fullscreen.adoc[tags=synopsis]
 ----
-include::aerospace-fullscreen.adoc[tags=purpose]
-include::aerospace-fullscreen.adoc[tags=body]
+include::airspace-fullscreen.adoc[tags=purpose]
+include::airspace-fullscreen.adoc[tags=body]
 
 == join-with
 ----
-include::aerospace-join-with.adoc[tags=synopsis]
+include::airspace-join-with.adoc[tags=synopsis]
 ----
-include::aerospace-join-with.adoc[tags=purpose]
-include::aerospace-join-with.adoc[tags=body]
+include::airspace-join-with.adoc[tags=purpose]
+include::airspace-join-with.adoc[tags=body]
 
 == layout
 ----
-include::aerospace-layout.adoc[tags=synopsis]
+include::airspace-layout.adoc[tags=synopsis]
 ----
-include::aerospace-layout.adoc[tags=purpose]
-include::aerospace-layout.adoc[tags=body]
+include::airspace-layout.adoc[tags=purpose]
+include::airspace-layout.adoc[tags=body]
 
 == list-apps
 ----
-include::aerospace-list-apps.adoc[tags=synopsis]
+include::airspace-list-apps.adoc[tags=synopsis]
 ----
-include::aerospace-list-apps.adoc[tags=purpose]
-include::aerospace-list-apps.adoc[tags=body]
+include::airspace-list-apps.adoc[tags=purpose]
+include::airspace-list-apps.adoc[tags=body]
 
 == list-exec-env-vars
 ----
-include::aerospace-list-exec-env-vars.adoc[tags=synopsis]
+include::airspace-list-exec-env-vars.adoc[tags=synopsis]
 ----
-include::aerospace-list-exec-env-vars.adoc[tags=purpose]
-include::aerospace-list-exec-env-vars.adoc[tags=body]
+include::airspace-list-exec-env-vars.adoc[tags=purpose]
+include::airspace-list-exec-env-vars.adoc[tags=body]
 
 == list-modes
 ----
-include::aerospace-list-modes.adoc[tags=synopsis]
+include::airspace-list-modes.adoc[tags=synopsis]
 ----
-include::aerospace-list-modes.adoc[tags=purpose]
-include::aerospace-list-modes.adoc[tags=body]
+include::airspace-list-modes.adoc[tags=purpose]
+include::airspace-list-modes.adoc[tags=body]
 
 == list-monitors
 ----
-include::aerospace-list-monitors.adoc[tags=synopsis]
+include::airspace-list-monitors.adoc[tags=synopsis]
 ----
-include::aerospace-list-monitors.adoc[tags=purpose]
-include::aerospace-list-monitors.adoc[tags=body]
+include::airspace-list-monitors.adoc[tags=purpose]
+include::airspace-list-monitors.adoc[tags=body]
 
 == list-windows
 ----
-include::aerospace-list-windows.adoc[tags=synopsis]
+include::airspace-list-windows.adoc[tags=synopsis]
 ----
-include::aerospace-list-windows.adoc[tags=purpose]
-include::aerospace-list-windows.adoc[tags=body]
+include::airspace-list-windows.adoc[tags=purpose]
+include::airspace-list-windows.adoc[tags=body]
 
 == list-workspaces
 ----
-include::aerospace-list-workspaces.adoc[tags=synopsis]
+include::airspace-list-workspaces.adoc[tags=synopsis]
 ----
-include::aerospace-list-workspaces.adoc[tags=purpose]
-include::aerospace-list-workspaces.adoc[tags=body]
+include::airspace-list-workspaces.adoc[tags=purpose]
+include::airspace-list-workspaces.adoc[tags=body]
 
 == macos-native-fullscreen
 ----
-include::aerospace-macos-native-fullscreen.adoc[tags=synopsis]
+include::airspace-macos-native-fullscreen.adoc[tags=synopsis]
 ----
-include::aerospace-macos-native-fullscreen.adoc[tags=purpose]
-include::aerospace-macos-native-fullscreen.adoc[tags=body]
+include::airspace-macos-native-fullscreen.adoc[tags=purpose]
+include::airspace-macos-native-fullscreen.adoc[tags=body]
 
 == macos-native-minimize
 ----
-include::aerospace-macos-native-minimize.adoc[tags=synopsis]
+include::airspace-macos-native-minimize.adoc[tags=synopsis]
 ----
-include::aerospace-macos-native-minimize.adoc[tags=purpose]
-include::aerospace-macos-native-minimize.adoc[tags=body]
+include::airspace-macos-native-minimize.adoc[tags=purpose]
+include::airspace-macos-native-minimize.adoc[tags=body]
 
 == mode
 ----
-include::aerospace-mode.adoc[tags=synopsis]
+include::airspace-mode.adoc[tags=synopsis]
 ----
-include::aerospace-mode.adoc[tags=purpose]
-include::aerospace-mode.adoc[tags=body]
+include::airspace-mode.adoc[tags=purpose]
+include::airspace-mode.adoc[tags=body]
 
 [#move]
 == move
 ----
-include::aerospace-move.adoc[tags=synopsis]
+include::airspace-move.adoc[tags=synopsis]
 ----
-include::aerospace-move.adoc[tags=purpose]
-include::aerospace-move.adoc[tags=body]
+include::airspace-move.adoc[tags=purpose]
+include::airspace-move.adoc[tags=body]
 
 == move-mouse
 ----
-include::./aerospace-move-mouse.adoc[tags=synopsis]
+include::./airspace-move-mouse.adoc[tags=synopsis]
 ----
-include::./aerospace-move-mouse.adoc[tags=purpose]
-include::./aerospace-move-mouse.adoc[tags=body]
+include::./airspace-move-mouse.adoc[tags=purpose]
+include::./airspace-move-mouse.adoc[tags=body]
 
 == move-node-to-monitor
 ----
-include::aerospace-move-node-to-monitor.adoc[tags=synopsis]
+include::airspace-move-node-to-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-move-node-to-monitor.adoc[tags=purpose]
-include::aerospace-move-node-to-monitor.adoc[tags=body]
+include::airspace-move-node-to-monitor.adoc[tags=purpose]
+include::airspace-move-node-to-monitor.adoc[tags=body]
 
 == move-node-to-workspace
 ----
-include::aerospace-move-node-to-workspace.adoc[tags=synopsis]
+include::airspace-move-node-to-workspace.adoc[tags=synopsis]
 ----
-include::aerospace-move-node-to-workspace.adoc[tags=purpose]
-include::aerospace-move-node-to-workspace.adoc[tags=body]
+include::airspace-move-node-to-workspace.adoc[tags=purpose]
+include::airspace-move-node-to-workspace.adoc[tags=body]
 
 == move-workspace-to-monitor
 ----
-include::aerospace-move-workspace-to-monitor.adoc[tags=synopsis]
+include::airspace-move-workspace-to-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-move-workspace-to-monitor.adoc[tags=purpose]
-include::aerospace-move-workspace-to-monitor.adoc[tags=body]
+include::airspace-move-workspace-to-monitor.adoc[tags=purpose]
+include::airspace-move-workspace-to-monitor.adoc[tags=body]
 
 == reload-config
 ----
-include::aerospace-reload-config.adoc[tags=synopsis]
+include::airspace-reload-config.adoc[tags=synopsis]
 ----
-include::aerospace-reload-config.adoc[tags=purpose]
-include::aerospace-reload-config.adoc[tags=body]
+include::airspace-reload-config.adoc[tags=purpose]
+include::airspace-reload-config.adoc[tags=body]
 
 == resize
 ----
-include::aerospace-resize.adoc[tags=synopsis]
+include::airspace-resize.adoc[tags=synopsis]
 ----
-include::aerospace-resize.adoc[tags=purpose]
-include::aerospace-resize.adoc[tags=body]
+include::airspace-resize.adoc[tags=purpose]
+include::airspace-resize.adoc[tags=body]
 
 == run-callback
 ----
-include::aerospace-run-callback.adoc[tags=synopsis]
+include::airspace-run-callback.adoc[tags=synopsis]
 ----
-include::aerospace-run-callback.adoc[tags=purpose]
-include::aerospace-run-callback.adoc[tags=body]
+include::airspace-run-callback.adoc[tags=purpose]
+include::airspace-run-callback.adoc[tags=body]
 
 == split
 ----
-include::aerospace-split.adoc[tags=synopsis]
+include::airspace-split.adoc[tags=synopsis]
 ----
-include::aerospace-split.adoc[tags=purpose]
-include::aerospace-split.adoc[tags=body]
+include::airspace-split.adoc[tags=purpose]
+include::airspace-split.adoc[tags=body]
 
 == subscribe
 ----
-include::aerospace-subscribe.adoc[tags=synopsis]
+include::airspace-subscribe.adoc[tags=synopsis]
 ----
-include::aerospace-subscribe.adoc[tags=purpose]
-include::aerospace-subscribe.adoc[tags=body]
+include::airspace-subscribe.adoc[tags=purpose]
+include::airspace-subscribe.adoc[tags=body]
 
 == swap
 ----
-include::aerospace-swap.adoc[tags=synopsis]
+include::airspace-swap.adoc[tags=synopsis]
 ----
-include::aerospace-swap.adoc[tags=purpose]
-include::aerospace-swap.adoc[tags=body]
+include::airspace-swap.adoc[tags=purpose]
+include::airspace-swap.adoc[tags=body]
 
 == test
 ----
-include::aerospace-test.adoc[tags=synopsis]
+include::airspace-test.adoc[tags=synopsis]
 ----
-include::aerospace-test.adoc[tags=purpose]
-include::aerospace-test.adoc[tags=body]
+include::airspace-test.adoc[tags=purpose]
+include::airspace-test.adoc[tags=body]
 
 == test-not
 ----
-include::aerospace-test-not.adoc[tags=synopsis]
+include::airspace-test-not.adoc[tags=synopsis]
 ----
-include::aerospace-test-not.adoc[tags=purpose]
-include::aerospace-test-not.adoc[tags=body]
+include::airspace-test-not.adoc[tags=purpose]
+include::airspace-test-not.adoc[tags=body]
 
 
 == summon-workspace
 ----
-include::./aerospace-summon-workspace.adoc[tags=synopsis]
+include::./airspace-summon-workspace.adoc[tags=synopsis]
 ----
-include::./aerospace-summon-workspace.adoc[tags=purpose]
-include::./aerospace-summon-workspace.adoc[tags=body]
+include::./airspace-summon-workspace.adoc[tags=purpose]
+include::./airspace-summon-workspace.adoc[tags=body]
 
 == trigger-binding
 ----
-include::aerospace-trigger-binding.adoc[tags=synopsis]
+include::airspace-trigger-binding.adoc[tags=synopsis]
 ----
-include::aerospace-trigger-binding.adoc[tags=purpose]
-include::aerospace-trigger-binding.adoc[tags=body]
+include::airspace-trigger-binding.adoc[tags=purpose]
+include::airspace-trigger-binding.adoc[tags=body]
 
 == true
 ----
-include::aerospace-true.adoc[tags=synopsis]
+include::airspace-true.adoc[tags=synopsis]
 ----
-include::aerospace-true.adoc[tags=purpose]
-include::aerospace-true.adoc[tags=body]
+include::airspace-true.adoc[tags=purpose]
+include::airspace-true.adoc[tags=body]
 
 == volume
 ----
-include::./aerospace-volume.adoc[tags=synopsis]
+include::./airspace-volume.adoc[tags=synopsis]
 ----
-include::./aerospace-volume.adoc[tags=purpose]
-include::./aerospace-volume.adoc[tags=body]
+include::./airspace-volume.adoc[tags=purpose]
+include::./airspace-volume.adoc[tags=body]
 
 == workspace
 ----
-include::aerospace-workspace.adoc[tags=synopsis]
+include::airspace-workspace.adoc[tags=synopsis]
 ----
-include::aerospace-workspace.adoc[tags=purpose]
-include::aerospace-workspace.adoc[tags=body]
+include::airspace-workspace.adoc[tags=purpose]
+include::airspace-workspace.adoc[tags=body]
 
 == workspace-back-and-forth
 ----
-include::aerospace-workspace-back-and-forth.adoc[tags=synopsis]
+include::airspace-workspace-back-and-forth.adoc[tags=synopsis]
 ----
-include::aerospace-workspace-back-and-forth.adoc[tags=purpose]
-include::aerospace-workspace-back-and-forth.adoc[tags=body]
+include::airspace-workspace-back-and-forth.adoc[tags=purpose]
+include::airspace-workspace-back-and-forth.adoc[tags=body]

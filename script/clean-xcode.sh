@@ -7,5 +7,5 @@ source ./script/setup.sh
 rm -rf ~/Library/Developer/Xcode/DerivedData/AeroSpace-*
 rm -rf ./xcode/.xcode-build
 
-rm -rf ./xcode/AeroSpace.xcodeproj
+rm -rf ./xcode/AirSpace.xcodeproj
 ./generate.sh

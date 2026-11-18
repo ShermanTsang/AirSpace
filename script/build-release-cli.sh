@@ -3,7 +3,7 @@ cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
 build_info_file='' # mandatory
-codesign_identity="aerospace-codesign-certificate"
+codesign_identity="airspace-codesign-certificate"
 while test $# -gt 0; do
     case $1 in
         --build-info-file) build_info_file="$2"; shift 2;;
@@ -15,7 +15,7 @@ done
 if test -z "$build_info_file"; then echo "--build-info-file is mandatory" > /dev/stderr; exit 1; fi
 
 export SWIFTPM_WARNINGS_AS_ERRORS=1
-swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product aerospace)
+swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product airspace)
 swift "${swift_build_cli[@]}" \
     -Xlinker -sectcreate \
     -Xlinker __TEXT \
@@ -23,15 +23,15 @@ swift "${swift_build_cli[@]}" \
     -Xlinker "$build_info_file"
 cli_bin_path="$(swift "${swift_build_cli[@]}" --show-bin-path)"
 
-cp -r "$cli_bin_path/aerospace" .release/aerospace
+cp -r "$cli_bin_path/airspace" .release/airspace
 
 # Binary reproducibility: strip non-portable rpaths
 # https://github.com/swiftlang/swift-package-manager/issues/10760
-/usr/bin/xcrun objdump --macho --rpaths --no-leading-headers --arch all .release/aerospace |
+/usr/bin/xcrun objdump --macho --rpaths --no-leading-headers --arch all .release/airspace |
     grep -vE '^(@|/usr/lib/swift$)' |
     sort -u |
     while IFS= read -r rpath; do
-        install_name_tool -delete_rpath "$rpath" .release/aerospace
+        install_name_tool -delete_rpath "$rpath" .release/airspace
     done
 
-codesign -s "$codesign_identity" .release/aerospace
+codesign -s "$codesign_identity" .release/airspace

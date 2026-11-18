@@ -17,7 +17,7 @@ public func bugPrompt(_ __message: String = "", isDie: Bool = false, fileId: MyF
     let thread = Thread.current
     return """
         Please report to:
-            https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+            https://github.com/ShermanTsang/AirSpace/discussions/categories/potential-bugs
             Please describe what you did to trigger this error
 
         Message: \(_message)
@@ -46,9 +46,9 @@ public func dieT<T>(_ __message: String = "", fileId: MyFileId = #myFileId) -> T
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringTermination
-                ? "aerospace-runtime-error-recursion.txt"
-                : "aerospace-runtime-error.txt",
-            title: "AeroSpace Runtime Error",
+                ? "airspace-runtime-error-recursion.txt"
+                : "airspace-runtime-error.txt",
+            title: "AirSpace Runtime Error",
             message: message,
         )
     }

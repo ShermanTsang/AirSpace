@@ -6,10 +6,10 @@ export SWIFTPM_WARNINGS_AS_ERRORS=1
 ./build-debug.sh
 ./swift-test.sh
 
-./.debug/aerospace -h > /dev/null
-./.debug/aerospace --help > /dev/null
-./.debug/aerospace -v | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
-./.debug/aerospace --version | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
+./.debug/airspace -h > /dev/null
+./.debug/airspace --help > /dev/null
+./.debug/airspace -v | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
+./.debug/airspace --version | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
 
 ./lint.sh
 ./generate.sh

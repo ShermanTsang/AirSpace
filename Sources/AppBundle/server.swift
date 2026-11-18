@@ -17,6 +17,38 @@ func startUnixSocketServer() {
     listener.start(queue: .global())
 }
 
+/// Upstream AeroSpace's socket. AirSpace has its own socket, so a live socket at this path means AeroSpace.app is running too
+let upstreamAeroSpaceSocketPath = "/tmp/bobko.aerospace-\(unixUserName).sock"
+
+@MainActor
+func warnIfUpstreamAeroSpaceIsRunning() async {
+    guard socketPath != upstreamAeroSpaceSocketPath else { return }
+    let connection = NWConnection(to: NWEndpoint.unix(path: upstreamAeroSpaceSocketPath), using: .tcp)
+    defer { connection.cancel() }
+    let isUpstreamRunning: Bool
+    if let connectionError = await connection.initConnection().error {
+        switch connectionError {
+            case .customError: isUpstreamRunning = true // The server answered, but speaks an incompatible protocol version
+            case .nwError: isUpstreamRunning = false // Can't connect, AeroSpace.app is not running
+        }
+    } else {
+        isUpstreamRunning = true // The server answered
+    }
+    if !isUpstreamRunning { return }
+    if MessageModel.shared.message != nil { return } // Don't hide config diagnostics
+    MessageModel.shared.message = Message(
+        title: "Two tiling window managers are running",
+        description: "AeroSpace is running while \(aeroSpaceAppName) starts",
+        body: """
+            AeroSpace (upstream) and \(aeroSpaceAppName) are both running. Both apps rearrange the same windows, so they will \
+            fight over your window layout.
+
+            Quit AeroSpace (or \(aeroSpaceAppName)) and keep only one tiling window manager running.
+            """,
+        containsWarnings: true,
+    )
+}
+
 func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     if serverArgs.isReadOnly { return }
     if !isDebug { return }
@@ -73,7 +105,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             await answerToClient(
                 exitCode: EXIT_CODE_TWO,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
-                    "You can use 'aerospace enable on' to enable the server",
+                    "You can use 'airspace enable on' to enable the server",
             )
             continue
         }
@@ -109,7 +141,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                         )
                     }
                 if request.windowId == nil || request.workspace == nil {
-                    answer.stderr += "\n\nAeroSpace client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSPACE_WINDOW_ID and AEROSPACE_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explicit 'null' in the JSON."
+                    answer.stderr += "\n\nAirSpace client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSPACE_WINDOW_ID and AEROSPACE_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explicit 'null' in the JSON."
                 }
                 await answerToClient(answer)
                 continue

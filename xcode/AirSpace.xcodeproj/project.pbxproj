@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		56B6850572B268D8D751F2D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D12C364AA6F9B9A643D72FAB /* Assets.xcassets */; };
+		601DC7F28CC12E5C404861F4 /* AirSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA48511A7AFB3B1FE430715 /* AirSpaceApp.swift */; };
+		B26CE1D1F3EF0AEA6014A52F /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = CC9F19E6F2DAC1905C007B11 /* AppBundle */; };
+		B603B62B5E136F9301CF9759 /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 6A2AED75A8ECA6D70A9338E1 /* default-config.toml */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5DA48511A7AFB3B1FE430715 /* AirSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirSpaceApp.swift; sourceTree = "<group>"; };
+		6A2AED75A8ECA6D70A9338E1 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
+		B37335200EF3CB1D0384EB7C /* AirSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C37457CC2873BB3585EE1D00 /* AirSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AirSpace.entitlements; sourceTree = "<group>"; };
+		D12C364AA6F9B9A643D72FAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0AF7461B17CC0A14E0F3552 /* airspace-package-symlink */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "airspace-package-symlink"; path = "airspace-package-symlink"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F9E2D5716310A776BBC60B1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B26CE1D1F3EF0AEA6014A52F /* AppBundle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		071778C46FC67C30B4F24676 = {
+			isa = PBXGroup;
+			children = (
+				735D3FA13B0A6188D19E4521 /* AirSpaceApp */,
+				6C442EC61B59D5D7713BA172 /* config-examples */,
+				60FE4BE5F2920D6CA07FF747 /* Packages */,
+				F1D587582303C0423F7C734E /* resources */,
+				9AEF3B829E33E115DFF6FC1C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		60FE4BE5F2920D6CA07FF747 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				F0AF7461B17CC0A14E0F3552 /* airspace-package-symlink */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		6C442EC61B59D5D7713BA172 /* config-examples */ = {
+			isa = PBXGroup;
+			children = (
+				6A2AED75A8ECA6D70A9338E1 /* default-config.toml */,
+			);
+			name = "config-examples";
+			path = "../docs/config-examples";
+			sourceTree = "<group>";
+		};
+		735D3FA13B0A6188D19E4521 /* AirSpaceApp */ = {
+			isa = PBXGroup;
+			children = (
+				5DA48511A7AFB3B1FE430715 /* AirSpaceApp.swift */,
+			);
+			name = AirSpaceApp;
+			path = ../Sources/AirSpaceApp;
+			sourceTree = "<group>";
+		};
+		9AEF3B829E33E115DFF6FC1C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B37335200EF3CB1D0384EB7C /* AirSpace.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1D587582303C0423F7C734E /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				C37457CC2873BB3585EE1D00 /* AirSpace.entitlements */,
+				D12C364AA6F9B9A643D72FAB /* Assets.xcassets */,
+			);
+			name = resources;
+			path = ../resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5B4D0A7C14018357826E5DF6 /* AirSpace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE3ABACB35F19C602A1FFBFC /* Build configuration list for PBXNativeTarget "AirSpace" */;
+			buildPhases = (
+				0D6C7F9EA1B8946DEA4FF7C2 /* Sources */,
+				B70CB21384DAC140296C44D6 /* Resources */,
+				F9E2D5716310A776BBC60B1D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirSpace;
+			packageProductDependencies = (
+				CC9F19E6F2DAC1905C007B11 /* AppBundle */,
+			);
+			productName = AirSpace;
+			productReference = B37335200EF3CB1D0384EB7C /* AirSpace.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B7C3067ECB0B6D72AE86035A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 80FD343190D2B0F42FB0590D /* Build configuration list for PBXProject "AirSpace" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 071778C46FC67C30B4F24676;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				13EFFF48DDD90307B41E4AE9 /* XCLocalSwiftPackageReference "airspace-package-symlink" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9AEF3B829E33E115DFF6FC1C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5B4D0A7C14018357826E5DF6 /* AirSpace */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B70CB21384DAC140296C44D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56B6850572B268D8D751F2D3 /* Assets.xcassets in Resources */,
+				B603B62B5E136F9301CF9759 /* default-config.toml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0D6C7F9EA1B8946DEA4FF7C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				601DC7F28CC12E5C404861F4 /* AirSpaceApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0B04A295C4A6EA5EF75485C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				AEROSPACE_CODE_SIGN_IDENTITY = "airspace-codesign-certificate";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "$(AEROSPACE_CODE_SIGN_IDENTITY)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6;
+				TOOLCHAINS = org.swift.642202610261a;
+			};
+			name = Release;
+		};
+		3646427B8740184F629F3335 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ../resources/AirSpace.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.shermantsang.airspace.debug;
+				PRODUCT_NAME = "AirSpace-Debug";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6D1081AB67AA9CA0E58EA321 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ../resources/AirSpace.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_LDFLAGS = "$(inherited) $(AEROSPACE_BUILD_INFO_LDFLAGS)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.shermantsang.airspace;
+				PRODUCT_NAME = AirSpace;
+				SDKROOT = macosx;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+			};
+			name = Release;
+		};
+		E42C0E29B224F2D0472A6E2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				AEROSPACE_CODE_SIGN_IDENTITY = "airspace-codesign-certificate";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "$(AEROSPACE_CODE_SIGN_IDENTITY)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6;
+				TOOLCHAINS = org.swift.642202610261a;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		80FD343190D2B0F42FB0590D /* Build configuration list for PBXProject "AirSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E42C0E29B224F2D0472A6E2D /* Debug */,
+				0B04A295C4A6EA5EF75485C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FE3ABACB35F19C602A1FFBFC /* Build configuration list for PBXNativeTarget "AirSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3646427B8740184F629F3335 /* Debug */,
+				6D1081AB67AA9CA0E58EA321 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		13EFFF48DDD90307B41E4AE9 /* XCLocalSwiftPackageReference "airspace-package-symlink" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "airspace-package-symlink";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC9F19E6F2DAC1905C007B11 /* AppBundle */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppBundle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = B7C3067ECB0B6D72AE86035A /* Project object */;
+}

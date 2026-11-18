@@ -17,7 +17,7 @@ enum ConfigFileEditor {
         var errorDescription: String? {
             switch self {
                 case .ambiguousConfigLocation(let candidates):
-                    "AeroSpace can't decide which config file to edit: \(candidates.map(\.path).joined(separator: ", ")). Remove all but one of them."
+                    "AirSpace can't decide which config file to edit: \(candidates.map(\.path).joined(separator: ", ")). Remove all but one of them."
                 case .readFailure(let url, let underlying):
                     "Can't read \(url.path): \(underlying)"
                 case .writeFailure(let url, let underlying):
@@ -25,7 +25,7 @@ enum ConfigFileEditor {
                 case .patcherFailure(let description):
                     "Can't patch the config file: \(description)"
                 case .reloadFailed(let description):
-                    description.isEmpty ? "AeroSpace failed to apply the new config" : description
+                    description.isEmpty ? "AirSpace failed to apply the new config" : description
                 case .configChanged:
                     "This section or the config file location changed while you were editing it. Reopen the editor to load the latest version."
             }

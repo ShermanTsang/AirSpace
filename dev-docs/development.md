@@ -5,7 +5,7 @@ To build/install from sources do the following:
 2. Create codesign certificate in `Keychain Access.app`
 3. Run one of the entry point scripts to build/install from sources
 
-If you struggle to build AeroSpace locally, you can also refer to [builds in GitHub Actions](https://github.com/nikitabobko/AeroSpace/actions?query=branch%3Amain)
+If you struggle to build AirSpace locally, you can also refer to [builds in GitHub Actions](https://github.com/ShermanTsang/AirSpace/actions?query=branch%3Amain)
 
 ## Definitions
 
@@ -22,17 +22,17 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
     -   `brew install bash fish`
 4.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
     -   `rbenv install 3.3.4` (or whatever 3.x version)
-    -   Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
+    -   Install asciidoctor using Ruby `bundler`. `cd AirSpace && bundler install`
 
 ## 2. Create codesign certificate
 
-If you want to run AeroSpace as App Bundle (AeroSpace.app) you need to create self-signed certificate that will be used to codesign AeroSpace.
+If you want to run AirSpace as App Bundle (AirSpace.app) you need to create self-signed certificate that will be used to codesign AirSpace.
 Release artifact is built as App Bundle.
-If you only plan to build the debug version of AeroSpace, you can run it from the terminal and custom certificate is not required.
+If you only plan to build the debug version of AirSpace, you can run it from the terminal and custom certificate is not required.
 
 1.  Open `Keychain Access.app`
 2.  Menu -> `Keychain Access` -> `Certificate Assistance` -> `Create a Certificate...`
-    -   Name: `aerospace-codesign-certificate`
+    -   Name: `airspace-codesign-certificate`
     -   Identity Type: `Self-Signed Root`
     -   Certificate Type: `Code Signing`
 
@@ -42,17 +42,17 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 -   `build-debug.sh` - Build debug build to `.debug` dir by using SPM. (Xcode is not involved)
 -   `test.sh` - Run tests.
 -   `swiftformat.sh` - Format the code.
--   `run-debug.sh` - Run AeroSpace.app debug build.
--   `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
+-   `run-debug.sh` - Run AirSpace.app debug build.
+-   `run-cli.sh` - Run `airspace` in CLI. Arguments are forwarded to `airspace` binary.
 -   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
 -   `build-shell-completion.sh` - Build shell completion to `.shell-completion`.
-    You can test that the completion works properly by sourcing the file `source ./.shell-completion/zsh/_aerospace`
--   `generate.sh` - Regenerate generated project files. `xcode/AeroSpace.xcodeproj` is generated, and some of the source files
+    You can test that the completion works properly by sourcing the file `source ./.shell-completion/zsh/_airspace`
+-   `generate.sh` - Regenerate generated project files. `xcode/AirSpace.xcodeproj` is generated, and some of the source files
     (the source files have `Generated` suffix in their names).
 
 **Release build**
 -   `build-release.sh` - Build release build to `.release` dir by using Xcode.
--   `install-from-sources.sh` - Build release build from sources and install it as `aerospace-dev` brew cask.
+-   `install-from-sources.sh` - Build release build from sources and install it as `airspace-dev` brew cask.
     This script is "work in progress".
     Use it on your own risk.
 
@@ -70,9 +70,9 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 
 Even if you use LSP and another text editor, Xcode is still useful to attach debugger (though you can use `lldb` in CLI).
 
-1.  To open the project in Xcode: File -> Open -> Choose `Package.swift` file instead of `xcode/AeroSpace.xcodeproj`.
+1.  To open the project in Xcode: File -> Open -> Choose `Package.swift` file instead of `xcode/AirSpace.xcodeproj`.
     It's better to open `Package.swift`, because SPM project is more lightweight.
-    `xcode/AeroSpace.xcodeproj` is only used in `*release*.sh` build scripts.
+    `xcode/AirSpace.xcodeproj` is only used in `*release*.sh` build scripts.
 2.  After you opened the project in Xcode.
     Edit Scheme... -> Options -> Console -> Choose `Terminal`.
     This way Accessibility permission will be requested from Terminal.
