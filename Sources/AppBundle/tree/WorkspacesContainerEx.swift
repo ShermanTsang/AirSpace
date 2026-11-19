@@ -33,14 +33,14 @@ extension WorkspacesContainer {
 }
 
 // The returned workspace must be invisible and it must belong to the requested monitor
-@MainActor func getStubWorkspace(for monitor: MonitorInfo) -> Workspace { // todo revisit this API
-    getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
+@MainActor func getStubWorkspace(for monitor: MonitorInfo, excluding name: String? = nil) -> Workspace { // todo revisit this API
+    getStubWorkspace(forPoint: monitor.rect.topLeftCorner, excluding: name)
 }
 
 // todo accepting point parameter looks suboptimal
-@MainActor private func getStubWorkspace(forPoint point: Point) -> Workspace {
+@MainActor private func getStubWorkspace(forPoint point: Point, excluding name: String? = nil) -> Workspace {
     let container = point.monitorApproximation.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
-    if let prev = container.prevVisibleWorkspaceName.map({ Workspace.get(byName: $0) }),
+    if let prev = container.prevVisibleWorkspaceName.flatMap({ $0 == name ? nil : Workspace.get(byName: $0) }),
        !prev.isVisible && prev.workspaceMonitorInfo.rect.topLeftCorner == point && prev.forceAssignedMonitorInfo == nil
     {
         return prev
@@ -50,7 +50,7 @@ extension WorkspacesContainer {
     }
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
-        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitorInfo == nil }
+        .first { $0.name != name && $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitorInfo == nil }
         .orDie("Can't create empty workspace")
 }
 

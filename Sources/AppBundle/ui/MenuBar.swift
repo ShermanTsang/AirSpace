@@ -28,11 +28,14 @@ private struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
-    @State private var dropMessage: String?
+    @State private var actionMessage: String?
     @GestureState private var drag: WorkspaceAppDrag?
     @State private var dropFrames = WorkspaceDropFrames()
     @State private var listFrame: CGRect = .zero
     @State private var contentOffset: CGFloat = 0
+    @State private var contentHeight: CGFloat?
+    @State private var quickBarContentHeight: CGFloat?
+    @State private var expandedIdleGroups: Set<WorkspaceDisplay.ID> = []
     @State private var isListHovered = false
     @State private var isQuickBarPinned = false
 
@@ -41,7 +44,8 @@ private struct WorkspaceMenu: View {
     private let spacing: CGFloat = 8
     private let maxListHeight: CGFloat = 476
 
-    private var showsQuickBar: Bool { viewModel.workspaces.count > 1 && (isQuickBarPinned || drag != nil) }
+    private var hasMultipleSpaces: Bool { viewModel.workspaceGroups.sumOfInt { $0.workspaces.count } > 1 }
+    private var showsQuickBar: Bool { hasMultipleSpaces && (isQuickBarPinned || drag != nil) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -55,7 +59,7 @@ private struct WorkspaceMenu: View {
                     }
                 }
                 Spacer(minLength: 4)
-                if viewModel.axPermissionStatus == .granted, viewModel.isEnabled, viewModel.workspaces.count > 1 {
+                if viewModel.axPermissionStatus == .granted, viewModel.isEnabled, hasMultipleSpaces {
                     Toggle(isOn: $isQuickBarPinned) {
                         Image(systemName: "arrow.up.and.down.and.arrow.left.and.right")
                     }
@@ -88,15 +92,15 @@ private struct WorkspaceMenu: View {
                     Button("Configuration contains warnings") { openWindow(id: settingsWindowId) }
                         .foregroundStyle(.orange)
                 }
-                if let dropMessage {
-                    Label(dropMessage, systemImage: "lock.fill")
+                if let actionMessage {
+                    Label(actionMessage, systemImage: "exclamationmark.circle")
                         .font(.callout)
                         .foregroundStyle(.orange)
                 }
-                if viewModel.workspaces.isEmpty {
+                if viewModel.workspaceGroups.isEmpty {
                     Text("No spaces yet. Open a window to create one.").foregroundStyle(.secondary)
                 } else {
-                    spaceList
+                    scrollableGrid
                 }
             }
         }
@@ -116,40 +120,27 @@ private struct WorkspaceMenu: View {
         .frame(width: 520)
     }
 
-    private var spaceList: some View {
-        VStack(spacing: spacing) {
-            scrollableGrid
-        }
-    }
-
     private var scrollableGrid: some View {
         let targetName = drag.flatMap(dropTarget)
         return ScrollViewReader { scroll in
             ScrollView(.vertical, showsIndicators: false) {
-                let spaces = sortedSpaces
                 // Keep the source tile alive when a drag scrolls it out of view.
-                VStack(spacing: spacing) {
-                    ForEach(Array(stride(from: 0, to: spaces.count, by: columnCount)), id: \.self) { start in
-                        HStack(spacing: spacing) {
-                            ForEach(spaces[start..<min(start + columnCount, spaces.count)], id: \.name) { workspace in
-                                tile(for: workspace, isDropTarget: targetName == workspace.name)
-                            }
-                            if start + 1 == spaces.count {
-                                Color.clear.frame(minWidth: 0, maxWidth: .infinity).frame(height: tileHeight)
-                                    .accessibilityHidden(true)
-                            }
-                        }
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(viewModel.workspaceGroups) { group in
+                        displaySection(group, targetName: targetName)
                     }
                 }
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.trailing, scrollRange > 0 ? 12 : 0)
                 .id(WorkspaceDragArea.grid)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
                 .onGeometryChange(for: CGFloat.self) { -$0.frame(in: .named(WorkspaceDragArea.list)).minY } action: { contentOffset = $0 }
             }
             .frame(height: listHeight)
             .coordinateSpace(name: WorkspaceDragArea.list)
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(WorkspaceDragArea.panel)) } action: { listFrame = $0 }
             .overlay(alignment: .trailing) {
-                if scrollRange > 0 {
+                if let contentHeight, scrollRange > 0 {
                     WorkspaceScrollbar(
                         viewportHeight: listHeight,
                         contentHeight: contentHeight,
@@ -173,7 +164,51 @@ private struct WorkspaceMenu: View {
         }
     }
 
-    private func tile(for workspace: WorkspaceViewModel, isDropTarget: Bool) -> some View {
+    private func displaySection(_ group: WorkspaceDisplayGroup, targetName: String?) -> some View {
+        let spaces = sorted(group.workspaces)
+        let idle = spaces.filter(\.isIdle)
+        let expanded = expandedIdleGroups.contains(group.id)
+        let otherDisplays = viewModel.workspaceGroups.filter { $0.id != group.id }.map(\.display)
+        return VStack(alignment: .leading, spacing: spacing) {
+            Label(group.display.title, systemImage: "display")
+                .font(.subheadline.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
+            spaceRows(spaces.filter { !$0.isIdle }, targetName: targetName, otherDisplays: otherDisplays)
+            if !idle.isEmpty {
+                Button {
+                    if expanded {
+                        expandedIdleGroups.remove(group.id)
+                    } else {
+                        expandedIdleGroups.insert(group.id)
+                    }
+                } label: {
+                    Label("Idle spaces (\(idle.count))", systemImage: expanded ? "chevron.down" : "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.plain)
+                .accessibilityValue(expanded ? "Expanded" : "Collapsed")
+                if expanded { spaceRows(idle, targetName: targetName, otherDisplays: otherDisplays) }
+            }
+        }
+    }
+
+    @ViewBuilder private func spaceRows(_ spaces: [WorkspaceViewModel], targetName: String?, otherDisplays: [WorkspaceDisplay]) -> some View {
+        ForEach(Array(stride(from: 0, to: spaces.count, by: columnCount)), id: \.self) { start in
+            HStack(spacing: spacing) {
+                ForEach(spaces[start..<min(start + columnCount, spaces.count)], id: \.name) { workspace in
+                    tile(for: workspace, isDropTarget: targetName == workspace.name, otherDisplays: otherDisplays)
+                }
+                if start + 1 == spaces.count {
+                    Color.clear.frame(minWidth: 0, maxWidth: .infinity).frame(height: tileHeight)
+                        .accessibilityHidden(true)
+                }
+            }
+        }
+    }
+
+    private func tile(for workspace: WorkspaceViewModel, isDropTarget: Bool, otherDisplays: [WorkspaceDisplay]) -> some View {
         WorkspaceTile(
             workspace: workspace,
             focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
@@ -186,6 +221,8 @@ private struct WorkspaceMenu: View {
                 resetClosedWindowsCache()
             } },
             toggleLock: { runAction { await WorkspaceLocks.shared.toggle(Workspace.get(byName: workspace.name)) } },
+            otherDisplays: otherDisplays,
+            moveToDisplay: { display in moveSpace(workspace.name, to: display) },
             drag: _drag,
             isDropTarget: isDropTarget,
             finishDrag: finishDrag,
@@ -203,33 +240,20 @@ private struct WorkspaceMenu: View {
 
     private var quickDropBar: some View {
         let targetName = drag.flatMap(dropTarget)
-        return LazyVGrid(columns: [GridItem(.adaptive(minimum: 30), spacing: 4)], spacing: 4) {
-            ForEach(sortedSpaces, id: \.name) { workspace in
-                let isTarget = targetName == workspace.name
-                let tint = workspace.isLocked ? Color.orange : Color.accentColor
-                Text(workspace.name)
-                    .font(.caption.weight(.semibold))
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 24)
-                    .foregroundStyle(drag?.workspace == workspace.name ? .secondary : .primary)
-                    .background(isTarget ? tint.opacity(0.25) : Color.primary.opacity(0.075), in: RoundedRectangle(cornerRadius: 5))
-                    .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(isTarget ? tint : .clear))
-                    .help(workspace.name)
-                    .background {
-                        GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: WorkspaceDropFramePreference.self,
-                                value: WorkspaceDropFrames(shortcuts: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
-                            )
+        return ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(viewModel.workspaceGroups) { group in
+                    Text(group.display.title).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 30), spacing: 4)], spacing: 4) {
+                        ForEach(sorted(group.workspaces), id: \.name) { workspace in
+                            quickDropTarget(workspace, in: group.display, isTarget: targetName == workspace.name)
                         }
                     }
+                }
             }
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { quickBarContentHeight = $0 }
         }
-        .padding(8)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.primary.opacity(0.12)))
-        .shadow(color: .black.opacity(0.16), radius: 5, y: 2)
+        .frame(height: min(quickBarContentHeight ?? 136, 136))
         .background {
             GeometryReader { geometry in
                 Color.clear.preference(
@@ -238,6 +262,31 @@ private struct WorkspaceMenu: View {
                 )
             }
         }
+        .padding(8)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.primary.opacity(0.12)))
+        .shadow(color: .black.opacity(0.16), radius: 5, y: 2)
+    }
+
+    private func quickDropTarget(_ workspace: WorkspaceViewModel, in display: WorkspaceDisplay, isTarget: Bool) -> some View {
+        let tint = workspace.isLocked ? Color.orange : Color.accentColor
+        return Text(workspace.name)
+            .font(.caption.weight(.semibold))
+            .lineLimit(1)
+            .frame(maxWidth: .infinity)
+            .frame(height: 24)
+            .foregroundStyle(drag?.workspace == workspace.name ? .secondary : .primary)
+            .background(isTarget ? tint.opacity(0.25) : Color.primary.opacity(0.075), in: RoundedRectangle(cornerRadius: 5))
+            .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(isTarget ? tint : .clear))
+            .help("\(workspace.name) · \(display.title)")
+            .background {
+                GeometryReader { geometry in
+                    Color.clear.preference(
+                        key: WorkspaceDropFramePreference.self,
+                        value: WorkspaceDropFrames(shortcuts: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
+                    )
+                }
+            }
     }
 
     private func dropTarget(_ drag: WorkspaceAppDrag) -> String? {
@@ -258,24 +307,51 @@ private struct WorkspaceMenu: View {
         return nil
     }
 
-    private var sortedSpaces: [WorkspaceViewModel] {
-        guard sortOrder == .active else { return viewModel.workspaces }
-        return viewModel.workspaces.enumerated().sorted {
+    private func sorted(_ spaces: [WorkspaceViewModel]) -> [WorkspaceViewModel] {
+        guard sortOrder == .active else { return spaces }
+        return spaces.enumerated().sorted {
             ($0.element.activityRank, $0.offset) < ($1.element.activityRank, $1.offset)
         }.map(\.element)
     }
 
-    private var listHeight: CGFloat { min(contentHeight, maxListHeight) }
-    private var scrollRange: CGFloat { contentHeight - listHeight }
+    private var listHeight: CGFloat { min(contentHeight ?? maxListHeight, maxListHeight) }
+    private var scrollRange: CGFloat { max(0, (contentHeight ?? 0) - listHeight) }
 
-    private var contentHeight: CGFloat {
-        let rows = CGFloat((viewModel.workspaces.count + columnCount - 1) / columnCount)
-        return rows * tileHeight + max(0, rows - 1) * spacing
+    private func moveSpace(_ name: String, to display: WorkspaceDisplay) {
+        runAction {
+            gcMonitors()
+            guard let workspace = Workspace.all.first(where: { $0.name == name }) else {
+                actionMessage = "Space \(name) is no longer available."
+                return
+            }
+            guard !workspace.isLocked else {
+                actionMessage = workspaceLockedMessage(name)
+                return
+            }
+            guard let monitor = globalSortedMonitorInfos.first(where: { WorkspaceDisplay.ID($0) == display.id }) else {
+                actionMessage = "\(display.title) is no longer connected."
+                return
+            }
+            let focus = globalFocus.workspace
+            let destinationIsFocused = focus.workspaceMonitorInfo.rect.topLeftCorner == monitor.rect.topLeftCorner
+            // Do not displace the user's focused space when moving an unfocused one.
+            let shouldShow = workspace == focus || (workspace.isVisible && !destinationIsFocused)
+            // Match workspace garbage collection so a move cannot make the space disappear.
+            if !shouldShow && workspace.isEffectivelyEmpty && !config.persistentWorkspaces.contains(name) {
+                actionMessage = "Focus space \(name) before moving it. Empty automatic spaces cannot be moved in the background."
+                return
+            }
+            guard moveWorkspace(workspace, to: monitor, showOnDestination: shouldShow) else {
+                actionMessage = "Space \(name) is assigned to another display in the configuration."
+                return
+            }
+            resetClosedWindowsCache()
+        }
     }
 
     private func runAction(_ action: @escaping @MainActor () async -> Void) {
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        dropMessage = nil
+        actionMessage = nil
         Task.startUnstructured {
             try await runLightSession(.menuBarButton, token, body: action)
         }
@@ -286,14 +362,14 @@ private struct WorkspaceMenu: View {
         let source = Workspace.get(byName: item.workspace)
         let target = Workspace.get(byName: targetName)
         if target.isLocked || source.isLocked {
-            dropMessage = workspaceLockedMessage(target.isLocked ? target.name : source.name)
+            actionMessage = workspaceLockedMessage(target.isLocked ? target.name : source.name)
             return
         }
         runAction {
             let windows = item.app.windowIDs.compactMap { Window.get(byId: $0) }.filter { $0.membershipWorkspace == source }
             guard !windows.isEmpty else { return }
             if let locked = lockedWorkspaceForTransfer(windows[0], to: target) {
-                dropMessage = workspaceLockedMessage(locked.name)
+                actionMessage = workspaceLockedMessage(locked.name)
                 return
             }
             resetClosedWindowsCache()
@@ -406,6 +482,8 @@ private struct WorkspaceTile: View {
     let chooseLayout: (WorkspaceLayoutMode) -> Void
     let restoreLayout: () -> Void
     let toggleLock: () -> Void
+    let otherDisplays: [WorkspaceDisplay]
+    let moveToDisplay: (WorkspaceDisplay) -> Void
     let drag: GestureState<WorkspaceAppDrag?>
     let isDropTarget: Bool
     let finishDrag: (WorkspaceAppDrag) -> Void
@@ -424,7 +502,8 @@ private struct WorkspaceTile: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .help("Focus \(workspace.name)")
+                .help(workspace.isFocused ? "Focused space" : workspace.isVisible ? "Visible on this display" : "Focus \(workspace.name)")
+                .accessibilityValue(workspace.isFocused ? "Focused" : workspace.isVisible ? "Visible" : "Hidden")
                 Menu {
                     ForEach(WorkspaceLayoutMode.allCases, id: \.self) { mode in
                         Button { chooseLayout(mode) } label: {
@@ -448,6 +527,20 @@ private struct WorkspaceTile: View {
                 .help("Layout: \(workspace.mode.title)")
                 .accessibilityLabel("Layout: \(workspace.mode.title)")
                 Spacer()
+                if !otherDisplays.isEmpty {
+                    Menu {
+                        ForEach(otherDisplays) { display in
+                            Button(display.title) { moveToDisplay(display) }
+                        }
+                    } label: {
+                        Image(systemName: "display.2")
+                    }
+                    .menuIndicator(.hidden)
+                    .fixedSize()
+                    .disabled(workspace.isLocked)
+                    .help("Move space to display")
+                    .accessibilityLabel("Move \(workspace.name) to display")
+                }
                 Button(action: toggleLock) {
                     Image(systemName: workspace.isLocked ? "lock.fill" : "lock.open")
                         .foregroundStyle(workspace.isLocked ? Color.orange : Color.secondary)

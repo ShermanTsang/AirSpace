@@ -121,9 +121,20 @@ var mainMonitorInfo: MonitorInfo {
     return LazyMonitorInfo(monitorAppKitNsScreenScreensId: screen.index + 1, isMain: true, screen.value)
 }
 
+private let secondaryTestMonitorInfo = MonitorInfoImpl(
+    monitorAppKitNsScreenScreensId: 2,
+    name: "Test external display",
+    displayKey: "test-external-display",
+    rect: Rect(topLeftX: 1920, topLeftY: 0, width: 1920, height: 1080),
+    visibleRect: Rect(topLeftX: 1920, topLeftY: 0, width: 1920, height: 1080),
+    isMain: false,
+)
+
+@TaskLocal var hasSecondaryMonitorForTests = false
+
 var globalUnsortedMonitorInfos: [MonitorInfo] {
     isUnitTest
-        ? [testMonitorInfo]
+        ? (hasSecondaryMonitorForTests ? [testMonitorInfo, secondaryTestMonitorInfo] : [testMonitorInfo])
         : NSScreen.screens.enumerated().map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 

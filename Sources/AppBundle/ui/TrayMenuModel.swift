@@ -9,7 +9,8 @@ public final class TrayMenuModel: ObservableObject {
     @Published var focusedWorkspaceIcons: [NSImage] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
-    @Published var workspaces: [WorkspaceViewModel] = []
+    @Published var workspaceGroups: [WorkspaceDisplayGroup] = []
+    var workspaces: [WorkspaceViewModel] { workspaceGroups.flatMap(\.workspaces) }
     @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
     @Published var lastReloadConfigContainedWarnings: Bool = false
     @Published var axPermissionStatus: AxPermissionStatus = .waitingWithPrompt
@@ -29,27 +30,48 @@ enum AxPermissionStatus: Equatable {
     TrayMenuModel.shared.focusedWorkspaceIcons = Array(focus.workspace.allLeafWindowsRecursive.lazy.compactMap {
         NSRunningApplication(processIdentifier: $0.app.pid)?.icon
     }.prefix(3))
-    TrayMenuModel.shared.workspaces = Workspace.all.map { workspace in
-        let apps = workspace.lockableWindows.grouped { $0.app.pid }.map { pid, windows in
-            let runningApp = NSRunningApplication(processIdentifier: pid)
-            let name = windows.first?.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app"
-            return WorkspaceApp(id: pid, name: name, icon: runningApp?.icon, windowIDs: windows.map(\.windowId))
-        }.sorted {
-            let order = $0.name.localizedStandardCompare($1.name)
-            return order == .orderedSame ? $0.id < $1.id : order == .orderedAscending
-        }
-        let root = workspace.rootTilingContainer
-        return WorkspaceViewModel(
-            name: workspace.name,
-            apps: apps,
-            mode: WorkspaceLayoutMode(layout: root.layout, orientation: root.orientation),
-            hasDisplayLayout: WorkspaceDisplayLayouts.shared.remembered(workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey) != nil,
-            canRememberDisplayLayout: workspace.workspaceMonitorInfo.displayKey != nil,
-            isLocked: workspace.isLocked,
-            isFocused: focus.workspace == workspace,
-            isVisible: workspace.isVisible,
+    let monitors = globalSortedMonitorInfos
+    // A newly connected display may not have a visible space until its first layout.
+    for monitor in monitors { _ = monitor.visibleWorkspace }
+    let workspacesByDisplay = Workspace.all.grouped { $0.workspaceMonitorInfo.rect.topLeftCorner }
+    TrayMenuModel.shared.workspaceGroups = monitors.enumerated().map { index, monitor in
+        WorkspaceDisplayGroup(
+            display: WorkspaceDisplay(monitor: monitor, number: index + 1),
+            workspaces: (workspacesByDisplay[monitor.rect.topLeftCorner] ?? []).map { workspace in
+                WorkspaceViewModel(workspace: workspace, focused: focus.workspace == workspace)
+            },
         )
     }
+}
+
+struct WorkspaceDisplay: Identifiable {
+    enum ID: Hashable {
+        case physical(String)
+        case position(Point)
+
+        init(_ monitor: MonitorInfo) {
+            self = monitor.displayKey.map(Self.physical) ?? .position(monitor.rect.topLeftCorner)
+        }
+    }
+
+    let id: ID
+    let name: String
+    let number: Int
+
+    init(monitor: MonitorInfo, number: Int) {
+        id = ID(monitor)
+        name = monitor.name
+        self.number = number
+    }
+
+    var title: String { "Display \(number) · \(name)" }
+}
+
+struct WorkspaceDisplayGroup: Identifiable {
+    let display: WorkspaceDisplay
+    let workspaces: [WorkspaceViewModel]
+
+    var id: WorkspaceDisplay.ID { display.id }
 }
 
 struct WorkspaceApp: Identifiable {
@@ -69,6 +91,27 @@ struct WorkspaceViewModel {
     let isFocused: Bool
     let isVisible: Bool
 
+    @MainActor init(workspace: Workspace, focused: Bool) {
+        name = workspace.name
+        apps = workspace.lockableWindows.grouped { $0.app.pid }.map { pid, windows in
+            let runningApp = NSRunningApplication(processIdentifier: pid)
+            let name = windows.first?.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app"
+            return WorkspaceApp(id: pid, name: name, icon: runningApp?.icon, windowIDs: windows.map(\.windowId))
+        }.sorted {
+            let order = $0.name.localizedStandardCompare($1.name)
+            return order == .orderedSame ? $0.id < $1.id : order == .orderedAscending
+        }
+        let root = workspace.rootTilingContainer
+        let displayKey = workspace.workspaceMonitorInfo.displayKey
+        mode = WorkspaceLayoutMode(layout: root.layout, orientation: root.orientation)
+        hasDisplayLayout = WorkspaceDisplayLayouts.shared.remembered(workspace: workspace.name, display: displayKey) != nil
+        canRememberDisplayLayout = displayKey != nil
+        isLocked = workspace.isLocked
+        isFocused = focused
+        isVisible = workspace.isVisible
+    }
+
+    var isIdle: Bool { apps.isEmpty && !isVisible && !isFocused && !isLocked }
     var activityRank: Int { isFocused ? 0 : isVisible ? 1 : apps.isEmpty ? 3 : 2 }
 }
 
