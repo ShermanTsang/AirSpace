@@ -95,40 +95,55 @@ private struct WorkspaceTile: View {
     private static let maxVisibleApps = 3
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: workspace.layoutName == "Tiles" ? "rectangle.split.2x1" : "rectangle.stack")
-                .font(.system(size: 17, weight: .medium))
-                .foregroundStyle(workspace.isFocused ? Color.accentColor : Color.secondary)
+        HStack(spacing: 10) {
+            Text(spaceAbbreviation(of: workspace.name))
+                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .foregroundStyle(.primary.opacity(0.75))
                 .frame(width: 42, height: 42)
                 .background(Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 12))
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(spacing: 6) {
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.primary.opacity(0.08), lineWidth: 1))
+            VStack(alignment: .leading, spacing: 3) {
+                if workspace.name != spaceAbbreviation(of: workspace.name) {
                     Text(workspace.name).font(.headline).lineLimit(1)
+                }
+                if workspace.apps.isEmpty {
+                    Text("Empty").font(.caption).foregroundStyle(.secondary)
+                } else {
+                    HStack(spacing: 4) {
+                        ForEach(Array(workspace.apps.prefix(Self.maxVisibleApps).enumerated()), id: \.offset) { _, app in
+                            Group {
+                                if let icon = app.icon {
+                                    Image(nsImage: icon).resizable().scaledToFit()
+                                } else {
+                                    Image(systemName: "app")
+                                }
+                            }
+                            .frame(width: 20, height: 20)
+                            .accessibilityLabel(Text(app.name))
+                            .help(app.name)
+                        }
+                        if workspace.apps.count > Self.maxVisibleApps {
+                            Text("+\(workspace.apps.count - Self.maxVisibleApps)")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .fixedSize()
+                }
+            }
+            Spacer(minLength: 4)
+            VStack(alignment: .trailing, spacing: 4) {
+                HStack(spacing: 4) {
                     if workspace.isFocused {
-                        Text("Current").font(.caption2.weight(.medium)).foregroundStyle(.tint)
+                        Image(systemName: "checkmark.circle.fill").font(.caption).foregroundStyle(.tint)
                     } else if workspace.isVisible {
                         Image(systemName: "display").font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 Text("\(workspace.layoutName) · \(workspace.orientationName)\(workspace.usesDefaultLayout ? " · Default" : "")")
-                    .font(.caption).foregroundStyle(.secondary).lineLimit(1)
-            }
-            Spacer(minLength: 4)
-            HStack(spacing: 3) {
-                ForEach(Array(workspace.apps.prefix(Self.maxVisibleApps).enumerated()), id: \.offset) { _, app in
-                    Group {
-                        if let icon = app.icon {
-                            Image(nsImage: icon).resizable().interpolation(.high)
-                        } else {
-                            Image(systemName: "app").resizable().scaledToFit()
-                        }
-                    }
-                    .frame(width: 20, height: 20)
-                    .help(app.name)
-                }
-                if workspace.apps.count > Self.maxVisibleApps {
-                    Text("+\(workspace.apps.count - Self.maxVisibleApps)").font(.caption2).foregroundStyle(.secondary)
-                }
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
         }
         .padding(.horizontal, 12)

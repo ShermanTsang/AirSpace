@@ -84,15 +84,7 @@ private struct SettingsView: View {
 
     private var menuBarSection: some View {
         Section {
-            Picker("Workspace display style", selection: Binding(
-                get: { trayModel.experimentalUISettings.displayStyle },
-                set: { trayModel.experimentalUISettings.displayStyle = $0 },
-            )) {
-                ForEach(MenuBarStyle.allCases) { style in
-                    Text(style.title).tag(style)
-                }
-            }
-            Text("The focused workspace shows up to three window icons on macOS 14 or later.")
+            Text("On macOS 14 or later, the menu bar shows the current space and up to three window icons.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } header: {

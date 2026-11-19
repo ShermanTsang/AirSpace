@@ -6,13 +6,10 @@ public final class TrayMenuModel: ObservableObject {
 
     private init() {}
 
-    @Published var trayText: String = ""
-    @Published var trayItems: [TrayItem] = []
     @Published var focusedWorkspaceIcons: [NSImage] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
-    @Published var experimentalUISettings: ExperimentalUISettings = ExperimentalUISettings()
     @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
     @Published var lastReloadConfigContainedWarnings: Bool = false
     @Published var axPermissionStatus: AxPermissionStatus = .waitingWithPrompt
@@ -28,20 +25,10 @@ enum AxPermissionStatus: Equatable {
 }
 
 @MainActor func updateTrayText() {
-    let sortedMonitors = globalSortedMonitorInfos
     let focus = globalFocus
     TrayMenuModel.shared.focusedWorkspaceIcons = Array(focus.workspace.allLeafWindowsRecursive.lazy.compactMap {
         NSRunningApplication(processIdentifier: $0.app.pid)?.icon
     }.prefix(3))
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
-        sortedMonitors
-        .lazy
-        .map {
-            let hasFullscreenWindows = $0.visibleWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
-            let visibleWorkspaceName = hasFullscreenWindows ? "[\($0.visibleWorkspace.name)]" : $0.visibleWorkspace.name
-            return ($0.visibleWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + visibleWorkspaceName
-        }
-        .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
         var seenPids = Set<Int32>()
         let workspaceApps = $0.allLeafWindowsRecursive.compactMap { window -> WorkspaceApp? in
@@ -49,14 +36,6 @@ enum AxPermissionStatus: Equatable {
             let runningApp = NSRunningApplication(processIdentifier: window.app.pid)
             return WorkspaceApp(name: window.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app", icon: runningApp?.icon)
         }.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        let apps = Set(workspaceApps.map(\.name))
-        let dash = " - "
-        let suffix = switch true {
-            case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
-            case $0.isVisible: dash + $0.workspaceMonitorInfo.name
-            default: ""
-        }
-        let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
         let root = $0.children.filterIsInstance(of: TilingContainer.self).first
         let layout = root?.layout ?? config.defaultRootContainerLayout
         let orientation = root.map { $0.orientation == .h ? "Horizontal" : "Vertical" } ?? {
@@ -68,7 +47,6 @@ enum AxPermissionStatus: Equatable {
         }()
         return WorkspaceViewModel(
             name: $0.name,
-            suffix: suffix,
             apps: workspaceApps,
             layoutName: layout == .tiles ? "Tiles" : "Accordion",
             orientationName: orientation,
@@ -76,28 +54,11 @@ enum AxPermissionStatus: Equatable {
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,
-            hasFullscreenWindows: hasFullscreenWindows,
         )
     }.sorted { lhs, rhs in
         if lhs.isEffectivelyEmpty != rhs.isEffectivelyEmpty { return !lhs.isEffectivelyEmpty }
         return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
     }
-    var items = sortedMonitors.map {
-        let hasFullscreenWindows = $0.visibleWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
-        return TrayItem(
-            type: .workspace,
-            name: $0.visibleWorkspace.name,
-            isActive: $0.visibleWorkspace == focus.workspace,
-            hasFullscreenWindows: hasFullscreenWindows,
-        )
-    }
-    let mode = activeMode?.takeIf { $0 != mainModeId }?.first.map {
-        TrayItem(type: .mode, name: $0.uppercased(), isActive: true, hasFullscreenWindows: false)
-    }
-    if let mode {
-        items.insert(mode, at: 0)
-    }
-    TrayMenuModel.shared.trayItems = items
 }
 
 struct WorkspaceApp {
@@ -107,7 +68,6 @@ struct WorkspaceApp {
 
 struct WorkspaceViewModel {
     let name: String
-    let suffix: String
     let apps: [WorkspaceApp]
     let layoutName: String
     let orientationName: String
@@ -115,36 +75,4 @@ struct WorkspaceViewModel {
     let isFocused: Bool
     let isEffectivelyEmpty: Bool
     let isVisible: Bool
-    let hasFullscreenWindows: Bool
-}
-
-enum TrayItemType: String, Hashable {
-    case mode
-    case workspace
-}
-
-private let validLetters = "A" ... "Z"
-
-struct TrayItem: Hashable, Identifiable {
-    let type: TrayItemType
-    let name: String
-    let isActive: Bool
-    let hasFullscreenWindows: Bool
-    var systemImageName: String? {
-        // System image type is only valid for numbers 0 to 50 and single capital char workspace name
-        switch Int(name) {
-            case let number?: if !(0 ... 50).contains(number) { return nil }
-            case nil where name.count == 1: if !validLetters.contains(name) { return nil }
-            default: return nil
-        }
-        let lowercasedName = name.lowercased()
-        return switch type {
-            case .mode: "\(lowercasedName).circle"
-            case .workspace where isActive: "\(lowercasedName).square.fill"
-            case .workspace: "\(lowercasedName).square"
-        }
-    }
-    var id: String {
-        return type.rawValue + name
-    }
 }
