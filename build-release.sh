@@ -4,10 +4,14 @@ source ./script/setup.sh
 
 build_version="0.0.0-SNAPSHOT"
 codesign_identity="airspace-codesign-certificate"
+notarize=false
+notarytool_profile=''
 while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         --codesign-identity) codesign_identity="$2"; shift 2;;
+        --notarize) notarize=true; shift;;
+        --notarytool-profile) notarytool_profile="$2"; shift 2;;
         *) echo "Unknown option $1" > /dev/stderr; exit 1 ;;
     esac
 done
@@ -73,8 +77,33 @@ cp -r .shell-completion ".release/AirSpace-v$build_version/shell-completion"
 cd .release
     mkdir -p "AirSpace-v$build_version/bin" && cp -r airspace "AirSpace-v$build_version/bin"
     cp -r AirSpace.app "AirSpace-v$build_version"
-    zip -r "AirSpace-v$build_version.zip" "AirSpace-v$build_version"
+    ditto -c -k --keepParent "AirSpace-v$build_version" "AirSpace-v$build_version.zip"
 cd -
+
+#################
+### Notarize ####
+#################
+
+if $notarize; then
+    if [[ "$codesign_identity" == "-" ]]; then
+        echo "--notarize requires a Developer ID identity passed via --codesign-identity" > /dev/stderr
+        exit 1
+    fi
+    notarize_args=(
+        --zip ".release/AirSpace-v$build_version.zip"
+        --app ".release/AirSpace-v$build_version/AirSpace.app"
+    )
+    if [[ -n "$notarytool_profile" ]]; then
+        notarize_args+=(--keychain-profile "$notarytool_profile")
+    fi
+    ./script/notarize-release.sh "${notarize_args[@]}"
+
+    # Recreate the zip so that it contains the stapled notarization ticket
+    cd .release
+        rm -f "AirSpace-v$build_version.zip"
+        ditto -c -k --keepParent "AirSpace-v$build_version" "AirSpace-v$build_version.zip"
+    cd -
+fi
 
 #################
 ### Brew Cask ###

@@ -1,0 +1,152 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build, for example 1.2.3 or 1.2.3-rc.1 (does not publish)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    env:
+      AEROSPACE_VERBOSE_BUILD: 1
+      SWIFTPM_WARNINGS_AS_ERRORS: 1
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Validate version
+        id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [[ "$EVENT_NAME" == push ]]; then
+            version="${REF_NAME#v}"
+          else
+            version="$INPUT_VERSION"
+          fi
+          if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
+            echo "Invalid version: $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - run: ./.github/gh-actions-runner-xcode-select.sh
+      - run: brew install bash fish
+      - run: HOMEBREW_DISABLE_LOAD_FORMULA=1 brew update
+      - run: brew install swiftly
+      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
+      - name: Import Developer ID certificate
+        if: github.event_name == 'push'
+        id: signing
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$MACOS_CERTIFICATE" || -z "$MACOS_CERTIFICATE_PASSWORD" ]]; then
+            echo "::error::MACOS_CERTIFICATE and MACOS_CERTIFICATE_PASSWORD secrets are required to sign tag releases"
+            exit 1
+          fi
+          keychain="$RUNNER_TEMP/airspace-signing.keychain-db"
+          keychain_password="$(openssl rand -hex 24)"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          printf '%s' "$MACOS_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/airspace-cert.p12"
+          security import "$RUNNER_TEMP/airspace-cert.p12" -k "$keychain" \
+            -P "$MACOS_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain" > /dev/null
+          existing_keychains="$(security list-keychains -d user | sed -e 's/^[[:space:]]*//' -e 's/"//g' | tr '\n' ' ')"
+          # Intentionally word-split: keychain paths don't contain spaces
+          security list-keychains -d user -s "$keychain" $existing_keychains
+          security default-keychain -s "$keychain"
+          identity="$(security find-identity -v -p codesigning "$keychain" |
+            sed -n 's/.*"\(Developer ID Application:.*\)"/\1/p' | head -n 1)"
+          if [[ -z "$identity" ]]; then
+            echo "::error::The imported certificate does not contain a Developer ID Application identity"
+            exit 1
+          fi
+          rm -f "$RUNNER_TEMP/airspace-cert.p12"
+          echo "identity=$identity" >> "$GITHUB_OUTPUT"
+          echo "Imported signing identity: $identity"
+      - name: Build universal release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          EVENT_NAME: ${{ github.event_name }}
+          SIGNING_IDENTITY: ${{ steps.signing.outputs.identity }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == push ]]; then
+            if [[ -z "$APPLE_ID" || -z "$APPLE_APP_SPECIFIC_PASSWORD" || -z "$APPLE_TEAM_ID" ]]; then
+              echo "::error::APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD and APPLE_TEAM_ID secrets are required to notarize tag releases"
+              exit 1
+            fi
+            ./build-release.sh --build-version "$VERSION" --codesign-identity "$SIGNING_IDENTITY" --notarize
+          else
+            # Manual runs build an ad-hoc signed artifact for verification. They never publish.
+            ./build-release.sh --build-version "$VERSION" --codesign-identity -
+          fi
+      - name: Generate checksum
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          cd .release
+          shasum -a 256 "AirSpace-v${VERSION}.zip" > "AirSpace-v${VERSION}.zip.sha256"
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: AirSpace-v${{ steps.version.outputs.version }}-universal
+          path: |
+            .release/AirSpace-v${{ steps.version.outputs.version }}.zip
+            .release/AirSpace-v${{ steps.version.outputs.version }}.zip.sha256
+          if-no-files-found: error
+      - name: Print build logs on failure
+        if: failure()
+        run: |
+          for log in .release/build-cli.log .release/build-app.log; do
+            if [[ -f "$log" ]]; then cat "$log"; fi
+          done
+      - name: Remove temporary signing keychain
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP/airspace-cert.p12"
+          security default-keychain -s login.keychain-db 2>/dev/null || true
+          security delete-keychain "$RUNNER_TEMP/airspace-signing.keychain-db" 2>/dev/null || true
+
+  publish:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4.3.0
+        with:
+          pattern: AirSpace-*-universal
+          merge-multiple: true
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          args=(--verify-tag --draft --title "$TAG" --generate-notes)
+          if [[ "$TAG" == *-* ]]; then args+=(--prerelease); fi
+          # An existing release is never overwritten. A failed upload leaves a draft
+          # for an administrator to inspect before retrying.
+          gh release create "$TAG" AirSpace-*.zip AirSpace-*.zip.sha256 "${args[@]}"
+          gh release edit "$TAG" --draft=false

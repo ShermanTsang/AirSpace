@@ -12,6 +12,11 @@ expected_layout=$(cat <<EOF
 .release/AirSpace.app/Contents/MacOS/AirSpace
 .release/AirSpace.app/Contents/Resources
 .release/AirSpace.app/Contents/Resources/default-config.toml
+.release/AirSpace.app/Contents/Resources/AirSpacePackage_AppBundle.bundle
+.release/AirSpace.app/Contents/Resources/AirSpacePackage_AppBundle.bundle/Contents
+.release/AirSpace.app/Contents/Resources/AirSpacePackage_AppBundle.bundle/Contents/Resources
+.release/AirSpace.app/Contents/Resources/AirSpacePackage_AppBundle.bundle/Contents/Resources/zh-Hans.json
+.release/AirSpace.app/Contents/Resources/AirSpacePackage_AppBundle.bundle/Contents/Info.plist
 .release/AirSpace.app/Contents/Resources/AppIcon.icns
 .release/AirSpace.app/Contents/Resources/Assets.car
 .release/AirSpace.app/Contents/Frameworks
@@ -101,6 +106,7 @@ expected_app_dylibs=$(cat <<EOF
 	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices
 	/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon
+	/System/Library/Frameworks/ColorSync.framework/Versions/A/ColorSync
 	/System/Library/Frameworks/Combine.framework/Versions/A/Combine
 	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation

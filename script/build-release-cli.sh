@@ -34,4 +34,9 @@ cp -r "$cli_bin_path/airspace" .release/airspace
         install_name_tool -delete_rpath "$rpath" .release/airspace
     done
 
-codesign -s "$codesign_identity" .release/airspace
+if [[ "$codesign_identity" == "-" ]]; then
+    codesign -s "$codesign_identity" .release/airspace
+else
+    # Developer ID signing for notarization: hardened runtime + secure timestamp
+    codesign --force --options runtime --timestamp --sign "$codesign_identity" .release/airspace
+fi

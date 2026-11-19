@@ -485,7 +485,7 @@ private struct SettingsPage<Content: View>: View {
             .frame(maxWidth: 720, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .scrollBounceBehavior(.basedOnSize)
+        .scrollBounceBasedOnSizeCompat()
     }
 }
 
@@ -933,7 +933,7 @@ private struct RunningApplicationsSettings: View {
                 .padding(.top, 2)
         }
         .onAppear { refresh() }
-        .onChange(of: trayModel.configReloadEpoch) { _, _ in loadRules() }
+        .onChangeCompat(of: trayModel.configReloadEpoch) { _ in loadRules() }
         .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.didLaunchApplicationNotification)) { _ in refreshApps() }
         .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.didTerminateApplicationNotification)) { _ in refreshApps() }
     }
