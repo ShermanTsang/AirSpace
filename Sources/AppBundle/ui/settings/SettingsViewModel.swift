@@ -7,6 +7,7 @@ import SwiftUI
 struct SettingsState: Equatable {
     var startAtLogin: Bool
     var autoReloadConfig: Bool
+    var restoreWindowWorkspaces: Bool
     var automaticallyUnhideMacosHiddenApps: Bool
     var defaultRootContainerLayout: Layout
     var defaultRootContainerOrientation: DefaultContainerOrientation
@@ -25,6 +26,7 @@ struct SettingsState: Equatable {
     init(config: Config) {
         startAtLogin = config.startAtLogin
         autoReloadConfig = config.autoReloadConfig
+        restoreWindowWorkspaces = config.restoreWindowWorkspaces
         automaticallyUnhideMacosHiddenApps = config.automaticallyUnhideMacosHiddenApps
         defaultRootContainerLayout = config.defaultRootContainerLayout
         defaultRootContainerOrientation = config.defaultRootContainerOrientation

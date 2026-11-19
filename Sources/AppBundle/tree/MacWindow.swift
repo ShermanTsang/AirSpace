@@ -40,7 +40,7 @@ final class MacWindow: Window {
         }
 
         try await debugWindowsIfRecording(window, .cancellable)
-        if destination.placement != nil {
+        if destination.placement != nil || destination.restored {
             _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window, runCallbacks: false)
         } else if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
             await runOnWindowDetected(ifConventional: window)
@@ -263,23 +263,30 @@ func admitPromotedPopup(_ window: MacWindow) async throws {
 
 @MainActor
 private func savedWindowTitle(_ id: OpaqueWindowId, _ app: MacApp, _ type: AxUiElementWindowType, _ cm: CancellationMode) async throws -> String? {
-    guard type != .popup, WorkspaceLocks.shared.remembers(app) else { return nil }
+    guard type != .popup, WorkspaceLocks.shared.remembers(app) || (isStartup && config.restoreWindowWorkspaces) else { return nil }
     return try await app.getAxTitle(id, cm) ?? ""
 }
 
 @MainActor
 private func newWindowDestination(
     _ id: OpaqueWindowId, _ app: MacApp, _ type: AxUiElementWindowType, _ title: String?, preferred: Workspace,
-) -> (binding: BindingData, placement: WorkspaceLocks.Placement?) {
+) -> (binding: BindingData, placement: WorkspaceLocks.Placement?, restored: Bool) {
     if let title, let placement = WorkspaceLocks.shared.placement(for: app, title: title, id: id) {
         let workspace = Workspace.get(byName: placement.workspace)
-        return (WorkspaceLocks.shared.initialBinding(for: placement, workspace: workspace), placement)
+        return (WorkspaceLocks.shared.initialBinding(for: placement, workspace: workspace), placement, true)
+    }
+    if isStartup, config.restoreWindowWorkspaces, let title, let identity = WorkspaceRestoration.identity(app),
+       let name = WorkspaceRestoration.shared.placement(app: identity, title: title) {
+        let workspace = Workspace.get(byName: name)
+        if !workspace.isLocked {
+            return (unbindAndGetBindingData(type, workspace, window: nil), nil, true)
+        }
     }
     if type != .popup && preferred.isLocked {
         showWorkspaceLocked(preferred)
-        return (unbindAndGetBindingData(type, preferred.unlockedAlternative(), window: nil), nil)
+        return (unbindAndGetBindingData(type, preferred.unlockedAlternative(), window: nil), nil, false)
     }
-    return (unbindAndGetBindingData(type, preferred, window: nil), nil)
+    return (unbindAndGetBindingData(type, preferred, window: nil), nil, false)
 }
 
 // The function is private because it's unsafe. It can leave the window in an unbound state.

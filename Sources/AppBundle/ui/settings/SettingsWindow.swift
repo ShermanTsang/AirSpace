@@ -127,6 +127,12 @@ private struct SettingsView: View {
                 isOn: model.binding(\.autoReloadConfig) { .bool(["auto-reload-config"], $0) },
             )
             SettingsToggleCard(
+                icon: "rectangle.stack.badge.clock",
+                title: "Restore window spaces on restart",
+                subtitle: "Return open windows to their previous spaces when AirSpace starts.",
+                isOn: model.binding(\.restoreWindowWorkspaces) { .bool(["restore-window-workspaces"], $0) },
+            )
+            SettingsToggleCard(
                 icon: "eye",
                 title: "Unhide macOS hidden apps",
                 subtitle: "Show windows of hidden apps when AirSpace focuses them.",
