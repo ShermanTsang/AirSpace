@@ -477,6 +477,8 @@ private struct WorkspaceAppIcon: View {
 
 @MainActor
 private struct WorkspaceTile: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let workspace: WorkspaceViewModel
     let focus: () -> Void
     let chooseLayout: (WorkspaceLayoutMode) -> Void
@@ -555,8 +557,22 @@ private struct WorkspaceTile: View {
                     HStack(spacing: 8) {
                         ForEach(workspace.apps) { app in
                             WorkspaceAppIcon(app: app)
+                                .overlay(alignment: .bottomTrailing) {
+                                    if app.windowIDs.count > 1 {
+                                        Text("×\(app.windowIDs.count)")
+                                            .font(.system(size: 9, weight: .bold).monospacedDigit())
+                                            .foregroundStyle(.white)
+                                            .padding(.horizontal, 3)
+                                            .padding(.vertical, 1)
+                                            .background(Color(white: 0.15), in: Capsule())
+                                            .fixedSize()
+                                            .allowsHitTesting(false)
+                                            .accessibilityHidden(true)
+                                    }
+                                }
                                 .contentShape(Rectangle())
                                 .accessibilityLabel(Text(app.name))
+                                .accessibilityValue(app.windowIDs.count == 1 ? "1 window" : "\(app.windowIDs.count) windows")
                                 .help("\(app.name) · \(app.windowIDs.count) window(s)")
                                 // Keep the gesture local to the menu bar window, without starting a system drag session.
                                 .highPriorityGesture(
@@ -576,13 +592,14 @@ private struct WorkspaceTile: View {
         }
         .padding(.horizontal, 12)
         .frame(minWidth: 0, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .background(background, in: RoundedRectangle(cornerRadius: 12))
+        .background(backgroundTint, in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.black.opacity(colorScheme == .dark ? 0.22 : 0.09), in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(border, lineWidth: 1))
     }
 
-    private var background: Color {
+    private var backgroundTint: Color {
         if isDropTarget { return (workspace.isLocked ? Color.orange : Color.accentColor).opacity(0.18) }
-        return workspace.isFocused ? Color.accentColor.opacity(0.10) : Color.primary.opacity(0.035)
+        return workspace.isFocused ? Color.accentColor.opacity(0.10) : .clear
     }
 
     private var border: Color {
