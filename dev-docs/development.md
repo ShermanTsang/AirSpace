@@ -56,6 +56,8 @@ If you only plan to build the debug version of AirSpace, you can run it from the
     This script is "work in progress".
     Use it on your own risk.
 
+See [release.md](./release.md) for the tag-driven GitHub Actions release, Developer ID signing, notarization, and failure recovery.
+
 ## IDE
 
 -   You can obviously [open the project in Xcode](#xcode).

@@ -56,6 +56,8 @@ git tag v1.2.3
 git push origin v1.2.3
 ```
 
+Maintainers can find the full release, signing, notarization, and failure-recovery checklist in [dev-docs/release.md](./dev-docs/release.md).
+
 ## Development
 
 See [development instructions](./dev-docs/development.md) for setup, building and testing. AirSpace runs on macOS 13 or later.
