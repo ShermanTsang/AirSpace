@@ -46,18 +46,22 @@ private struct WorkspaceMenu: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Spaces").font(.title3.weight(.semibold))
-                    Text("Drag an app icon to move its windows").font(.caption).foregroundStyle(.secondary)
+                if showsQuickBar {
+                    quickDropBar.frame(maxWidth: .infinity)
+                } else {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Spaces").font(.title3.weight(.semibold))
+                        Text("Drag an app icon to move its windows").font(.caption).foregroundStyle(.secondary)
+                    }
                 }
-                Spacer()
+                Spacer(minLength: 4)
                 if viewModel.axPermissionStatus == .granted, viewModel.isEnabled, viewModel.workspaces.count > 1 {
                     Toggle(isOn: $isQuickBarPinned) {
                         Image(systemName: "arrow.up.and.down.and.arrow.left.and.right")
                     }
                     .toggleStyle(.button)
-                    .help("Show quick drop targets")
-                    .accessibilityLabel("Show quick drop targets")
+                    .help(isQuickBarPinned ? "Hide quick drop targets" : "Show quick drop targets")
+                    .accessibilityLabel(isQuickBarPinned ? "Hide quick drop targets" : "Show quick drop targets")
                 }
                 Menu {
                     Picker("Sort spaces", selection: $sortOrder) {
@@ -96,22 +100,6 @@ private struct WorkspaceMenu: View {
                 }
             }
         }
-        .padding(14)
-        .frame(width: 520)
-    }
-
-    private var spaceList: some View {
-        VStack(spacing: spacing) {
-            if showsQuickBar, isQuickBarPinned {
-                quickDropBar
-            }
-            scrollableGrid
-                .overlay(alignment: .top) {
-                    if showsQuickBar, !isQuickBarPinned {
-                        quickDropBar.allowsHitTesting(false)
-                    }
-                }
-        }
         .overlay(alignment: .topLeading) {
             if let drag {
                 WorkspaceAppIcon(app: drag.app)
@@ -124,6 +112,14 @@ private struct WorkspaceMenu: View {
         .coordinateSpace(name: WorkspaceDragArea.panel)
         .onPreferenceChange(WorkspaceDropFramePreference.self) { dropFrames = $0 }
         .onDisappear { isQuickBarPinned = false }
+        .padding(14)
+        .frame(width: 520)
+    }
+
+    private var spaceList: some View {
+        VStack(spacing: spacing) {
+            scrollableGrid
+        }
     }
 
     private var scrollableGrid: some View {
