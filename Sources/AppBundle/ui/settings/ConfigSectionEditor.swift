@@ -3,11 +3,47 @@ import SwiftUI
 
 struct ConfigSectionButton: View {
     let section: ConfigSection
+    var icon: String = "slider.horizontal.3"
     @State private var isPresented = false
+    @State private var isHovered = false
 
     var body: some View {
-        Button(section.title + "…") { isPresented = true }
-            .sheet(isPresented: $isPresented) { ConfigSectionEditor(section: section) }
+        Button { isPresented = true } label: {
+            HStack(spacing: 12) {
+                SettingsIconTile(systemName: icon)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(section.title).font(.body.weight(.medium))
+                    Text(section.help)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                }
+                Spacer(minLength: 12)
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                Color(nsColor: .controlBackgroundColor),
+                in: RoundedRectangle(cornerRadius: 10, style: .continuous),
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.primary.opacity(isHovered ? 0.04 : 0)),
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.07)),
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .sheet(isPresented: $isPresented) { ConfigSectionEditor(section: section) }
     }
 }
 
