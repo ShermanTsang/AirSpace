@@ -76,6 +76,7 @@ let package = Package(
                 .target(name: "Macros"),
                 .target(name: "PrivateApi"),
             ],
+            resources: [.process("i18n/zh-Hans.json")],
             swiftSettings: swiftSettings,
         ),
         .executableTarget(

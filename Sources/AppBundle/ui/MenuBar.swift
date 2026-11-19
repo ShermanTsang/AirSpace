@@ -26,6 +26,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 @MainActor
 private struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
+    @AppStorage("airspace.language") private var language = "system"
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
     @State private var actionMessage: String?
@@ -54,8 +55,8 @@ private struct WorkspaceMenu: View {
                     quickDropBar.frame(maxWidth: .infinity)
                 } else {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Spaces").font(.title3.weight(.semibold))
-                        Text("Drag an app icon to move its windows").font(.caption).foregroundStyle(.secondary)
+                        Text(L("Spaces")).font(.title3.weight(.semibold))
+                        Text(L("Drag an app icon to move its windows")).font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 Spacer(minLength: 4)
@@ -64,32 +65,32 @@ private struct WorkspaceMenu: View {
                         Image(systemName: "arrow.up.and.down.and.arrow.left.and.right")
                     }
                     .toggleStyle(.button)
-                    .help(isQuickBarPinned ? "Hide quick drop targets" : "Show quick drop targets")
-                    .accessibilityLabel(isQuickBarPinned ? "Hide quick drop targets" : "Show quick drop targets")
+                    .help(isQuickBarPinned ? L("Hide quick drop targets") : L("Show quick drop targets"))
+                    .accessibilityLabel(isQuickBarPinned ? L("Hide quick drop targets") : L("Show quick drop targets"))
                 }
                 Menu {
-                    Picker("Sort spaces", selection: $sortOrder) {
-                        Text("Space order").tag(WorkspaceSortOrder.name)
-                        Text("Active spaces first").tag(WorkspaceSortOrder.active)
+                    Picker(L("Sort spaces"), selection: $sortOrder) {
+                        Text(L("Space order")).tag(WorkspaceSortOrder.name)
+                        Text(L("Active spaces first")).tag(WorkspaceSortOrder.active)
                     }
                 } label: {
                     Image(systemName: "arrow.up.arrow.down")
                 }
                 .menuIndicator(.hidden)
                 .fixedSize()
-                .help("Sort spaces")
-                .accessibilityLabel("Sort spaces")
+                .help(L("Sort spaces"))
+                .accessibilityLabel(L("Sort spaces"))
                 Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
-                    .help("Settings")
-                    .accessibilityLabel("Settings")
+                    .help(L("Settings"))
+                    .accessibilityLabel(L("Settings"))
             }
             if viewModel.axPermissionStatus != .granted {
-                Button("Grant accessibility permission") { viewModel.axPermissionStatus = .waitingWithPrompt }
+                Button(L("Grant accessibility permission")) { viewModel.axPermissionStatus = .waitingWithPrompt }
             } else if !viewModel.isEnabled {
-                Text("AirSpace is paused. Enable it in Settings.").foregroundStyle(.secondary)
+                Text(L("AirSpace is paused. Enable it in Settings.")).foregroundStyle(.secondary)
             } else {
                 if viewModel.lastReloadConfigContainedWarnings {
-                    Button("Configuration contains warnings") { openWindow(id: settingsWindowId) }
+                    Button(L("Configuration contains warnings")) { openWindow(id: settingsWindowId) }
                         .foregroundStyle(.orange)
                 }
                 if let actionMessage {
@@ -98,7 +99,7 @@ private struct WorkspaceMenu: View {
                         .foregroundStyle(.orange)
                 }
                 if viewModel.workspaceGroups.isEmpty {
-                    Text("No spaces yet. Open a window to create one.").foregroundStyle(.secondary)
+                    Text(L("No spaces yet. Open a window to create one.")).foregroundStyle(.secondary)
                 } else {
                     scrollableGrid
                 }
@@ -188,7 +189,7 @@ private struct WorkspaceMenu: View {
                         .padding(.vertical, 4)
                 }
                 .buttonStyle(.plain)
-                .accessibilityValue(expanded ? "Expanded" : "Collapsed")
+                .accessibilityValue(expanded ? L("Expanded") : L("Collapsed"))
                 if expanded { spaceRows(idle, targetName: targetName, otherDisplays: otherDisplays) }
             }
         }
@@ -504,8 +505,8 @@ private struct WorkspaceTile: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .help(workspace.isFocused ? "Focused space" : workspace.isVisible ? "Visible on this display" : "Focus \(workspace.name)")
-                .accessibilityValue(workspace.isFocused ? "Focused" : workspace.isVisible ? "Visible" : "Hidden")
+                .help(workspace.isFocused ? L("Focused space") : workspace.isVisible ? L("Visible on this display") : "Focus \(workspace.name)")
+                .accessibilityValue(workspace.isFocused ? L("Focused") : workspace.isVisible ? L("Visible") : L("Hidden"))
                 Menu {
                     ForEach(WorkspaceLayoutMode.allCases, id: \.self) { mode in
                         Button { chooseLayout(mode) } label: {
@@ -517,8 +518,8 @@ private struct WorkspaceTile: View {
                         }
                     }
                     Divider()
-                    Text(workspace.isLocked ? "Layout controlled by lock" : !workspace.canRememberDisplayLayout ? "Display cannot be identified" : workspace.hasDisplayLayout ? "Remembered for this display" : "Using default layout")
-                    Button("Restore default layout", action: restoreLayout)
+                    Text(workspace.isLocked ? L("Layout controlled by lock") : !workspace.canRememberDisplayLayout ? L("Display cannot be identified") : workspace.hasDisplayLayout ? L("Remembered for this display") : L("Using default layout"))
+                    Button(L("Restore default layout"), action: restoreLayout)
                         .disabled(!workspace.hasDisplayLayout || workspace.isLocked)
                 } label: {
                     Image(systemName: workspace.mode.icon)
@@ -540,7 +541,7 @@ private struct WorkspaceTile: View {
                     .menuIndicator(.hidden)
                     .fixedSize()
                     .disabled(workspace.isLocked)
-                    .help("Move space to display")
+                    .help(L("Move space to display"))
                     .accessibilityLabel("Move \(workspace.name) to display")
                 }
                 Button(action: toggleLock) {
@@ -551,7 +552,7 @@ private struct WorkspaceTile: View {
                 .accessibilityLabel(workspace.isLocked ? "Unlock \(workspace.name)" : "Lock \(workspace.name)")
             }
             if workspace.apps.isEmpty {
-                Text("No windows").font(.caption).foregroundStyle(.secondary).frame(height: 24)
+                Text(L("No windows")).font(.caption).foregroundStyle(.secondary).frame(height: 24)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -571,8 +572,9 @@ private struct WorkspaceTile: View {
                                     }
                                 }
                                 .contentShape(Rectangle())
+                                .accessibilityAddTraits(.isButton)
                                 .accessibilityLabel(Text(app.name))
-                                .accessibilityValue(app.windowIDs.count == 1 ? "1 window" : "\(app.windowIDs.count) windows")
+                                .accessibilityValue(app.windowIDs.count == 1 ? L("1 window") : "\(app.windowIDs.count) windows")
                                 .help("\(app.name) · \(app.windowIDs.count) window(s)")
                                 // Keep the gesture local to the menu bar window, without starting a system drag session.
                                 .highPriorityGesture(
@@ -584,6 +586,7 @@ private struct WorkspaceTile: View {
                                             finishDrag(WorkspaceAppDrag(workspace: workspace.name, app: app, location: value.location))
                                         },
                                 )
+                                .simultaneousGesture(TapGesture().onEnded { focus() })
                         }
                     }
                 }
@@ -640,7 +643,7 @@ func openConfigInTextEditor() {
 @MainActor @ViewBuilder
 func reloadConfigButton(showShortcutGroup: Bool = false, warningsAsErrors: Bool) -> some View {
     if let token: RunSessionGuard = .isServerEnabled {
-        let button = Button("Reload config") {
+        let button = Button(L("Reload config")) {
             Task.startUnstructured {
                 try await runLightSession(.menuBarButton, token) {
                     let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).with(\.warningsAsErrors, warningsAsErrors)

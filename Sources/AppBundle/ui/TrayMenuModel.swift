@@ -95,7 +95,7 @@ struct WorkspaceViewModel {
         name = workspace.name
         apps = workspace.lockableWindows.grouped { $0.app.pid }.map { pid, windows in
             let runningApp = NSRunningApplication(processIdentifier: pid)
-            let name = windows.first?.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app"
+            let name = windows.first?.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? L("Unknown app")
             return WorkspaceApp(id: pid, name: name, icon: runningApp?.icon, windowIDs: windows.map(\.windowId))
         }.sorted {
             let order = $0.name.localizedStandardCompare($1.name)
@@ -138,10 +138,10 @@ enum WorkspaceLayoutMode: String, CaseIterable, Codable {
 
     var title: String {
         switch self {
-            case .horizontalTiles: "Horizontal tiles"
-            case .verticalTiles: "Vertical tiles"
-            case .horizontalAccordion: "Horizontal accordion"
-            case .verticalAccordion: "Vertical accordion"
+            case .horizontalTiles: L("Horizontal tiles")
+            case .verticalTiles: L("Vertical tiles")
+            case .horizontalAccordion: L("Horizontal accordion")
+            case .verticalAccordion: L("Vertical accordion")
         }
     }
 

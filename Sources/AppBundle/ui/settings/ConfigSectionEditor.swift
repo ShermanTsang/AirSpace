@@ -12,8 +12,8 @@ struct ConfigSectionButton: View {
             HStack(spacing: 12) {
                 SettingsIconTile(systemName: icon)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(section.title).font(.body.weight(.medium))
-                    Text(section.help)
+                    Text(L(section.title)).font(.body.weight(.medium))
+                    Text(L(section.help))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
@@ -57,8 +57,8 @@ private struct ConfigSectionEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(section.title).font(.title2.bold())
-            Text(section.help).foregroundStyle(.secondary)
+            Text(L(section.title)).font(.title2.bold())
+            Text(L(section.help)).foregroundStyle(.secondary)
             Form {
                 if let error {
                     Label(error, systemImage: "exclamationmark.triangle")
@@ -66,16 +66,16 @@ private struct ConfigSectionEditor: View {
                         .textSelection(.enabled)
                 }
                 if original != nil {
-                    Toggle("Set this option", isOn: Binding(
+                    Toggle(L("Set this option"), isOn: Binding(
                         get: { draft != nil },
                         set: { draft = $0 ? original?.value ?? section.schema.initial : nil },
                     ))
                     if draft != nil {
-                        ConfigFieldEditor(title: section.title, schema: section.schema, value: Binding(
+                        ConfigFieldEditor(title: L(section.title), schema: section.schema, value: Binding(
                             get: { draft ?? section.schema.initial }, set: { draft = $0 },
                         ))
                     }
-                    Text("Saving may reformat this section and remove comments attached to its values. Other sections are left untouched.")
+                    Text(L("Saving may reformat this section and remove comments attached to its values. Other sections are left untouched."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -84,8 +84,8 @@ private struct ConfigSectionEditor: View {
             .disabled(isSaving)
             HStack {
                 Spacer()
-                Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction).disabled(isSaving)
-                Button("Save & Apply", action: save)
+                Button(L("Cancel")) { dismiss() }.keyboardShortcut(.cancelAction).disabled(isSaving)
+                Button(L("Save & Apply"), action: save)
                     .keyboardShortcut(.defaultAction)
                     .disabled(isSaving || original == nil || draft == original?.value)
             }
@@ -130,7 +130,7 @@ private struct ConfigFieldEditor: View {
             editor
         } else {
             LabeledContent(title, value: "Unexpected value type: \(value.tomlType.rawValue)")
-            Button("Replace with default value") { value = schema.initial }
+            Button(L("Replace with default value")) { value = schema.initial }
         }
     }
 
@@ -140,7 +140,7 @@ private struct ConfigFieldEditor: View {
                 TextField(title, text: Binding(get: { value.asStringOrNil ?? "" }, set: { value = .string($0) }))
             case .applicationID:
                 TextField(title, text: Binding(get: { value.asStringOrNil ?? "" }, set: { value = .string($0) }))
-                Menu("Choose Running Application") {
+                Menu(L("Choose Running Application")) {
                     ForEach(runningApplications, id: \.id) { app in
                         Button(app.name) { value = .string(app.id) }
                     }
@@ -157,12 +157,12 @@ private struct ConfigFieldEditor: View {
             case .fields(let fields, _):
                 ForEach(fields) { field in
                     if value.asDictOrNil?[field.id] != nil {
-                        ConfigFieldEditor(title: field.title, schema: field.schema, value: dictionaryBinding(field.id, fallback: field.schema.initial))
+                        ConfigFieldEditor(title: L(field.title), schema: field.schema, value: dictionaryBinding(field.id, fallback: field.schema.initial))
                     }
                 }
-                Menu("Optional Fields") {
+                Menu(L("Optional Fields")) {
                     ForEach(fields) { field in
-                        Toggle(field.title, isOn: Binding(
+                        Toggle(L(field.title), isOn: Binding(
                             get: { value.asDictOrNil?[field.id] != nil },
                             set: { setKey(field.id, to: $0 ? field.schema.initial : nil) },
                         ))
@@ -172,8 +172,8 @@ private struct ConfigFieldEditor: View {
                 let keys = value.asDictOrNil.map { Array($0.keys) } ?? []
                 ForEach(keys, id: \.self) { key in
                     DisclosureGroup(key) {
-                        ConfigFieldEditor(title: "Value", schema: item, value: dictionaryBinding(key, fallback: item.initial))
-                        ConfigMapRenameButton(keyLabel: keyLabel, key: key, usedKeys: Set(keys)) { newKey in
+                        ConfigFieldEditor(title: L("Value"), schema: item, value: dictionaryBinding(key, fallback: item.initial))
+                        ConfigMapRenameButton(keyLabel: L(keyLabel), key: key, usedKeys: Set(keys)) { newKey in
                             guard let old = value.asDictOrNil?[key] else { return }
                             setKey(key, to: nil)
                             setKey(newKey, to: old)
@@ -191,17 +191,17 @@ private struct ConfigFieldEditor: View {
                     setKey(key, to: item.initial)
                 }
             case .list(let itemTitle, let item):
-                ConfigListEditor(itemTitle: itemTitle, item: item, items: Binding(
+                ConfigListEditor(itemTitle: L(itemTitle), item: item, items: Binding(
                     get: { value.asArrayOrNil ?? [] }, set: { value = .array($0) },
                 ))
             case .choice(let choices):
                 let index = choices.firstIndex { $0.schema.matches(value) } ?? 0
                 Picker(title, selection: Binding(get: { index }, set: { value = choices[$0].schema.initial })) {
-                    ForEach(choices.indices, id: \.self) { Text(choices[$0].title).tag($0) }
+                    ForEach(choices.indices, id: \.self) { Text(L(choices[$0].title)).tag($0) }
                 }
                 if choices.indices.contains(index) {
                     let choice = choices[index]
-                    ConfigFieldEditor(title: choice.title, schema: choice.schema, value: $value)
+                    ConfigFieldEditor(title: L(choice.title), schema: choice.schema, value: $value)
                 }
             case .gap:
                 ConfigGapEditor(title: title, value: $value)
@@ -240,10 +240,10 @@ private struct ConfigListEditor: View {
                     set: { if items.indices.contains(index) { items[index] = $0 } },
                 ))
                 HStack {
-                    Button("Move Up") { move(index, to: index - 1) }.disabled(index == items.startIndex)
-                    Button("Move Down") { move(index, to: index + 1) }.disabled(index + 1 == items.endIndex)
+                    Button(L("Move Up")) { move(index, to: index - 1) }.disabled(index == items.startIndex)
+                    Button(L("Move Down")) { move(index, to: index + 1) }.disabled(index + 1 == items.endIndex)
                     Spacer()
-                    Button("Remove", role: .destructive) {
+                    Button(L("Remove"), role: .destructive) {
                         if items.indices.contains(index) { items.remove(at: index) }
                     }
                 }
@@ -275,7 +275,7 @@ private struct ConfigMapRenameButton: View {
         .popover(isPresented: $isPresented) {
             VStack(alignment: .leading) {
                 TextField(keyLabel, text: $newKey)
-                Button("Rename") {
+                Button(L("Rename")) {
                     isPresented = false
                     rename(newKey)
                 }
@@ -292,26 +292,26 @@ private struct ConfigGapEditor: View {
     @Binding var value: OrderedJson
 
     private let override = ConfigFieldSchema.fields([
-        .init("monitor", "Monitor selector", .map("Monitor pattern", .integer(0), initialKey: "main")),
+        .init("monitor", L("Monitor selector"), .map(L("Monitor pattern"), .integer(0), initialKey: "main")),
     ], defaults: ["monitor"])
 
     var body: some View {
         DisclosureGroup(title) {
-            Toggle("Use monitor overrides", isOn: Binding(
+            Toggle(L("Use monitor overrides"), isOn: Binding(
                 get: { value.asArrayOrNil != nil },
                 set: { enabled in
                     let fallback = fallbackValue
                     value = enabled ? .array([override.initial, fallback]) : fallback
                 },
             ))
-            ConfigFieldEditor(title: value.asArrayOrNil == nil ? "Pixels" : "Fallback (pixels)", schema: .integer(0), value: Binding(
+            ConfigFieldEditor(title: value.asArrayOrNil == nil ? L("Pixels") : L("Fallback (pixels)"), schema: .integer(0), value: Binding(
                 get: { fallbackValue },
                 set: { newValue in
                     if let array = value.asArrayOrNil { value = .array(Array(array.dropLast()) + [newValue]) } else { value = newValue }
                 },
             ))
             if value.asArrayOrNil != nil {
-                ConfigListEditor(itemTitle: "Monitor Override", item: override, items: Binding(
+                ConfigListEditor(itemTitle: L("Monitor Override"), item: override, items: Binding(
                     get: { Array((value.asArrayOrNil ?? []).dropLast()) },
                     set: { value = .array($0 + [fallbackValue]) },
                 ))

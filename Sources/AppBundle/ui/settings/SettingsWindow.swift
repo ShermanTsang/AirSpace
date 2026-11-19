@@ -7,7 +7,7 @@ public let settingsWindowId = "\(aeroSpaceAppName).settingsView"
 
 @MainActor
 public func getSettingsWindow(viewModel: TrayMenuModel) -> some Scene {
-    SwiftUI.Window("Settings", id: settingsWindowId) {
+    SwiftUI.Window(L("Settings"), id: settingsWindowId) {
         SettingsView()
             .environmentObject(viewModel)
             .frame(minWidth: 760, minHeight: 560)
@@ -28,12 +28,12 @@ private enum SettingsCategory: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-            case .general: "General"
-            case .layout: "Layout"
-            case .gaps: "Gaps"
-            case .apps: "Applications"
-            case .automation: "Rules & Automation"
-            case .advanced: "Advanced"
+            case .general: L("General")
+            case .layout: L("Layout")
+            case .gaps: L("Gaps")
+            case .apps: L("Applications")
+            case .automation: L("Rules & Automation")
+            case .advanced: L("Advanced")
         }
     }
 
@@ -53,6 +53,7 @@ private struct SettingsView: View {
     @ObservedObject private var model = SettingsViewModel.shared
     @EnvironmentObject private var trayModel: TrayMenuModel
     @State private var selection: SettingsCategory? = .general
+    @AppStorage("airspace.language") private var language = AppLanguage.system.rawValue
 
     var body: some View {
         HStack(spacing: 0) {
@@ -87,22 +88,27 @@ private struct SettingsView: View {
 
     private var generalPage: some View {
         SettingsPage(
-            title: "General",
-            subtitle: "How AirSpace starts, responds to config changes, and follows the pointer.",
+            title: L("General"),
+            subtitle: L("How AirSpace starts, responds to config changes, and follows the pointer."),
         ) {
+            Picker(L("Language"), selection: $language) {
+                ForEach(AppLanguage.allCases) { option in
+                    Text(option.displayName).tag(option.rawValue)
+                }
+            }
             SettingsCard {
                 Circle()
                     .fill(trayModel.isEnabled ? Color.green : Color.orange)
                     .frame(width: 10, height: 10)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(trayModel.isEnabled ? "AirSpace is active" : "AirSpace is paused")
+                    Text(trayModel.isEnabled ? L("AirSpace is active") : L("AirSpace is paused"))
                         .font(.headline)
-                    Text(trayModel.isEnabled ? "Windows are tiled and shortcuts are available." : "Windows keep their current positions and shortcuts are disabled.")
+                    Text(trayModel.isEnabled ? L("Windows are tiled and shortcuts are available.") : L("Windows keep their current positions and shortcuts are disabled."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 12)
-                Button(trayModel.isEnabled ? "Pause" : "Resume") {
+                Button(trayModel.isEnabled ? L("Pause") : L("Resume")) {
                     Task.startUnstructured {
                         try await runLightSession(.menuBarButton, .forceRun) {
                             _ = await EnableCommand(
@@ -116,38 +122,38 @@ private struct SettingsView: View {
             }
             SettingsToggleCard(
                 icon: "power",
-                title: "Start at login",
-                subtitle: "Launch AirSpace automatically when you sign in.",
+                title: L("Start at login"),
+                subtitle: L("Launch AirSpace automatically when you sign in."),
                 isOn: model.binding(\.startAtLogin) { .bool(["start-at-login"], $0) },
             )
             SettingsToggleCard(
                 icon: "arrow.triangle.2.circlepath",
-                title: "Auto-reload config",
-                subtitle: "Apply edits to the config file as soon as they are saved.",
+                title: L("Auto-reload config"),
+                subtitle: L("Apply edits to the config file as soon as they are saved."),
                 isOn: model.binding(\.autoReloadConfig) { .bool(["auto-reload-config"], $0) },
             )
             SettingsToggleCard(
                 icon: "rectangle.stack.badge.clock",
-                title: "Restore window spaces on restart",
-                subtitle: "Return open windows to their previous spaces when AirSpace starts.",
+                title: L("Restore window spaces on restart"),
+                subtitle: L("Return open windows to their previous spaces when AirSpace starts."),
                 isOn: model.binding(\.restoreWindowWorkspaces) { .bool(["restore-window-workspaces"], $0) },
             )
             SettingsToggleCard(
                 icon: "eye",
-                title: "Unhide macOS hidden apps",
-                subtitle: "Show windows of hidden apps when AirSpace focuses them.",
+                title: L("Unhide macOS hidden apps"),
+                subtitle: L("Show windows of hidden apps when AirSpace focuses them."),
                 isOn: model.binding(\.automaticallyUnhideMacosHiddenApps) { .bool(["automatically-unhide-macos-hidden-apps"], $0) },
             )
             SettingsToggleCard(
                 icon: "cursorarrow.rays",
-                title: "Focus follows mouse",
-                subtitle: "Move focus to the window under the pointer without clicking.",
+                title: L("Focus follows mouse"),
+                subtitle: L("Move focus to the window under the pointer without clicking."),
                 isOn: model.binding(\.focusFollowsMouse) { .bool(["focus-follows-mouse", "enabled"], $0) },
             )
             SettingsInfoCard(
                 icon: "menubar.rectangle",
-                title: "Menu bar",
-                text: "The menu bar shows the current space and up to three window icons on macOS 14 or later.",
+                title: L("Menu bar"),
+                text: L("The menu bar shows the current space and up to three window icons on macOS 14 or later."),
             )
             errorBanner
         }
@@ -155,17 +161,17 @@ private struct SettingsView: View {
 
     private var layoutPage: some View {
         SettingsPage(
-            title: "Layout",
-            subtitle: "Choose how new workspaces arrange windows. Changes apply to the next layout pass.",
+            title: L("Layout"),
+            subtitle: L("Choose how new workspaces arrange windows. Changes apply to the next layout pass."),
         ) {
             VStack(alignment: .leading, spacing: 10) {
-                Text("Default layout")
+                Text(L("Default layout"))
                     .font(.subheadline.weight(.medium))
                 HStack(spacing: 12) {
                     LayoutChoiceCard(
                         layout: .tiles,
-                        title: "Tiles",
-                        subtitle: "Each window gets its own share of the space.",
+                        title: L("Tiles"),
+                        subtitle: L("Each window gets its own share of the space."),
                         isSelected: model.state.defaultRootContainerLayout == .tiles,
                     ) {
                         model.binding(\.defaultRootContainerLayout) { .string(["default-root-container-layout"], $0.rawValue) }
@@ -173,8 +179,8 @@ private struct SettingsView: View {
                     }
                     LayoutChoiceCard(
                         layout: .accordion,
-                        title: "Accordion",
-                        subtitle: "Windows stack; the focused window comes forward.",
+                        title: L("Accordion"),
+                        subtitle: L("Windows stack; the focused window comes forward."),
                         isSelected: model.state.defaultRootContainerLayout == .accordion,
                     ) {
                         model.binding(\.defaultRootContainerLayout) { .string(["default-root-container-layout"], $0.rawValue) }
@@ -184,17 +190,17 @@ private struct SettingsView: View {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("Orientation")
+                Text(L("Orientation"))
                     .font(.subheadline.weight(.medium))
                 SettingsCard {
                     VStack(alignment: .leading, spacing: 10) {
                         Picker(
-                            "Orientation",
+                            L("Orientation"),
                             selection: model.binding(\.defaultRootContainerOrientation) { .string(["default-root-container-orientation"], $0.rawValue) },
                         ) {
-                            Label("Auto", systemImage: "wand.and.stars").tag(DefaultContainerOrientation.auto)
-                            Label("Horizontal", systemImage: "arrow.left.and.right").tag(DefaultContainerOrientation.horizontal)
-                            Label("Vertical", systemImage: "arrow.up.and.down").tag(DefaultContainerOrientation.vertical)
+                            Label(L("Auto"), systemImage: "wand.and.stars").tag(DefaultContainerOrientation.auto)
+                            Label(L("Horizontal"), systemImage: "arrow.left.and.right").tag(DefaultContainerOrientation.horizontal)
+                            Label(L("Vertical"), systemImage: "arrow.up.and.down").tag(DefaultContainerOrientation.vertical)
                         }
                         .pickerStyle(.segmented)
                         .labelsHidden()
@@ -207,8 +213,8 @@ private struct SettingsView: View {
 
             SettingsSliderCard(
                 icon: "rectangle.stack",
-                title: "Accordion padding",
-                subtitle: "Overlap between stacked windows. Only used by accordion containers.",
+                title: L("Accordion padding"),
+                subtitle: L("Overlap between stacked windows. Only used by accordion containers."),
                 value: model.binding(\.accordionPadding) { .int(["accordion-padding"], $0) },
                 range: 0...500,
                 unit: "px",
@@ -217,14 +223,14 @@ private struct SettingsView: View {
 
             SettingsToggleCard(
                 icon: "rectangle.compress.vertical",
-                title: "Flatten nested containers",
-                subtitle: "Collapse redundant containers with a single child so layouts stay simple.",
+                title: L("Flatten nested containers"),
+                subtitle: L("Collapse redundant containers with a single child so layouts stay simple."),
                 isOn: model.binding(\.flattenContainersNormalization) { .bool(["enable-normalization-flatten-containers"], $0) },
             )
             SettingsToggleCard(
                 icon: "arrow.triangle.branch",
-                title: "Alternate nested orientation",
-                subtitle: "Nest containers with the opposite orientation to keep divisions readable.",
+                title: L("Alternate nested orientation"),
+                subtitle: L("Nest containers with the opposite orientation to keep divisions readable."),
                 isOn: model.binding(\.oppositeOrientationNormalization) { .bool(["enable-normalization-opposite-orientation-for-nested-containers"], $0) },
             )
             errorBanner
@@ -233,16 +239,16 @@ private struct SettingsView: View {
 
     private var orientationCaption: String {
         switch model.state.defaultRootContainerOrientation {
-            case .auto: "AirSpace picks the orientation that fits the monitor."
-            case .horizontal: "Windows are arranged side by side."
-            case .vertical: "Windows are stacked from top to bottom."
+            case .auto: L("AirSpace picks the orientation that fits the monitor.")
+            case .horizontal: L("Windows are arranged side by side.")
+            case .vertical: L("Windows are stacked from top to bottom.")
         }
     }
 
     private var gapsPage: some View {
         SettingsPage(
-            title: "Gaps",
-            subtitle: "Space between windows and around the edges of each monitor.",
+            title: L("Gaps"),
+            subtitle: L("Space between windows and around the edges of each monitor."),
         ) {
             GapsDiagram(
                 innerHorizontal: Double(model.state.gapsInnerHorizontal ?? 0),
@@ -254,7 +260,7 @@ private struct SettingsView: View {
             )
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Inner gap presets")
+                Text(L("Inner gap presets"))
                     .font(.subheadline.weight(.medium))
                 HStack(spacing: 8) {
                     ForEach([4, 8, 12, 16], id: \.self) { preset in
@@ -266,49 +272,49 @@ private struct SettingsView: View {
                         }
                     }
                 }
-                Text("Presets set a single value for every monitor.")
+                Text(L("Presets set a single value for every monitor."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             GapRow(
                 icon: "arrow.left.and.right",
-                title: "Inner horizontal",
+                title: L("Inner horizontal"),
                 value: model.state.gapsInnerHorizontal,
                 range: 0...500,
                 onChange: { model.intBinding(\.gapsInnerHorizontal, path: ["gaps", "inner", "horizontal"], range: 0...500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.up.and.down",
-                title: "Inner vertical",
+                title: L("Inner vertical"),
                 value: model.state.gapsInnerVertical,
                 range: 0...500,
                 onChange: { model.intBinding(\.gapsInnerVertical, path: ["gaps", "inner", "vertical"], range: 0...500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.left",
-                title: "Outer left",
+                title: L("Outer left"),
                 value: model.state.gapsOuterLeft,
                 range: -500...500,
                 onChange: { model.intBinding(\.gapsOuterLeft, path: ["gaps", "outer", "left"], range: -500...500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.up",
-                title: "Outer top",
+                title: L("Outer top"),
                 value: model.state.gapsOuterTop,
                 range: -500...500,
                 onChange: { model.intBinding(\.gapsOuterTop, path: ["gaps", "outer", "top"], range: -500...500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.down",
-                title: "Outer bottom",
+                title: L("Outer bottom"),
                 value: model.state.gapsOuterBottom,
                 range: -500...500,
                 onChange: { model.intBinding(\.gapsOuterBottom, path: ["gaps", "outer", "bottom"], range: -500...500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.right",
-                title: "Outer right",
+                title: L("Outer right"),
                 value: model.state.gapsOuterRight,
                 range: -500...500,
                 onChange: { model.intBinding(\.gapsOuterRight, path: ["gaps", "outer", "right"], range: -500...500).wrappedValue = $0 },
@@ -320,29 +326,29 @@ private struct SettingsView: View {
 
     private var appsPage: some View {
         SettingsPage(
-            title: "Applications",
-            subtitle: "Set per-app behavior. Changes apply right away to eligible windows and are saved for new windows.",
+            title: L("Applications"),
+            subtitle: L("Set per-app behavior. Changes apply right away to eligible windows and are saved for new windows."),
         ) {
             RunningApplicationsSettings()
-            SettingsSectionHeader("Detailed rules")
+            SettingsSectionHeader(L("Detailed rules"))
             ConfigSectionButton(section: .windowRules, icon: "list.bullet.rectangle")
         }
     }
 
     private var automationPage: some View {
         SettingsPage(
-            title: "Rules & Automation",
-            subtitle: "Keyboard shortcuts, workspaces, monitors, and commands that run on events.",
+            title: L("Rules & Automation"),
+            subtitle: L("Keyboard shortcuts, workspaces, monitors, and commands that run on events."),
         ) {
-            SettingsSectionHeader("Keyboard")
+            SettingsSectionHeader(L("Keyboard"))
             ForEach(ConfigSection.shortcuts) { section in
                 ConfigSectionButton(section: section, icon: "keyboard")
             }
-            SettingsSectionHeader("Workspaces & monitors")
+            SettingsSectionHeader(L("Workspaces & monitors"))
             ForEach(ConfigSection.workspaces) { section in
                 ConfigSectionButton(section: section, icon: "rectangle.3.group")
             }
-            SettingsSectionHeader("Automation")
+            SettingsSectionHeader(L("Automation"))
             ForEach(ConfigSection.automation) { section in
                 ConfigSectionButton(section: section, icon: "bolt")
             }
@@ -352,13 +358,13 @@ private struct SettingsView: View {
 
     private var advancedPage: some View {
         SettingsPage(
-            title: "Advanced",
-            subtitle: "The underlying config file, version, and app information.",
+            title: L("Advanced"),
+            subtitle: L("The underlying config file, version, and app information."),
         ) {
             SettingsCard {
                 SettingsIconTile(systemName: "doc.text")
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Configuration file").font(.body.weight(.medium))
+                    Text(L("Configuration file")).font(.body.weight(.medium))
                     Text(configUrl.path)
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(.secondary)
@@ -366,12 +372,12 @@ private struct SettingsView: View {
                         .lineLimit(2)
                         .truncationMode(.middle)
                     HStack(spacing: 8) {
-                        Button("Open in Editor") { openConfigInTextEditor() }
+                        Button(L("Open in Editor")) { openConfigInTextEditor() }
                             .buttonStyle(.bordered)
-                        Button("Reload Now") { reloadConfig() }
+                        Button(L("Reload Now")) { reloadConfig() }
                             .buttonStyle(.bordered)
                         if trayModel.lastReloadConfigContainedWarnings {
-                            Button("Show Warnings") { showConfigWarnings() }
+                            Button(L("Show Warnings")) { showConfigWarnings() }
                                 .buttonStyle(.bordered)
                                 .tint(.orange)
                         }
@@ -393,13 +399,13 @@ private struct SettingsView: View {
                         .textSelection(.enabled)
                 }
                 Spacer(minLength: 12)
-                Button("Copy Version") {
+                Button(L("Copy Version")) {
                     "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)".copyToClipboard()
                 }
                 .buttonStyle(.bordered)
             }
             HStack(spacing: 8) {
-                Button("Sponsor AeroSpace") {
+                Button(L("Sponsor AeroSpace")) {
                     NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
                 }
                 .buttonStyle(.bordered)
@@ -632,7 +638,7 @@ private struct GapRow: View {
                         .padding(.vertical, 3)
                         .background(Color.primary.opacity(0.06), in: Capsule())
                 } else {
-                    Text("Per monitor")
+                    Text(L("Per monitor"))
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 7)
@@ -647,7 +653,7 @@ private struct GapRow: View {
                     step: 1,
                 )
             } else {
-                Text("This gap is set separately for each monitor. Use Gaps by Monitor below to change it.")
+                Text(L("This gap is set separately for each monitor. Use Gaps by Monitor below to change it."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -828,7 +834,7 @@ private struct GapsDiagram: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 SettingsIconTile(systemName: "rectangle.inset.filled")
-                Text("Preview").font(.body.weight(.medium))
+                Text(L("Preview")).font(.body.weight(.medium))
                 Spacer()
                 Text("Inner \(Int(innerHorizontal))×\(Int(innerVertical)) · Outer \(Int(outerLeft))/\(Int(outerTop))/\(Int(outerBottom))/\(Int(outerRight))")
                     .font(.system(.caption2, design: .monospaced))
@@ -936,7 +942,7 @@ private struct RunningApplicationsSettings: View {
         HStack(spacing: 6) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
-            TextField("Search applications", text: $search)
+            TextField(L("Search applications"), text: $search)
                 .textFieldStyle(.plain)
             if !search.isEmpty {
                 Button {
@@ -980,15 +986,15 @@ private struct RunningApplicationsSettings: View {
                 ProgressView().controlSize(.small)
             }
             Picker(
-                "Window mode",
+                L("Window mode"),
                 selection: Binding(
                     get: { mode(for: id) },
                     set: { setMode($0, for: app) },
                 ),
             ) {
-                Text("Auto").tag("default")
-                Text("Float").tag("floating")
-                Text("Tile").tag("tiling")
+                Text(L("Auto")).tag("default")
+                Text(L("Float")).tag("floating")
+                Text(L("Tile")).tag("tiling")
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -1070,7 +1076,7 @@ private struct RunningApplicationsSettings: View {
                 error = nil
                 guard mode != "default" else { return }
                 guard let token: RunSessionGuard = .isServerEnabled else {
-                    error = "Saved for new windows. Enable AirSpace to change existing windows."
+                    error = L("Saved for new windows. Enable AirSpace to change existing windows.")
                     return
                 }
                 let ids = windowIDs(app)
