@@ -30,11 +30,18 @@ private struct WorkspaceMenu: View {
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
     @State private var dropMessage: String?
     @GestureState private var drag: WorkspaceAppDrag?
-    @State private var rowFrames: [String: CGRect] = [:]
-    @State private var listSize: CGSize = .zero
+    @State private var dropFrames = WorkspaceDropFrames()
+    @State private var listFrame: CGRect = .zero
+    @State private var contentOffset: CGFloat = 0
+    @State private var isListHovered = false
+    @State private var isQuickBarPinned = false
 
+    private let columnCount = 2
     private let tileHeight: CGFloat = 78
     private let spacing: CGFloat = 8
+    private let maxListHeight: CGFloat = 476
+
+    private var showsQuickBar: Bool { viewModel.workspaces.count > 1 && (isQuickBarPinned || drag != nil) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -44,6 +51,14 @@ private struct WorkspaceMenu: View {
                     Text("Drag an app icon to move its windows").font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
+                if viewModel.axPermissionStatus == .granted, viewModel.isEnabled, viewModel.workspaces.count > 1 {
+                    Toggle(isOn: $isQuickBarPinned) {
+                        Image(systemName: "arrow.up.and.down.and.arrow.left.and.right")
+                    }
+                    .toggleStyle(.button)
+                    .help("Show quick drop targets")
+                    .accessibilityLabel("Show quick drop targets")
+                }
                 Menu {
                     Picker("Sort spaces", selection: $sortOrder) {
                         Text("Space order").tag(WorkspaceSortOrder.name)
@@ -86,61 +101,144 @@ private struct WorkspaceMenu: View {
     }
 
     private var spaceList: some View {
-        ScrollViewReader { scroll in
-            ScrollView(.vertical) {
+        VStack(spacing: spacing) {
+            if showsQuickBar, isQuickBarPinned {
+                quickDropBar
+            }
+            scrollableGrid
+                .overlay(alignment: .top) {
+                    if showsQuickBar, !isQuickBarPinned {
+                        quickDropBar.allowsHitTesting(false)
+                    }
+                }
+        }
+        .overlay(alignment: .topLeading) {
+            if let drag {
+                WorkspaceAppIcon(app: drag.app)
+                    .opacity(0.85)
+                    .position(x: drag.location.x + 14, y: drag.location.y + 14)
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
+            }
+        }
+        .coordinateSpace(name: WorkspaceDragArea.panel)
+        .onPreferenceChange(WorkspaceDropFramePreference.self) { dropFrames = $0 }
+        .onDisappear { isQuickBarPinned = false }
+    }
+
+    private var scrollableGrid: some View {
+        let targetName = drag.flatMap(dropTarget)
+        return ScrollViewReader { scroll in
+            ScrollView(.vertical, showsIndicators: false) {
+                let spaces = sortedSpaces
+                // Keep the source tile alive when a drag scrolls it out of view.
                 VStack(spacing: spacing) {
-                    ForEach(sortedSpaces, id: \.name) { workspace in
-                        WorkspaceTile(
-                            workspace: workspace,
-                            focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
-                            chooseLayout: { mode in runAction { mode.apply(to: Workspace.get(byName: workspace.name)) } },
-                            toggleLock: { runAction { await WorkspaceLocks.shared.toggle(Workspace.get(byName: workspace.name)) } },
-                            drag: _drag,
-                            isDropTarget: drag.flatMap(dropTarget) == workspace.name,
-                            finishDrag: finishDrag,
-                        )
-                        .frame(height: tileHeight)
-                        .id(workspace.name)
-                        .background {
-                            GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: WorkspaceRowFrames.self,
-                                    value: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.list))],
-                                )
+                    ForEach(Array(stride(from: 0, to: spaces.count, by: columnCount)), id: \.self) { start in
+                        HStack(spacing: spacing) {
+                            ForEach(spaces[start..<min(start + columnCount, spaces.count)], id: \.name) { workspace in
+                                tile(for: workspace, isDropTarget: targetName == workspace.name)
+                            }
+                            if start + 1 == spaces.count {
+                                Color.clear.frame(minWidth: 0, maxWidth: .infinity).frame(height: tileHeight)
+                                    .accessibilityHidden(true)
                             }
                         }
                     }
                 }
+                .padding(.trailing, scrollRange > 0 ? 12 : 0)
+                .id(WorkspaceDragArea.grid)
+                .onGeometryChange(for: CGFloat.self) { -$0.frame(in: .named(WorkspaceDragArea.list)).minY } action: { contentOffset = $0 }
             }
             .frame(height: listHeight)
             .coordinateSpace(name: WorkspaceDragArea.list)
-            .onPreferenceChange(WorkspaceRowFrames.self) { rowFrames = $0 }
-            .onGeometryChange(for: CGSize.self) { $0.size } action: { listSize = $0 }
-            .overlay(alignment: .topLeading) {
-                if let drag {
-                    WorkspaceAppIcon(app: drag.app)
-                        .opacity(0.85)
-                        .position(x: drag.location.x + 14, y: drag.location.y + 14)
-                        .accessibilityHidden(true)
-                        .allowsHitTesting(false)
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(WorkspaceDragArea.panel)) } action: { listFrame = $0 }
+            .overlay(alignment: .trailing) {
+                if scrollRange > 0 {
+                    WorkspaceScrollbar(
+                        viewportHeight: listHeight,
+                        contentHeight: contentHeight,
+                        progress: min(max(contentOffset / scrollRange, 0), 1),
+                        isHovered: isListHovered,
+                        scroll: { scroll.scrollTo(WorkspaceDragArea.grid, anchor: UnitPoint(x: 0, y: $0)) },
+                    )
                 }
             }
-            .clipped()
+            .onHover { isListHovered = $0 }
             .task(id: scrollDirection) {
-                guard let direction = scrollDirection else { return }
+                guard let direction = scrollDirection, scrollRange > 0 else { return }
                 while !Task.isCancelled {
                     try? await Task.sleep(for: .milliseconds(260))
-                    guard !Task.isCancelled, scrollDirection == direction else { return }
-                    if let next = nextScrollSpace(direction) {
-                        scroll.scrollTo(next, anchor: direction == .up ? .top : .bottom)
-                    }
+                    guard !Task.isCancelled, scrollDirection == direction, scrollRange > 0 else { return }
+                    let step = direction == .up ? -(tileHeight + spacing) : tileHeight + spacing
+                    let progress = min(max((contentOffset + step) / scrollRange, 0), 1)
+                    scroll.scrollTo(WorkspaceDragArea.grid, anchor: UnitPoint(x: 0, y: progress))
                 }
             }
         }
     }
 
+    private func tile(for workspace: WorkspaceViewModel, isDropTarget: Bool) -> some View {
+        WorkspaceTile(
+            workspace: workspace,
+            focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
+            chooseLayout: { mode in runAction { mode.apply(to: Workspace.get(byName: workspace.name)) } },
+            toggleLock: { runAction { await WorkspaceLocks.shared.toggle(Workspace.get(byName: workspace.name)) } },
+            drag: _drag,
+            isDropTarget: isDropTarget,
+            finishDrag: finishDrag,
+        )
+        .frame(height: tileHeight)
+        .background {
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: WorkspaceDropFramePreference.self,
+                    value: WorkspaceDropFrames(tiles: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
+                )
+            }
+        }
+    }
+
+    private var quickDropBar: some View {
+        let targetName = drag.flatMap(dropTarget)
+        return LazyVGrid(columns: [GridItem(.adaptive(minimum: 30), spacing: 4)], spacing: 4) {
+            ForEach(sortedSpaces, id: \.name) { workspace in
+                let isTarget = targetName == workspace.name
+                let tint = workspace.isLocked ? Color.orange : Color.accentColor
+                Text(workspace.name)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 24)
+                    .foregroundStyle(drag?.workspace == workspace.name ? .secondary : .primary)
+                    .background(isTarget ? tint.opacity(0.25) : Color.primary.opacity(0.075), in: RoundedRectangle(cornerRadius: 5))
+                    .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(isTarget ? tint : .clear))
+                    .help(workspace.name)
+                    .background {
+                        GeometryReader { geometry in
+                            Color.clear.preference(
+                                key: WorkspaceDropFramePreference.self,
+                                value: WorkspaceDropFrames(shortcuts: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
+                            )
+                        }
+                    }
+            }
+        }
+        .padding(8)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.primary.opacity(0.12)))
+        .shadow(color: .black.opacity(0.16), radius: 5, y: 2)
+        .background {
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: WorkspaceDropFramePreference.self,
+                    value: WorkspaceDropFrames(shortcutBar: geometry.frame(in: .named(WorkspaceDragArea.panel))),
+                )
+            }
+        }
+    }
+
     private func dropTarget(_ drag: WorkspaceAppDrag) -> String? {
-        workspaceDropTarget(source: drag.workspace, location: drag.location, listSize: listSize, rowFrames: rowFrames)
+        dropFrames.target(source: drag.workspace, location: drag.location, listFrame: listFrame)
     }
 
     private func finishDrag(_ drag: WorkspaceAppDrag) {
@@ -148,18 +246,13 @@ private struct WorkspaceMenu: View {
     }
 
     private var scrollDirection: WorkspaceScrollDirection? {
-        guard let location = drag?.location, CGRect(origin: .zero, size: listSize).contains(location) else { return nil }
-        if location.y < 24 { return .up }
-        if location.y > listSize.height - 24 { return .down }
+        guard let location = drag?.location, listFrame.contains(location) else { return nil }
+        // The floating bar covers the top edge. Scroll up just below it during a drag.
+        let top = !isQuickBarPinned ? max(listFrame.minY, dropFrames.shortcutBar.maxY) : listFrame.minY
+        if location.y < top { return nil }
+        if location.y < top + 24 { return .up }
+        if location.y > listFrame.maxY - 24 { return .down }
         return nil
-    }
-
-    private func nextScrollSpace(_ direction: WorkspaceScrollDirection) -> String? {
-        let names = sortedSpaces.map(\.name)
-        switch direction {
-            case .up: return names.last { (rowFrames[$0]?.minY ?? 0) < -1 }
-            case .down: return names.first { (rowFrames[$0]?.maxY ?? 0) > listSize.height + 1 }
-        }
     }
 
     private var sortedSpaces: [WorkspaceViewModel] {
@@ -169,9 +262,12 @@ private struct WorkspaceMenu: View {
         }.map(\.element)
     }
 
-    private var listHeight: CGFloat {
-        let rows = CGFloat(viewModel.workspaces.count)
-        return min(rows * tileHeight + max(0, rows - 1) * spacing, 476)
+    private var listHeight: CGFloat { min(contentHeight, maxListHeight) }
+    private var scrollRange: CGFloat { contentHeight - listHeight }
+
+    private var contentHeight: CGFloat {
+        let rows = CGFloat((viewModel.workspaces.count + columnCount - 1) / columnCount)
+        return rows * tileHeight + max(0, rows - 1) * spacing
     }
 
     private func runAction(_ action: @escaping @MainActor () async -> Void) {
@@ -210,7 +306,7 @@ private enum WorkspaceSortOrder: String {
     case name, active
 }
 
-private enum WorkspaceDragArea { case list }
+private enum WorkspaceDragArea { case panel, list, grid }
 private enum WorkspaceScrollDirection { case up, down }
 
 private struct WorkspaceAppDrag {
@@ -219,17 +315,70 @@ private struct WorkspaceAppDrag {
     let location: CGPoint
 }
 
-private struct WorkspaceRowFrames: PreferenceKey {
-    static let defaultValue: [String: CGRect] = [:]
+struct WorkspaceDropFrames: Equatable {
+    var tiles: [String: CGRect] = [:]
+    var shortcuts: [String: CGRect] = [:]
+    var shortcutBar: CGRect = .null
 
-    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) {
-        value.merge(nextValue()) { _, new in new }
+    func target(source: String, location: CGPoint, listFrame: CGRect) -> String? {
+        if shortcutBar.contains(location) {
+            return shortcuts.first { $0.key != source && $0.value.contains(location) }?.key
+        }
+        guard listFrame.contains(location) else { return nil }
+        return tiles.first { $0.key != source && $0.value.contains(location) }?.key
     }
 }
 
-func workspaceDropTarget(source: String, location: CGPoint, listSize: CGSize, rowFrames: [String: CGRect]) -> String? {
-    guard CGRect(origin: .zero, size: listSize).contains(location) else { return nil }
-    return rowFrames.first { $0.key != source && $0.value.contains(location) }?.key
+private struct WorkspaceDropFramePreference: PreferenceKey {
+    static let defaultValue = WorkspaceDropFrames()
+
+    static func reduce(value: inout WorkspaceDropFrames, nextValue: () -> WorkspaceDropFrames) {
+        let next = nextValue()
+        value.tiles.merge(next.tiles) { _, new in new }
+        value.shortcuts.merge(next.shortcuts) { _, new in new }
+        if !next.shortcutBar.isNull { value.shortcutBar = next.shortcutBar }
+    }
+}
+
+private struct WorkspaceScrollbar: View {
+    let viewportHeight: CGFloat
+    let contentHeight: CGFloat
+    let progress: CGFloat
+    let isHovered: Bool
+    let scroll: (CGFloat) -> Void
+
+    @GestureState private var isDragging = false
+    @State private var grabOffset: CGFloat?
+
+    var body: some View {
+        let thumbHeight = max(22, viewportHeight * viewportHeight / contentHeight)
+        let travel = viewportHeight - thumbHeight
+        let thumbTop = progress * travel
+        Capsule()
+            .fill(Color.primary.opacity(isDragging ? 0.28 : 0.17))
+            .frame(width: 5, height: thumbHeight)
+            .offset(y: thumbTop)
+            .frame(width: 12, height: viewportHeight, alignment: .top)
+            .contentShape(Rectangle())
+            .opacity(isHovered || isDragging ? 1 : 0)
+            .allowsHitTesting(isHovered || isDragging)
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .updating($isDragging) { _, state, _ in state = true }
+                    .onChanged { value in
+                        if grabOffset == nil {
+                            let start = value.startLocation.y - thumbTop
+                            grabOffset = (0 ... thumbHeight).contains(start) ? start : thumbHeight / 2
+                        }
+                        let position = value.location.y - (grabOffset ?? 0)
+                        scroll(min(max(position / travel, 0), 1))
+                    },
+            )
+            .onChangeCompat(of: isDragging) { dragging in
+                if !dragging { grabOffset = nil }
+            }
+            .accessibilityHidden(true)
+    }
 }
 
 private struct WorkspaceAppIcon: View {
@@ -310,7 +459,7 @@ private struct WorkspaceTile: View {
                                 .help("\(app.name) · \(app.windowIDs.count) window(s)")
                                 // Keep the gesture local to the menu bar window, without starting a system drag session.
                                 .highPriorityGesture(
-                                    DragGesture(minimumDistance: 5, coordinateSpace: .named(WorkspaceDragArea.list))
+                                    DragGesture(minimumDistance: 5, coordinateSpace: .named(WorkspaceDragArea.panel))
                                         .updating(drag) { value, state, _ in
                                             state = WorkspaceAppDrag(workspace: workspace.name, app: app, location: value.location)
                                         }
@@ -325,10 +474,9 @@ private struct WorkspaceTile: View {
             }
         }
         .padding(.horizontal, 12)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .frame(minWidth: 0, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(background, in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(border, lineWidth: 1))
-
     }
 
     private var background: Color {
