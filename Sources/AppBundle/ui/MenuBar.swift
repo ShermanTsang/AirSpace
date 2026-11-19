@@ -178,6 +178,13 @@ private struct WorkspaceMenu: View {
             workspace: workspace,
             focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
             chooseLayout: { mode in runAction { mode.apply(to: Workspace.get(byName: workspace.name)) } },
+            restoreLayout: { runAction {
+                let target = Workspace.get(byName: workspace.name)
+                let monitor = target.workspaceMonitorInfo
+                WorkspaceDisplayLayouts.shared.forget(workspace: target.name, display: monitor.displayKey)
+                WorkspaceDisplayLayouts.shared.apply(to: target, on: monitor)
+                resetClosedWindowsCache()
+            } },
             toggleLock: { runAction { await WorkspaceLocks.shared.toggle(Workspace.get(byName: workspace.name)) } },
             drag: _drag,
             isDropTarget: isDropTarget,
@@ -397,6 +404,7 @@ private struct WorkspaceTile: View {
     let workspace: WorkspaceViewModel
     let focus: () -> Void
     let chooseLayout: (WorkspaceLayoutMode) -> Void
+    let restoreLayout: () -> Void
     let toggleLock: () -> Void
     let drag: GestureState<WorkspaceAppDrag?>
     let isDropTarget: Bool
@@ -427,6 +435,10 @@ private struct WorkspaceTile: View {
                             }
                         }
                     }
+                    Divider()
+                    Text(workspace.isLocked ? "Layout controlled by lock" : !workspace.canRememberDisplayLayout ? "Display cannot be identified" : workspace.hasDisplayLayout ? "Remembered for this display" : "Using default layout")
+                    Button("Restore default layout", action: restoreLayout)
+                        .disabled(!workspace.hasDisplayLayout || workspace.isLocked)
                 } label: {
                     Image(systemName: workspace.mode.icon)
                         .rotationEffect(.degrees(workspace.mode == .verticalAccordion ? 90 : 0))

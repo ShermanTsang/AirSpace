@@ -11,6 +11,9 @@ extension Workspace {
                     case .auto: workspaceMonitorInfo.then { $0.width >= $0.height } ? .h : .v
                 }
                 let root = TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
+                if let mode = WorkspaceDisplayLayouts.shared.remembered(workspace: name, display: workspaceMonitorInfo.displayKey) {
+                    mode.applyLayout(to: root)
+                }
                 WorkspaceLocks.shared.applySavedRootLayout(root, workspaceName: name)
                 return root
             case 1:

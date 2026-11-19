@@ -29,6 +29,7 @@ final class WorkspaceLocks {
             snapshots[workspace.name] = nil
             occupants[workspace.name] = nil
             save()
+            WorkspaceDisplayLayouts.shared.apply(to: workspace, on: workspace.workspaceMonitorInfo)
             return
         }
         var titles: [OpaqueWindowId: String] = [:]

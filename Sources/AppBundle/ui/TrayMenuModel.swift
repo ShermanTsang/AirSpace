@@ -43,6 +43,8 @@ enum AxPermissionStatus: Equatable {
             name: workspace.name,
             apps: apps,
             mode: WorkspaceLayoutMode(layout: root.layout, orientation: root.orientation),
+            hasDisplayLayout: WorkspaceDisplayLayouts.shared.remembered(workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey) != nil,
+            canRememberDisplayLayout: workspace.workspaceMonitorInfo.displayKey != nil,
             isLocked: workspace.isLocked,
             isFocused: focus.workspace == workspace,
             isVisible: workspace.isVisible,
@@ -61,6 +63,8 @@ struct WorkspaceViewModel {
     let name: String
     let apps: [WorkspaceApp]
     let mode: WorkspaceLayoutMode
+    let hasDisplayLayout: Bool
+    let canRememberDisplayLayout: Bool
     let isLocked: Bool
     let isFocused: Bool
     let isVisible: Bool
@@ -68,7 +72,7 @@ struct WorkspaceViewModel {
     var activityRank: Int { isFocused ? 0 : isVisible ? 1 : apps.isEmpty ? 3 : 2 }
 }
 
-enum WorkspaceLayoutMode: String, CaseIterable {
+enum WorkspaceLayoutMode: String, CaseIterable, Codable {
     case horizontalTiles, verticalTiles, horizontalAccordion, verticalAccordion
 
     init(layout: Layout, orientation: Orientation) {
@@ -98,10 +102,15 @@ enum WorkspaceLayoutMode: String, CaseIterable {
         }
     }
 
-    @MainActor func apply(to workspace: Workspace) {
-        let root = workspace.rootTilingContainer
+    @MainActor func applyLayout(to root: TilingContainer) {
         root.layout = self == .horizontalTiles || self == .verticalTiles ? .tiles : .accordion
         root.changeOrientation(self == .horizontalTiles || self == .horizontalAccordion ? .h : .v)
+    }
+
+    @MainActor func apply(to workspace: Workspace) {
+        let root = workspace.rootTilingContainer
+        applyLayout(to: root)
+        WorkspaceDisplayLayouts.shared.remember(self, workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey)
         WorkspaceLocks.shared.updateRootLayout(workspace)
         resetClosedWindowsCache()
     }

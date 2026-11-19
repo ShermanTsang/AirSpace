@@ -24,10 +24,29 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
 }
 
 @MainActor private func rearrangeMonitors() {
+    let previousDisplays = Dictionary(uniqueKeysWithValues: Monitor.all.flatMap { monitor in
+        monitor.children.flatMap { container in
+            container.children.compactMap { child -> (ObjectIdentifier, String)? in
+                guard let workspace = child as? Workspace else { return nil }
+                return (ObjectIdentifier(workspace), monitorLayoutIdentity(monitor.info))
+            }
+        }
+    })
     var newMonitorPoints = globalUnsortedMonitorInfos.grouped(by: { $0.rect.topLeftCorner }).mapValues { $0.singleOrNil().orDie() }
 
     var oldPointToMonitor = pointToMonitor
     pointToMonitor = [:]
+
+    // Preserve each monitor's workspaces when displays move in the arrangement.
+    for (newPoint, info) in Array(newMonitorPoints) {
+        guard let key = info.displayKey,
+              let match = oldPointToMonitor.first(where: { $0.value.info.displayKey == key }) else { continue }
+        let monitor = match.value
+        oldPointToMonitor.removeValue(forKey: match.key)
+        newMonitorPoints.removeValue(forKey: newPoint)
+        monitor._info = info
+        pointToMonitor[newPoint] = monitor
+    }
 
     var newPointToClosestOldPoint = [Point: Point]()
     var oldPointToClosestNewPoint = [Point: Point]()
@@ -84,6 +103,19 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
         pointToMonitor[monitor.info.rect.topLeftCorner] = monitor
         i += 1
     }
+    for monitor in Monitor.all {
+        for container in monitor.children {
+            for case let workspace as Workspace in container.children {
+                if let previous = previousDisplays[ObjectIdentifier(workspace)], previous != monitorLayoutIdentity(monitor.info) {
+                    WorkspaceDisplayLayouts.shared.apply(to: workspace, on: monitor.info)
+                }
+            }
+        }
+    }
+}
+
+private func monitorLayoutIdentity(_ info: MonitorInfo) -> String {
+    "\(info.displayKey ?? "unknown")|\(info.width)|\(info.height)"
 }
 
 extension MonitorInfo {
@@ -113,7 +145,11 @@ extension MonitorInfo {
 }
 
 @MainActor func gcMonitors() {
-    if pointToMonitor.count != globalUnsortedMonitorInfos.count {
+    let infos = globalUnsortedMonitorInfos
+    if pointToMonitor.count != infos.count || infos.contains(where: { info in
+        guard let monitor = pointToMonitor[info.rect.topLeftCorner] else { return true }
+        return monitorLayoutIdentity(monitor.info) != monitorLayoutIdentity(info)
+    }) {
         rearrangeMonitors()
     }
 }

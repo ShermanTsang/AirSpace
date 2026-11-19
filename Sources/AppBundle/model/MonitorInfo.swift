@@ -4,6 +4,7 @@ import Common
 private struct MonitorInfoImpl {
     let monitorAppKitNsScreenScreensId: Int
     let name: String
+    let displayKey: String?
     let rect: Rect
     let visibleRect: Rect
     let isMain: Bool
@@ -19,6 +20,7 @@ protocol MonitorInfo: AeroAny {
     /// The index in NSScreen.screens array. 1-based index
     var monitorAppKitNsScreenScreensId: Int { get }
     var name: String { get }
+    var displayKey: String? { get }
     var rect: Rect { get }
     var visibleRect: Rect { get }
     var width: CGFloat { get }
@@ -26,10 +28,15 @@ protocol MonitorInfo: AeroAny {
     var isMain: Bool { get }
 }
 
+extension MonitorInfo {
+    var displayKey: String? { nil }
+}
+
 final class LazyMonitorInfo: MonitorInfo {
     private let screen: NSScreen
     let monitorAppKitNsScreenScreensId: Int
     let name: String
+    let displayKey: String?
     let width: CGFloat
     let height: CGFloat
     let isMain: Bool
@@ -39,6 +46,7 @@ final class LazyMonitorInfo: MonitorInfo {
     init(monitorAppKitNsScreenScreensId: Int, isMain: Bool, _ screen: NSScreen) {
         self.monitorAppKitNsScreenScreensId = monitorAppKitNsScreenScreensId
         self.name = screen.localizedName
+        self.displayKey = screen.stableDisplayKey
         self.width = screen.frame.width // Don't call rect because it would cause recursion during mainMonitor init
         self.height = screen.frame.height // Don't call rect because it would cause recursion during mainMonitor init
         self.screen = screen
@@ -59,10 +67,18 @@ final class LazyMonitorInfo: MonitorInfo {
 // 2. It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 //    kAXFocusedWindowChangedNotification callbacks.
 extension NSScreen {
+    fileprivate var stableDisplayKey: String? {
+        guard let number = deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber else { return nil }
+        let id = CGDirectDisplayID(number.uint32Value)
+        guard let uuid = unsafe CGDisplayCreateUUIDFromDisplayID(id)?.takeRetainedValue() else { return nil }
+        return CFUUIDCreateString(nil, uuid) as String
+    }
+
     fileprivate func toMonitorInfo(monitorAppKitNsScreenScreensId: Int) -> MonitorInfo {
         MonitorInfoImpl(
             monitorAppKitNsScreenScreensId: monitorAppKitNsScreenScreensId,
             name: localizedName,
+            displayKey: stableDisplayKey,
             rect: rect,
             visibleRect: visibleRect,
             isMain: isMainScreen,
@@ -89,6 +105,7 @@ private let testMonitorInfoRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, he
 private let testMonitorInfo = MonitorInfoImpl(
     monitorAppKitNsScreenScreensId: 1,
     name: "Test Monitor",
+    displayKey: "test-monitor",
     rect: testMonitorInfoRect,
     visibleRect: testMonitorInfoRect,
     isMain: true,

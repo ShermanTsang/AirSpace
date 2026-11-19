@@ -23,7 +23,11 @@ extension WorkspacesContainer {
     @MainActor func bindWorkspace(_ workspace: Workspace) -> Bool {
         guard let parent = parent as? Monitor else { return false }
         if !isValidAssignment(workspace: workspace, point: parent.info.rect.topLeftCorner) { return false }
+        let previousDisplay = workspace.nodeMonitorInfo?.displayKey
         workspace.bind(to: self, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+        if previousDisplay != parent.info.displayKey {
+            WorkspaceDisplayLayouts.shared.apply(to: workspace, on: parent.info)
+        }
         return true
     }
 }

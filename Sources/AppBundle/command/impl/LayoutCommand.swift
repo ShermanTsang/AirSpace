@@ -41,6 +41,13 @@ struct LayoutCommand: Command {
         let targetDescription = args.toggleBetween.val.first(where: { !node.matchesDescription($0) })
             ?? args.toggleBetween.val.first.orDie()
         if node.matchesDescription(targetDescription) {
+            if !args.failIfNoop, case .tilingContainer(let parent) = node,
+               let workspace = parent.nodeWorkspace, parent === workspace.rootTilingContainer {
+                WorkspaceDisplayLayouts.shared.remember(
+                    WorkspaceLayoutMode(layout: parent.layout, orientation: parent.orientation),
+                    workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey,
+                )
+            }
             switch args.failIfNoop {
                 case true: return .fail
                 case false:
@@ -107,6 +114,11 @@ struct LayoutCommand: Command {
             let targetLayout = targetLayout ?? parent.layout
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
+            if let workspace = parent.nodeWorkspace, parent === workspace.rootTilingContainer {
+                let mode = WorkspaceLayoutMode(layout: parent.layout, orientation: parent.orientation)
+                WorkspaceDisplayLayouts.shared.remember(mode, workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey)
+                WorkspaceLocks.shared.updateRootLayout(workspace)
+            }
             return .succ
     }
 }
