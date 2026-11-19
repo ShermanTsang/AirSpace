@@ -79,6 +79,15 @@ extension Window {
     @MainActor
     fileprivate func layoutFloatingWindow(_ context: LayoutContext, _ windowRect: Rect?) {
         let workspace = context.workspace
+        if let frame = pendingLockedFloatingFrame {
+            pendingLockedFloatingFrame = nil
+            let rect = workspace.workspaceMonitorInfo.rect
+            let x = (rect.minX + frame.x * rect.width).coerce(in: rect.minX ... max(rect.minX, rect.maxX - frame.size.width))
+            let y = (rect.minY + frame.y * rect.height).coerce(in: rect.minY ... max(rect.minY, rect.maxY - frame.size.height))
+            lastFloatingSize = frame.size
+            setAxFrame(Point(x: x, y: y), frame.size)
+            return
+        }
         let currentMonitor = windowRect?.center.monitorApproximation
         if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
             let windowTopLeftCorner = windowRect.topLeftCorner

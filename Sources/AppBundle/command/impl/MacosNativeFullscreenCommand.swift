@@ -50,7 +50,9 @@ struct MacosNativeFullscreenCommand: Command {
                     }
                 default:
                     do {
-                        try await window.relayoutWindow(on: workspace, .nonCancellable)
+                        if !WorkspaceLocks.shared.restoreAfterNativeState(window, in: workspace) {
+                            try await window.relayoutWindow(on: workspace, .nonCancellable)
+                        }
                     } catch {
                         return .fail(io.err(bugPrompt()))
                     }

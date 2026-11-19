@@ -5,6 +5,8 @@ open class Window: TreeNode, Hashable {
     let windowId: OpaqueWindowId
     let app: any AbstractApp
     var lastFloatingSize: CGSize?
+    var pendingLockedFloatingFrame: LockedFloatingFrame?
+    var minimizedWorkspaceName: String?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard

@@ -30,7 +30,11 @@ struct MoveNodeToWorkspaceCommand: Command {
 
 @MainActor
 func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool, index: Int = INDEX_BIND_LAST) -> BinaryExitCode {
-    if window.nodeWorkspace == targetWorkspace {
+    if let locked = lockedWorkspaceForTransfer(window, to: targetWorkspace) {
+        showWorkspaceLocked(locked)
+        return .fail(io.err(workspaceLockedMessage(locked.name)))
+    }
+    if window.membershipWorkspace == targetWorkspace {
         return switch failIfNoop {
             case true: .fail
             case false:
@@ -40,6 +44,8 @@ func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io:
     let targetContainer: NonLeafTreeNodeObject = window.isFloating
         ? targetWorkspace.floatingWindowsContainer
         : targetWorkspace.rootTilingContainer
+    window.minimizedWorkspaceName = nil
+    window.pendingLockedFloatingFrame = nil
     window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: index)
     return .from(bool: focusFollowsWindow ? window.focusWindow() : true)
 }

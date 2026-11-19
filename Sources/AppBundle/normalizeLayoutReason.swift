@@ -12,8 +12,7 @@
         let popup = (node as! MacWindow)
         let windowLevel = try await popup.getWindowLevel(.cancellable)
         if try await popup.isWindowHeuristic(windowLevel, .cancellable) {
-            try await popup.relayoutWindow(on: globalFocus.workspace, .cancellable)
-            await runOnWindowDetected(ifConventional: popup)
+            try await admitPromotedPopup(popup)
         }
     }
 }
@@ -33,6 +32,7 @@
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
                     case isMacosMinimized:
+                        window.minimizedWorkspaceName = workspace.name
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                     case isMacosWindowOfHiddenApp:
@@ -51,10 +51,19 @@
 @MainActor func exitMacOsNativeUnconventionalState(
     window: Window,
     prevParentKind: WindowParentCases.Kind,
-    workspace: Workspace,
+    workspace preferredWorkspace: Workspace,
     _ cm: CancellationMode,
 ) async throws {
+    let previous = window.membershipWorkspace
+    window.minimizedWorkspaceName = nil
     window.layoutReason = .standard
+    if let previous, WorkspaceLocks.shared.restoreAfterNativeState(window, in: previous) { return }
+    let workspace: Workspace
+    if let previous, previous.isLocked {
+        workspace = previous
+    } else {
+        workspace = preferredWorkspace.isLocked ? preferredWorkspace.unlockedAlternative() : preferredWorkspace
+    }
     switch prevParentKind {
         case .floatingWindowsContainer:
             window.bindAsFloatingWindow(to: workspace)

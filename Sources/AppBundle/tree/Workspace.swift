@@ -60,12 +60,12 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     }
 
     @MainActor static func garbageCollectUnusedWorkspaces() {
-        for name in config.persistentWorkspaces {
+        for name in Set(config.persistentWorkspaces).union(WorkspaceLocks.shared.names) {
             _ = get(byName: name) // Make sure that all persistent workspaces are "cached"
         }
         let focus = globalFocus
         let garbage = workspaceNameToWorkspace.values.filter { workspace in
-            !config.persistentWorkspaces.contains(workspace.name) &&
+            !config.persistentWorkspaces.contains(workspace.name) && !workspace.isLocked &&
                 workspace.isEffectivelyEmpty &&
                 !workspace.isVisible &&
                 workspace.name != focus.workspace.name

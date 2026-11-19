@@ -45,10 +45,12 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
 @MainActor
 private func moveFloatingWindow(_ window: Window) async throws {
     guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.visibleWorkspace else { return }
-    guard let parent = window.parent else { return }
-    if targetWorkspace != parent {
-        window.bindAsFloatingWindow(to: targetWorkspace)
+    guard targetWorkspace != window.nodeWorkspace else { return }
+    if let locked = lockedWorkspaceForTransfer(window, to: targetWorkspace) {
+        showWorkspaceLocked(locked)
+        return
     }
+    window.bindAsFloatingWindow(to: targetWorkspace)
 }
 
 @MainActor
@@ -57,6 +59,10 @@ private func moveTilingWindow(_ window: Window) {
     window.lastAppliedLayoutPhysicalRect = nil
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.visibleWorkspace
+    if let locked = lockedWorkspaceForTransfer(window, to: targetWorkspace) {
+        showWorkspaceLocked(locked)
+        return
+    }
     let swapTarget = mouseLocation
         .findWindowRecursively(in: targetWorkspace.rootTilingContainer, virtual: false, fullscreenCoversAll: false)?
         .takeIf { $0 != window }

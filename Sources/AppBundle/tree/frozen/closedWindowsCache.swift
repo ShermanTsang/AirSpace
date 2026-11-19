@@ -50,7 +50,7 @@ struct FrozenWorkspace: Sendable {
 }
 
 @MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) async throws -> Bool {
-    if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
+    if newlyDetectedWindow.membershipWorkspace?.isLocked == true || !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
     let monitors = globalUnsortedMonitorInfos
@@ -59,14 +59,19 @@ struct FrozenWorkspace: Sendable {
     for monitor in closedWindowsCache.monitors {
         for frozenWorkspace in monitor.workspaces {
             let workspace = Workspace.get(byName: frozenWorkspace.name)
+            guard !workspace.isLocked else { continue }
             _ = topLeftCornerToMonitorInfo[monitor.topLeftCorner]?
                 .singleOrNil()?
                 .bindWorkspace(workspace)
             for frozenWindow in frozenWorkspace.floatingWindows {
-                MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+                if let window = MacWindow.get(byId: frozenWindow.id), window.membershipWorkspace?.isLocked != true {
+                    window.bindAsFloatingWindow(to: workspace)
+                }
             }
             for frozenWindow in frozenWorkspace.macosUnconventionalWindows { // Will get fixed by normalizations
-                MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+                if let window = MacWindow.get(byId: frozenWindow.id), window.membershipWorkspace?.isLocked != true {
+                    window.bindAsFloatingWindow(to: workspace)
+                }
             }
             let prevRoot = workspace.rootTilingContainer // Save prevRoot into a variable to avoid it being garbage collected earlier than needed
             let potentialOrphans = prevRoot.allLeafWindowsRecursive
@@ -99,7 +104,7 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         switch child {
             case .window(let w):
                 // Stop the loop if can't find the window, because otherwise all the subsequent windows will have incorrect index
-                guard let window = MacWindow.get(byId: w.id) else { return false }
+                guard let window = MacWindow.get(byId: w.id), window.membershipWorkspace?.isLocked != true else { return false }
                 window.bind(to: container, adaptiveWeight: w.weight, index: index)
             case .container(let c):
                 // There is no reason to continue

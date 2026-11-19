@@ -29,50 +29,80 @@ enum AxPermissionStatus: Equatable {
     TrayMenuModel.shared.focusedWorkspaceIcons = Array(focus.workspace.allLeafWindowsRecursive.lazy.compactMap {
         NSRunningApplication(processIdentifier: $0.app.pid)?.icon
     }.prefix(3))
-    TrayMenuModel.shared.workspaces = Workspace.all.map {
-        var seenPids = Set<Int32>()
-        let workspaceApps = $0.allLeafWindowsRecursive.compactMap { window -> WorkspaceApp? in
-            guard seenPids.insert(window.app.pid).inserted else { return nil }
-            let runningApp = NSRunningApplication(processIdentifier: window.app.pid)
-            return WorkspaceApp(name: window.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app", icon: runningApp?.icon)
-        }.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        let root = $0.children.filterIsInstance(of: TilingContainer.self).first
-        let layout = root?.layout ?? config.defaultRootContainerLayout
-        let orientation = root.map { $0.orientation == .h ? "Horizontal" : "Vertical" } ?? {
-            switch config.defaultRootContainerOrientation {
-                case .horizontal: "Horizontal"
-                case .vertical: "Vertical"
-                case .auto: "Auto"
-            }
-        }()
+    TrayMenuModel.shared.workspaces = Workspace.all.map { workspace in
+        let apps = workspace.lockableWindows.grouped { $0.app.pid }.map { pid, windows in
+            let runningApp = NSRunningApplication(processIdentifier: pid)
+            let name = windows.first?.app.name?.takeIf { !$0.isEmpty } ?? runningApp?.localizedName ?? "Unknown app"
+            return WorkspaceApp(id: pid, name: name, icon: runningApp?.icon, windowIDs: windows.map(\.windowId))
+        }.sorted {
+            let order = $0.name.localizedStandardCompare($1.name)
+            return order == .orderedSame ? $0.id < $1.id : order == .orderedAscending
+        }
+        let root = workspace.rootTilingContainer
         return WorkspaceViewModel(
-            name: $0.name,
-            apps: workspaceApps,
-            layoutName: layout == .tiles ? "Tiles" : "Accordion",
-            orientationName: orientation,
-            usesDefaultLayout: root == nil,
-            isFocused: focus.workspace == $0,
-            isEffectivelyEmpty: $0.isEffectivelyEmpty,
-            isVisible: $0.isVisible,
+            name: workspace.name,
+            apps: apps,
+            mode: WorkspaceLayoutMode(layout: root.layout, orientation: root.orientation),
+            isLocked: workspace.isLocked,
+            isFocused: focus.workspace == workspace,
+            isVisible: workspace.isVisible,
         )
-    }.sorted { lhs, rhs in
-        if lhs.isEffectivelyEmpty != rhs.isEffectivelyEmpty { return !lhs.isEffectivelyEmpty }
-        return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
     }
 }
 
-struct WorkspaceApp {
+struct WorkspaceApp: Identifiable {
+    let id: Int32
     let name: String
     let icon: NSImage?
+    let windowIDs: [OpaqueWindowId]
 }
 
 struct WorkspaceViewModel {
     let name: String
     let apps: [WorkspaceApp]
-    let layoutName: String
-    let orientationName: String
-    let usesDefaultLayout: Bool
+    let mode: WorkspaceLayoutMode
+    let isLocked: Bool
     let isFocused: Bool
-    let isEffectivelyEmpty: Bool
     let isVisible: Bool
+
+    var activityRank: Int { isFocused ? 0 : isVisible ? 1 : apps.isEmpty ? 3 : 2 }
+}
+
+enum WorkspaceLayoutMode: String, CaseIterable {
+    case horizontalTiles, verticalTiles, horizontalAccordion, verticalAccordion
+
+    init(layout: Layout, orientation: Orientation) {
+        self = switch (layout, orientation) {
+            case (.tiles, .h): .horizontalTiles
+            case (.tiles, .v): .verticalTiles
+            case (.accordion, .h): .horizontalAccordion
+            case (.accordion, .v): .verticalAccordion
+        }
+    }
+
+    var icon: String {
+        switch self {
+            case .horizontalTiles: "rectangle.split.2x1"
+            case .verticalTiles: "rectangle.split.1x2"
+            case .horizontalAccordion: "rectangle.stack"
+            case .verticalAccordion: "rectangle.stack"
+        }
+    }
+
+    var title: String {
+        switch self {
+            case .horizontalTiles: "Horizontal tiles"
+            case .verticalTiles: "Vertical tiles"
+            case .horizontalAccordion: "Horizontal accordion"
+            case .verticalAccordion: "Vertical accordion"
+        }
+    }
+
+    @MainActor func apply(to workspace: Workspace) {
+        let root = workspace.rootTilingContainer
+        root.layout = self == .horizontalTiles || self == .verticalTiles ? .tiles : .accordion
+        root.changeOrientation(self == .horizontalTiles || self == .horizontalAccordion ? .h : .v)
+        WorkspaceLocks.shared.updateRootLayout(workspace)
+        resetClosedWindowsCache()
+    }
 }

@@ -10,7 +10,9 @@ extension Workspace {
                     case .vertical: .v
                     case .auto: workspaceMonitorInfo.then { $0.width >= $0.height } ? .h : .v
                 }
-                return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
+                let root = TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
+                WorkspaceLocks.shared.applySavedRootLayout(root, workspaceName: name)
+                return root
             case 1:
                 return containers.singleOrNil().orDie()
             default:

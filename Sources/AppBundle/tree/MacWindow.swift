@@ -25,23 +25,24 @@ final class MacWindow: Window {
     static func getOrRegister(windowId: OpaqueWindowId, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId, .cancellable)
-        let data = try await unbindAndGetBindingDataForNewWindow(
-            windowId,
-            macApp,
-            isStartup
-                ? (rect?.center.monitorApproximation ?? mainMonitorInfo).visibleWorkspace
-                : globalFocus.workspace,
-            window: nil,
-            .cancellable,
-        )
+        let type = try await detectWindowType(windowId, macApp, .cancellable)
+        let title = try await savedWindowTitle(windowId, macApp, type, .cancellable)
 
-        // atomic synchronous section
+        // Choose and claim the slot without suspending; two windows may be detected concurrently.
         if let existing = allWindowsMap[windowId] { return existing }
+        let preferred = isStartup ? (rect?.center.monitorApproximation ?? mainMonitorInfo).visibleWorkspace : globalFocus.workspace
+        let destination = newWindowDestination(windowId, macApp, type, title, preferred: preferred)
+        let data = destination.binding
         let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
         allWindowsMap[windowId] = window
+        if let placement = destination.placement {
+            WorkspaceLocks.shared.restore(placement, window: window, in: Workspace.get(byName: placement.workspace))
+        }
 
         try await debugWindowsIfRecording(window, .cancellable)
-        if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
+        if destination.placement != nil {
+            _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window, runCallbacks: false)
+        } else if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
             await runOnWindowDetected(ifConventional: window)
         }
         return window
@@ -198,6 +199,19 @@ final class MacWindow: Window {
         self.prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
     }
 
+    @MainActor
+    func floatingFrameForWorkspaceLock(_ workspace: Workspace) async throws -> LockedFloatingFrame? {
+        if let position = prevUnhiddenProportionalPositionInsideWorkspaceRect, let size = lastFloatingSize {
+            return LockedFloatingFrame(x: position.x, y: position.y, size: size)
+        }
+        guard let frame = try await getAxRect(.nonCancellable) else { return nil }
+        if let position = prevUnhiddenProportionalPositionInsideWorkspaceRect, let size = lastFloatingSize {
+            return LockedFloatingFrame(x: position.x, y: position.y, size: size)
+        }
+        let monitor = workspace.workspaceMonitorInfo.rect
+        return LockedFloatingFrame(x: (frame.minX - monitor.minX) / monitor.width, y: (frame.minY - monitor.minY) / monitor.height, size: frame.size)
+    }
+
     override var isHiddenInCorner: Bool {
         prevUnhiddenProportionalPositionInsideWorkspaceRect != nil
     }
@@ -218,18 +232,60 @@ final class MacWindow: Window {
 extension Window {
     @MainActor
     func relayoutWindow(on workspace: Workspace, _ cm: CancellationMode, forceTile: Bool = false) async throws {
-        let data = forceTile
-            ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
-            : try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self, cm)
+        let type: AxUiElementWindowType = forceTile ? .window : try await detectWindowType(windowId, asMacWindow().macApp, cm)
+        let data = unbindAndGetBindingData(type, workspace, window: self)
         bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }
 
-// The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewWindow(_ windowId: OpaqueWindowId, _ macApp: MacApp, _ workspace: Workspace, window: Window?, _ cm: CancellationMode) async throws -> BindingData {
-    let windowLevel = try await macApp.getWindowLevel(windowId, cm)
-    return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel, cm) {
+private func detectWindowType(_ id: OpaqueWindowId, _ app: MacApp, _ cm: CancellationMode) async throws -> AxUiElementWindowType {
+    let level = try await app.getWindowLevel(id, cm)
+    return try await app.getAxUiElementWindowType(id, level, cm)
+}
+
+// Called when a previously unmanaged popup becomes a regular window.
+@MainActor
+func admitPromotedPopup(_ window: MacWindow) async throws {
+    let type = try await detectWindowType(window.windowId, window.macApp, .cancellable)
+    let title = try await savedWindowTitle(window.windowId, window.macApp, type, .cancellable)
+    guard window.parent is MacosPopupWindowsContainer else { return }
+    let destination = newWindowDestination(window.windowId, window.macApp, type, title, preferred: globalFocus.workspace)
+    let data = destination.binding
+    window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+    if let placement = destination.placement {
+        WorkspaceLocks.shared.restore(placement, window: window, in: Workspace.get(byName: placement.workspace))
+        _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window, runCallbacks: false)
+    } else {
+        await runOnWindowDetected(ifConventional: window)
+    }
+}
+
+@MainActor
+private func savedWindowTitle(_ id: OpaqueWindowId, _ app: MacApp, _ type: AxUiElementWindowType, _ cm: CancellationMode) async throws -> String? {
+    guard type != .popup, WorkspaceLocks.shared.remembers(app) else { return nil }
+    return try await app.getAxTitle(id, cm) ?? ""
+}
+
+@MainActor
+private func newWindowDestination(
+    _ id: OpaqueWindowId, _ app: MacApp, _ type: AxUiElementWindowType, _ title: String?, preferred: Workspace,
+) -> (binding: BindingData, placement: WorkspaceLocks.Placement?) {
+    if let title, let placement = WorkspaceLocks.shared.placement(for: app, title: title, id: id) {
+        let workspace = Workspace.get(byName: placement.workspace)
+        return (WorkspaceLocks.shared.initialBinding(for: placement, workspace: workspace), placement)
+    }
+    if type != .popup && preferred.isLocked {
+        showWorkspaceLocked(preferred)
+        return (unbindAndGetBindingData(type, preferred.unlockedAlternative(), window: nil), nil)
+    }
+    return (unbindAndGetBindingData(type, preferred, window: nil), nil)
+}
+
+// The function is private because it's unsafe. It can leave the window in an unbound state.
+@MainActor
+private func unbindAndGetBindingData(_ type: AxUiElementWindowType, _ workspace: Workspace, window: Window?) -> BindingData {
+    return switch type {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace.floatingWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
@@ -275,13 +331,14 @@ func runOnWindowDetected(ifConventional window: Window) async {
 }
 
 @MainActor
-func onWindowDetected(_ env: CmdEnv, _ io: CmdIo, _ window: Window) async -> Int32ExitCode {
+func onWindowDetected(_ env: CmdEnv, _ io: CmdIo, _ window: Window, runCallbacks: Bool = true) async -> Int32ExitCode {
     broadcastEvent(.windowDetected(
         windowId: window.windowId,
         workspace: window.nodeWorkspace?.name,
         appBundleId: window.app.rawAppBundleId,
         appName: window.app.name,
     ))
+    guard runCallbacks else { return .succ }
     var lastExitCode = Int32ExitCode.succ
     for callback in config.onWindowDetected where await callback.matches(window) {
         lastExitCode = await callback.run.run(env.withWindowId(window.windowId), io)
