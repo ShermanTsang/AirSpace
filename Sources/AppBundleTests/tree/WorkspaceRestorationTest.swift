@@ -23,6 +23,31 @@ struct WorkspaceRestorationTest {
         #expect(restored.placement(app: "other", title: "Same") == nil)
     }
 
+    @Test func singleEntryFallbackOnlyWhenTitleCannotIdentifyWindow() throws {
+        let suite = "WorkspaceRestorationTest.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+
+        defaults.set(
+            try JSONEncoder().encode([WorkspaceRestoration.Entry(app: "app", title: "Old", workspace: "1")]),
+            forKey: "workspace" + "Membership.v1",
+        )
+        let restored = WorkspaceRestoration(defaults: defaults)
+        #expect(restored.placement(app: "app", title: "Brand New") == nil)
+        #expect(restored.placement(app: "app", title: "") == "1")
+        #expect(restored.placement(app: "app", title: "") == nil)
+
+        let untitledSuite = suite + ".untitled"
+        let untitledDefaults = UserDefaults(suiteName: untitledSuite)!
+        defer { untitledDefaults.removePersistentDomain(forName: untitledSuite) }
+        untitledDefaults.set(
+            try JSONEncoder().encode([WorkspaceRestoration.Entry(app: "app", title: "", workspace: "2")]),
+            forKey: "workspace" + "Membership.v1",
+        )
+        let untitled = WorkspaceRestoration(defaults: untitledDefaults)
+        #expect(untitled.placement(app: "app", title: "Now Has A Title") == "2")
+    }
+
     @Test func configDefaultsToEnabledAndCanBeDisabled() {
         #expect(Config().restoreWindowWorkspaces)
         let parsed = parseConfig("restore-window-workspaces = false")

@@ -36,6 +36,16 @@ The tag must match:
 
 The version without the leading `v` is passed to the build as `MARKETING_VERSION` and embedded in the app.
 
+### Portal version code
+
+The in-app update check compares integer version codes, not version strings. AirSpace derives the current code as:
+
+```text
+major * 1_000_000 + minor * 1_000 + patch
+```
+
+For example, `v1.2.3` is `1002003`. Minor and patch are capped at 999. If releases are registered with the walnut portal, the signed `manifest.json` must use the same `version_code`; otherwise the portal cannot tell that the running build is older than a published release. Release registration is a separate platform-side step from publishing the GitHub Release.
+
 ## Prerequisites
 
 ### Apple Developer account

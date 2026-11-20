@@ -104,6 +104,27 @@ private struct WorkspaceMenu: View {
                     scrollableGrid
                 }
             }
+            Divider()
+            HStack(spacing: 12) {
+                Menu {
+                    Button(L("Help & Documentation")) { openSupport(.docs) }
+                    Button(L("Announcements")) { openSupport(.announcements) }
+                    Button(L("Agreements")) { openSupport(.agreements) }
+                    Button(L("Contact Support")) { openSupport(.contacts) }
+                } label: {
+                    Label(L("Help & Support"), systemImage: "questionmark.circle")
+                }
+                .menuIndicator(.hidden)
+                .fixedSize()
+                Button {
+                    Task.startUnstructured { await SupportActions.checkForUpdates() }
+                } label: {
+                    Label(L("Check for Updates"), systemImage: "arrow.triangle.2.circlepath")
+                }
+                .buttonStyle(.borderless)
+                Spacer(minLength: 0)
+            }
+            .font(.callout)
         }
         .overlay(alignment: .topLeading) {
             if let drag {
@@ -119,6 +140,11 @@ private struct WorkspaceMenu: View {
         .onDisappear { isQuickBarPinned = false }
         .padding(14)
         .frame(width: 520)
+    }
+
+    private func openSupport(_ section: SupportModel.Section) {
+        SupportModel.shared.section = section
+        openWindow(id: supportWindowId)
     }
 
     private var scrollableGrid: some View {

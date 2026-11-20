@@ -31,7 +31,11 @@ final class WorkspaceRestoration {
     func placement(app: String, title: String) -> String? {
         let matches = entries.indices.filter { entries[$0].app == app }
         let exact = matches.filter { !title.isEmpty && entries[$0].title == title }
-        let candidates = exact.isEmpty && matches.count == 1 ? matches : exact
+        // A single app entry may only be reused when the title cannot distinguish windows. Otherwise a
+        // newly opened window with a different title would be restored into the old workspace.
+        let candidates = exact.isEmpty && matches.count == 1 && (title.isEmpty || entries[matches[0]].title.isEmpty)
+            ? matches
+            : exact
         // Identical titles across workspaces cannot be assigned safely.
         guard let first = candidates.first, candidates.allSatisfy({ entries[$0].workspace == entries[first].workspace }),
               let free = candidates.first(where: { !claimed.contains($0) }) else { return nil }
@@ -50,7 +54,8 @@ final class WorkspaceRestoration {
         var snapshot: [Entry] = []
         for window in windows {
             guard let app = Self.identity(window.app), let workspace = window.membershipWorkspace?.name else { continue }
-            guard let title = try? await window.getTitle(.nonCancellable) else { return }
+            // A single unreadable window must not prevent saving every other window.
+            guard let title = try? await window.getTitle(.nonCancellable) else { continue }
             guard MacWindow.allWindowsMap[window.windowId] === window, window.membershipWorkspace?.name == workspace else { return }
             snapshot.append(Entry(app: app, title: title, workspace: workspace))
         }

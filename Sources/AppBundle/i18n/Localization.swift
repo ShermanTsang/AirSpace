@@ -12,6 +12,23 @@ public enum AppLanguage: String, CaseIterable, Identifiable {
             case .zhHans: "简体中文"
         }
     }
+
+    static var selected: AppLanguage {
+        AppLanguage(rawValue: UserDefaults.standard.string(forKey: languagePreferenceKey) ?? "system") ?? .system
+    }
+
+    /// The locale tags expected by the walnut portal API.
+    var portalLocale: String {
+        switch self {
+            case .zhHans: return "zh-CN"
+            case .en: return "en"
+            case .system:
+                switch resolveSystemLanguage(Locale.preferredLanguages) {
+                    case .zhHans: return "zh-CN"
+                    case .en, .system: return "en"
+                }
+        }
+    }
 }
 
 private let languagePreferenceKey = "airspace.language"

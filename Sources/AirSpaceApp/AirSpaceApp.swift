@@ -16,6 +16,7 @@ struct AirSpaceApp: App {
     var body: some Scene {
         menuBar(viewModel: viewModel)
         getSettingsWindow(viewModel: viewModel)
+        getSupportWindow()
         getMessageWindow(messageModel: messageModel)
             .onChangeCompat(of: messageModel.message) { message in
                 if message != nil {

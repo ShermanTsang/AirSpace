@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct Rect: Withable, AeroAny {
+struct Rect: Withable, AeroAny, Equatable {
     var topLeftX: CGFloat
     var topLeftY: CGFloat
 
@@ -22,6 +22,11 @@ struct Rect: Withable, AeroAny {
         self.topLeftY = topLeftY
         self._width = width
         self._height = height
+    }
+
+    static func == (lhs: Rect, rhs: Rect) -> Bool {
+        lhs.topLeftX == rhs.topLeftX && lhs.topLeftY == rhs.topLeftY &&
+            lhs.width == rhs.width && lhs.height == rhs.height
     }
 }
 

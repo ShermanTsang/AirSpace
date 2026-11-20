@@ -118,6 +118,17 @@ private func monitorLayoutIdentity(_ info: MonitorInfo) -> String {
     "\(info.displayKey ?? "unknown")|\(info.width)|\(info.height)"
 }
 
+/// Compares cached monitor geometry with a fresh snapshot. `monitorLayoutIdentity` deliberately
+/// excludes `visibleRect` because Dock/menu bar changes must not reset user display layouts, but the
+/// cached `MonitorInfo` still has to be refreshed when the usable area changes.
+func monitorInfoMatches(_ cached: MonitorInfo, _ fresh: MonitorInfo) -> Bool {
+    cached.displayKey == fresh.displayKey &&
+        cached.name == fresh.name &&
+        cached.rect == fresh.rect &&
+        cached.visibleRect == fresh.visibleRect &&
+        cached.isMain == fresh.isMain
+}
+
 extension MonitorInfo {
     @MainActor var visibleWorkspace: Workspace { // todo revisit this API
         let monitor = toMonitorOrRearrangeMonitors()
@@ -148,7 +159,7 @@ extension MonitorInfo {
     let infos = globalUnsortedMonitorInfos
     if pointToMonitor.count != infos.count || infos.contains(where: { info in
         guard let monitor = pointToMonitor[info.rect.topLeftCorner] else { return true }
-        return monitorLayoutIdentity(monitor.info) != monitorLayoutIdentity(info)
+        return !monitorInfoMatches(monitor.info, info)
     }) {
         rearrangeMonitors()
     }

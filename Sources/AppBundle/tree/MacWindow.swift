@@ -40,11 +40,15 @@ final class MacWindow: Window {
         }
 
         try await debugWindowsIfRecording(window, .cancellable)
-        if destination.placement != nil || destination.restored {
-            _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window, runCallbacks: false)
-        } else if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
-            await runOnWindowDetected(ifConventional: window)
+        if destination.placement == nil, !destination.restored,
+           try await restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window)
+        {
+            return window
         }
+        // Workspace restoration and locked layouts decide where a window starts, but they must not
+        // suppress user `on-window-detected` callbacks. Otherwise rules silently stop working after
+        // a restart, which diverges from upstream AeroSpace behavior.
+        await runOnWindowDetected(ifConventional: window)
         return window
     }
 
@@ -255,10 +259,8 @@ func admitPromotedPopup(_ window: MacWindow) async throws {
     window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     if let placement = destination.placement {
         WorkspaceLocks.shared.restore(placement, window: window, in: Workspace.get(byName: placement.workspace))
-        _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window, runCallbacks: false)
-    } else {
-        await runOnWindowDetected(ifConventional: window)
     }
+    await runOnWindowDetected(ifConventional: window)
 }
 
 @MainActor
