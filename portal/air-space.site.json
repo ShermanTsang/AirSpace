@@ -1,0 +1,27 @@
+{
+  "subject": { "facadeCode": "air-space", "facadeType": "app", "appCode": "air-space", "domains": ["air-space.ichaseu.com"] },
+  "brand": { "mainColor": "#0260cc", "design": "air-space", "urls": [{ "key": "github", "url": "https://github.com/ShermanTsang/AirSpace", "text": "GitHub" }] },
+  "locales": {
+    "zh-CN": { "name": "air-space", "description": "受 i3 启发的 macOS 平铺窗口管理器，让工作空间井然有序。" },
+    "en": { "name": "air-space", "description": "An i3-inspired tiling window manager for macOS, made for organized workspaces." }
+  },
+  "appProfile": {
+    "zh-CN": { "appName": "air-space", "description": "受 i3 启发的 macOS 平铺窗口管理器。", "urls": [{ "key": "github", "url": "https://github.com/ShermanTsang/AirSpace", "text": "GitHub" }] },
+    "en": { "appName": "air-space", "description": "An i3-inspired tiling window manager for macOS.", "urls": [{ "key": "github", "url": "https://github.com/ShermanTsang/AirSpace", "text": "GitHub" }] }
+  },
+  "slides": [
+    {
+      "key": "air-space-workspaces", "name": "让窗口各就各位", "navName": "工作空间", "subName": "Workspaces", "textItems": ["用工作空间组织窗口，在不同任务之间保持清晰。"],
+      "items": [ { "key": "tiling", "name": "平铺布局", "description": "自动排列窗口，充分利用屏幕空间。", "textItems": [] }, { "key": "keyboard", "name": "键盘操作", "description": "通过快捷键聚焦、移动和管理窗口。", "textItems": [] }, { "key": "displays", "name": "多显示器", "description": "在显示器之间组织和切换工作空间。", "textItems": [] } ],
+      "en": { "name": "A place for every window", "navName": "Workspaces", "subName": "Workspaces", "textItems": ["Organize windows into workspaces and move between tasks with clarity."], "items": [ { "key": "tiling", "name": "Tiling layouts", "description": "Arrange windows automatically and make use of your screen.", "textItems": [] }, { "key": "keyboard", "name": "Keyboard driven", "description": "Focus, move, and manage windows with shortcuts.", "textItems": [] }, { "key": "displays", "name": "Multiple displays", "description": "Organize and switch workspaces across displays.", "textItems": [] } ] }
+    },
+    {
+      "key": "air-space-setup", "name": "按自己的方式工作", "navName": "配置", "subName": "Make it yours", "textItems": ["使用图形设置编辑器调整配置，也可以使用兼容 AeroSpace 的配置文件。", "macOS 13 或更高版本", "菜单栏中查看和管理工作空间"],
+      "en": { "name": "Make it yours", "navName": "Configuration", "subName": "Your workflow", "textItems": ["Adjust settings with the graphical editor or use an AeroSpace-compatible configuration file.", "macOS 13 or later", "View and manage workspaces from the menu bar"] }
+    },
+    {
+      "key": "air-space-open-source", "name": "开放与透明", "navName": "开源", "subName": "Open source", "textItems": ["air-space 基于 AeroSpace 开发，源代码与项目资料可在 GitHub 查看。"],
+      "en": { "name": "Open by design", "navName": "Open source", "subName": "Open source", "textItems": ["Built on AeroSpace, air-space shares its source code and project information on GitHub."] }
+    }
+  ]
+}
