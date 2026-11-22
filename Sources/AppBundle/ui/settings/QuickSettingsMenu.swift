@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// Quick access to the most common settings from the menu bar dropdown
+// periphery:ignore - WIP: not wired into the menu bar yet
 @MainActor
 func quickSettingsMenu() -> some View {
     Menu {

@@ -83,7 +83,7 @@ enum ConfigFileEditor {
         guard patched != original else { return }
         let errors = parseConfig(patched).errors
         guard errors.isEmpty else {
-            throw EditError.patcherFailure(errors.map { $0.description(.error) }.joined(separator: "\n\n"))
+            throw EditError.patcherFailure(errors.lazy.map { $0.description(.error) }.joined(separator: "\n\n"))
         }
         guard try sourceUrl() == source else { throw EditError.configChanged }
         let url = try resolveConfigUrl()

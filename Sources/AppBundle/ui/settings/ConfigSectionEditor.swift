@@ -108,7 +108,7 @@ private struct ConfigSectionEditor: View {
         guard let original, !isSaving else { return }
         isSaving = true
         let value = draft
-        Task {
+        Task.startUnstructured {
             defer { isSaving = false }
             do {
                 try await ConfigFileEditor.saveSection(section.id, value: value, original: original)

@@ -73,6 +73,7 @@ public struct WalnutClient: Sendable {
         try await get("/portal/agreements", query: [URLQueryItem(name: "locale", value: locale)], locale: locale)
     }
 
+    // periphery:ignore - API endpoint kept for the planned detail view
     public func agreement(slug: String, locale: String) async throws -> AgreementItem {
         let path = "/portal/agreement/\(percentEncodedPathComponent(slug))"
         return try await get(path, query: [URLQueryItem(name: "locale", value: locale)], locale: locale)
@@ -87,6 +88,7 @@ public struct WalnutClient: Sendable {
         return try await get("/portal/activities", query: query, locale: locale)
     }
 
+    // periphery:ignore - API endpoint kept for the planned detail view
     public func activity(identifier: String, locale: String) async throws -> ActivityItem {
         let path = "/portal/activity/\(percentEncodedPathComponent(identifier))"
         return try await get(path, query: [URLQueryItem(name: "locale", value: locale)], locale: locale)
@@ -166,10 +168,13 @@ public struct WalnutClient: Sendable {
 
 public struct WalnutErrorPayload: Decodable, Sendable {
     public let message: String?
+    // periphery:ignore - response schema field kept for API compatibility
     public let code: String?
     public let errorType: String?
+    // periphery:ignore - response schema field kept for API compatibility
     public let detail: String?
     public let sourceService: String?
+    // periphery:ignore - response schema field kept for API compatibility
     public let sourceComponent: String?
 }
 
@@ -222,6 +227,7 @@ public enum WalnutVersion {
 extension WalnutClient {
     public struct ReleaseCheckResponse: Decodable, Sendable {
         public let available: Bool?
+        // periphery:ignore - response schema field kept for API compatibility
         public let title: String?
         public let version: String?
         public let versionCode: Int64?
@@ -249,6 +255,7 @@ extension WalnutClient {
         public let platform: String?
         public let arch: String?
         public let packageType: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let filename: String?
         public let githubUrl: String?
 
@@ -276,6 +283,7 @@ extension WalnutClient {
 
     public struct DocsResponse: Decodable, Sendable {
         public let list: [DocListItem]?
+        // periphery:ignore - response schema field kept for API compatibility
         public let total: Int64?
 
         public var items: [DocListItem] { list ?? [] }
@@ -284,9 +292,11 @@ extension WalnutClient {
     public struct DocListItem: Decodable, Sendable {
         public let id: String?
         public let slug: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let typeId: String?
         public let name: String?
         public let description: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let coverImage: String?
         public let parentId: String?
         public let order: Int64?
@@ -295,12 +305,15 @@ extension WalnutClient {
     }
 
     public struct DocDetail: Decodable, Sendable {
+        // periphery:ignore - response schema field kept for API compatibility
         public let id: String?
         public let slug: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let typeId: String?
         public let name: String?
         public let description: String?
         public let content: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let coverImage: String?
     }
 
@@ -308,6 +321,7 @@ extension WalnutClient {
         public let id: String?
         public let name: String?
         public let slug: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let typeId: String?
         public let typeName: String?
         public let description: String?
@@ -319,6 +333,7 @@ extension WalnutClient {
 
     public struct ActivitiesResponse: Decodable, Sendable {
         public let list: [ActivityItem]?
+        // periphery:ignore - response schema field kept for API compatibility
         public let total: Int64?
 
         public var items: [ActivityItem] { list ?? [] }
@@ -331,9 +346,12 @@ extension WalnutClient {
         public let subName: String?
         public let description: String?
         public let content: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let coverImage: String?
         public let externalUrl: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let datetimeStart: Int64?
+        // periphery:ignore - response schema field kept for API compatibility
         public let datetimeEnd: Int64?
 
         public var key: String { id?.nilIfBlank ?? slug?.nilIfBlank ?? name?.nilIfBlank ?? "" }
@@ -348,11 +366,15 @@ extension WalnutClient {
     public struct ContactChannel: Decodable, Sendable {
         public let id: String?
         public let code: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let scene: String?
         public let sceneName: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let sceneIcon: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let sceneColor: String?
         public let channelType: String?
+        // periphery:ignore - response schema field kept for API compatibility
         public let channelTypeName: String?
         public let name: String?
         public let description: String?
@@ -361,7 +383,9 @@ extension WalnutClient {
         public let imageUrl: String?
         public let icon: String?
         public let actions: [String]?
+        // periphery:ignore - response schema field kept for API compatibility
         public let expireAt: Int64?
+        // periphery:ignore - response schema field kept for API compatibility
         public let updatedAt: Int64?
 
         public var key: String { code?.nilIfBlank ?? id?.nilIfBlank ?? name?.nilIfBlank ?? "" }

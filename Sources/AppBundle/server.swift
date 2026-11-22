@@ -25,14 +25,13 @@ func warnIfUpstreamAeroSpaceIsRunning() async {
     guard socketPath != upstreamAeroSpaceSocketPath else { return }
     let connection = NWConnection(to: NWEndpoint.unix(path: upstreamAeroSpaceSocketPath), using: .tcp)
     defer { connection.cancel() }
-    let isUpstreamRunning: Bool
-    if let connectionError = await connection.initConnection().error {
+    let isUpstreamRunning: Bool = if let connectionError = await connection.initConnection().error {
         switch connectionError {
-            case .customError: isUpstreamRunning = true // The server answered, but speaks an incompatible protocol version
-            case .nwError: isUpstreamRunning = false // Can't connect, AeroSpace.app is not running
+            case .customError: true // The server answered, but speaks an incompatible protocol version
+            case .nwError: false // Can't connect, AeroSpace.app is not running
         }
     } else {
-        isUpstreamRunning = true // The server answered
+        true // The server answered
     }
     if !isUpstreamRunning { return }
     if MessageModel.shared.message != nil { return } // Don't hide config diagnostics

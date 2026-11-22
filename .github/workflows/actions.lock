@@ -5,6 +5,7 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/build.yml':
         - 'actions/checkout@v7.0.1'
+        - 'ruby/setup-ruby@v1.343.0'
     '.github/workflows/close-third-party-issues.yml': []
     '.github/workflows/label-incoming-prs.yml': []
     '.github/workflows/queue.yml':
@@ -13,6 +14,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/download-artifact@v4.3.0'
         - 'actions/upload-artifact@v4.6.2'
+        - 'ruby/setup-ruby@v1.343.0'
 dependencies:
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
@@ -29,3 +31,8 @@ dependencies:
         commit: 'sha1-ea165f8d65b6e75b540449e92b4886f43607fa02'
         owner_id: 44036562
         repo_id: 192625955
+    'ruby/setup-ruby@v1.343.0':
+        ref: 'v1.343.0'
+        commit: 'sha1-be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18'
+        owner_id: 210414
+        repo_id: 231208785

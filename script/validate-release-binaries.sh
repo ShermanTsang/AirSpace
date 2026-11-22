@@ -113,6 +113,7 @@ expected_app_dylibs=$(cat <<EOF
 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
 	/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement
 	/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI
+	/System/Library/Frameworks/WebKit.framework/Versions/A/WebKit
 	/usr/lib/libc++.1.dylib
 	@rpath/libswiftCompatibilitySpan.dylib
 EOF

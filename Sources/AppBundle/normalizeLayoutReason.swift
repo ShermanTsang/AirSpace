@@ -58,11 +58,10 @@
     window.minimizedWorkspaceName = nil
     window.layoutReason = .standard
     if let previous, WorkspaceLocks.shared.restoreAfterNativeState(window, in: previous) { return }
-    let workspace: Workspace
-    if let previous, previous.isLocked {
-        workspace = previous
+    let workspace: Workspace = if let previous, previous.isLocked {
+        previous
     } else {
-        workspace = preferredWorkspace.isLocked ? preferredWorkspace.unlockedAlternative() : preferredWorkspace
+        preferredWorkspace.isLocked ? preferredWorkspace.unlockedAlternative() : preferredWorkspace
     }
     switch prevParentKind {
         case .floatingWindowsContainer:

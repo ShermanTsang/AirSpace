@@ -11,7 +11,6 @@ public final class TrayMenuModel: ObservableObject {
     @Published var isEnabled: Bool = true
     @Published var workspaceGroups: [WorkspaceDisplayGroup] = []
     var workspaces: [WorkspaceViewModel] { workspaceGroups.flatMap(\.workspaces) }
-    @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
     @Published var lastReloadConfigContainedWarnings: Bool = false
     @Published var axPermissionStatus: AxPermissionStatus = .waitingWithPrompt
     /// Incremented every time the config is successfully reloaded. Used by the Settings UI

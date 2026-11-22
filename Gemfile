@@ -1,10 +1,13 @@
 # frozen_string_literal: true
-ruby '~> 3.0' # >= 3.0 and < 4.0
+ruby '>= 3.0' # Ruby 4 is supported by the pinned Asciidoctor release
 
 source "https://rubygems.org"
 
 # https://github.com/asciidoctor/asciidoctor/releases
 gem 'asciidoctor', '2.0.23'
+
+# Ruby 4 moved logger out of the default gems; Asciidoctor still requires it.
+gem 'logger'
 
 # https://github.com/pygments/pygments.rb/releases
 # https://github.com/pygments/pygments/releases

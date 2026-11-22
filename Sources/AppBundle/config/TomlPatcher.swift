@@ -96,7 +96,7 @@ enum TomlPatcher {
                 i += 1
             } else if let (path, end) = assignmentRange(doc.lines, at: i) {
                 if !removing && !(firstHeader == nil && path.first == key) {
-                    kept.append(contentsOf: doc.lines[i...end])
+                    kept.append(contentsOf: doc.lines[i ... end])
                 }
                 i = end + 1
             } else {
@@ -156,7 +156,7 @@ enum TomlPatcher {
             case .string(let string): formatTomlString(string)
             case .int(let int): int.description
             case .bool(let bool): bool ? "true" : "false"
-            case .dict(let dict): "{ " + (try dict.map { try formatKey($0.key) + " = " + literal($0.value) }.joined(separator: ", ")) + " }"
+            case .dict(let dict): "{ " + (try dict.lazy.map { try formatKey($0.key) + " = " + literal($0.value) }.joined(separator: ", ")) + " }"
             case .array(let array): "[" + (try array.map(literal).joined(separator: ", ")) + "]"
             case .null: throw PatcherError.invalidEdit(reason: "TOML does not have a null value")
         }
@@ -196,14 +196,13 @@ enum TomlPatcher {
         }
 
         func render() -> String {
-            lines.map { String($0) }.joined(separator: String(newline)) + (hasFinalNewline && !lines.isEmpty ? String(newline) : "")
+            lines.lazy.map { String($0) }.joined(separator: String(newline)) + (hasFinalNewline && !lines.isEmpty ? String(newline) : "")
         }
     }
 
     // MARK: single edit application
 
     private struct AssignmentRecord {
-        let path: [String]
         /// Index of the line with `key =`
         let line: Int
         /// Inclusive index of the last line occupied by the value (multi-line arrays/strings)
@@ -252,7 +251,7 @@ enum TomlPatcher {
                 if let context {
                     let fullPath = context + path
                     if result.assignments[fullPath] != nil { throw PatcherError.duplicateKey(path: fullPath) }
-                    result.assignments[fullPath] = AssignmentRecord(path: fullPath, line: i, endLine: end)
+                    result.assignments[fullPath] = AssignmentRecord(line: i, endLine: end)
                 }
                 i = end + 1
             } else {
@@ -282,7 +281,7 @@ enum TomlPatcher {
         }
         doc.lines[record.line] = Array(newLine)
         if valueScan.endLine > record.line {
-            doc.lines.removeSubrange((record.line + 1)...valueScan.endLine)
+            doc.lines.removeSubrange((record.line + 1) ... valueScan.endLine)
         }
     }
 
@@ -292,7 +291,7 @@ enum TomlPatcher {
 
         // 1. The exact parent table exists -> append a plain key assignment to its body
         if path.count >= 2, let headerLine = c.headers[Array(path.dropLast())] {
-            let insertAt = insertionIndex(inBodyOf: Array(path.dropLast()), headerLine: headerLine, classification: c, doc: doc)
+            let insertAt = insertionIndex(headerLine: headerLine, classification: c, doc: doc)
             doc.lines.insert(Array(bodyIndent(headerLine: headerLine, classification: c, doc: doc) + key + " = " + edit.value), at: insertAt)
             return
         }
@@ -307,7 +306,7 @@ enum TomlPatcher {
                     reason: "Can't insert '\(path.joined(separator: "."))' because '\((prefix + [path[prefixLength]]).joined(separator: "."))' is already defined as a value",
                 )
             }
-            let insertAt = insertionIndex(inBodyOf: prefix, headerLine: headerLine, classification: c, doc: doc)
+            let insertAt = insertionIndex(headerLine: headerLine, classification: c, doc: doc)
             let dottedKey = path.suffix(from: prefixLength).joined(separator: ".")
             doc.lines.insert(Array(bodyIndent(headerLine: headerLine, classification: c, doc: doc) + dottedKey + " = " + edit.value), at: insertAt)
             return
@@ -332,13 +331,13 @@ enum TomlPatcher {
 
     /// Index just after the last assignment of the table body; falls back to right after the header
     /// (skipping comment lines that directly follow the header and belong to it)
-    private static func insertionIndex(inBodyOf table: [String], headerLine: Int, classification c: Classification, doc: Document) -> Int {
+    private static func insertionIndex(headerLine: Int, classification c: Classification, doc: Document) -> Int {
         let bodyEnd = c.headerLines
             .filter { $0 > headerLine }
             .min() ?? doc.lines.count
         let lastAssignmentEnd = c.assignments.values
             .filter { $0.line > headerLine && $0.line < bodyEnd }
-            .map { $0.endLine }
+            .lazy.map { $0.endLine }
             .max()
         if let lastAssignmentEnd {
             return lastAssignmentEnd + 1
@@ -354,7 +353,7 @@ enum TomlPatcher {
         let bodyEnd = c.headerLines.min() ?? doc.lines.count
         let lastAssignmentEnd = c.assignments.values
             .filter { $0.line < bodyEnd }
-            .map { $0.endLine }
+            .lazy.map { $0.endLine }
             .max()
         // When the root table has no assignments, insert at the very top of the file
         return (lastAssignmentEnd ?? -1) + 1
@@ -422,13 +421,13 @@ enum TomlPatcher {
                 }
                 guard i < chars.count else { return nil }
                 i += 1
-                guard let table = try? [String: Any](TOMLTable(source: "k = " + String(chars[keyStart..<i]))),
+                guard let table = try? [String: Any](TOMLTable(source: "k = " + String(chars[keyStart ..< i]))),
                       let key = table["k"] as? String else { return nil }
                 components.append(key)
             } else {
                 while i < chars.count, isBareKeyChar(chars[i]) { i += 1 }
                 guard i > keyStart else { return nil }
-                components.append(String(chars[keyStart..<i]))
+                components.append(String(chars[keyStart ..< i]))
             }
             let afterKey = skipWhitespace(chars, from: i)
             if afterKey < chars.count, chars[afterKey] == "." {

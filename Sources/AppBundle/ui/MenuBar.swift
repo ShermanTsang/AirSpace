@@ -26,7 +26,6 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 @MainActor
 private struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
-    @AppStorage("airspace.language") private var language = "system"
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
     @State private var actionMessage: String?
@@ -224,7 +223,7 @@ private struct WorkspaceMenu: View {
     @ViewBuilder private func spaceRows(_ spaces: [WorkspaceViewModel], targetName: String?, otherDisplays: [WorkspaceDisplay]) -> some View {
         ForEach(Array(stride(from: 0, to: spaces.count, by: columnCount)), id: \.self) { start in
             HStack(spacing: spacing) {
-                ForEach(spaces[start..<min(start + columnCount, spaces.count)], id: \.name) { workspace in
+                ForEach(spaces[start ..< min(start + columnCount, spaces.count)], id: \.name) { workspace in
                     tile(for: workspace, isDropTarget: targetName == workspace.name, otherDisplays: otherDisplays)
                 }
                 if start + 1 == spaces.count {

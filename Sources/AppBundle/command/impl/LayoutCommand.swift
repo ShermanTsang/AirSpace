@@ -42,7 +42,8 @@ struct LayoutCommand: Command {
             ?? args.toggleBetween.val.first.orDie()
         if node.matchesDescription(targetDescription) {
             if !args.failIfNoop, case .tilingContainer(let parent) = node,
-               let workspace = parent.nodeWorkspace, parent === workspace.rootTilingContainer {
+               let workspace = parent.nodeWorkspace, parent === workspace.rootTilingContainer
+            {
                 WorkspaceDisplayLayouts.shared.remember(
                     WorkspaceLayoutMode(layout: parent.layout, orientation: parent.orientation),
                     workspace: workspace.name, display: workspace.workspaceMonitorInfo.displayKey,

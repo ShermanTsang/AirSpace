@@ -198,8 +198,8 @@ import Testing
             edits: [.int(["gaps", "inner", "vertical"], 10), .bool(["start-at-login"], true)],
             to: raw + "\n",
         )
-        #expect(result == raw.replacingOccurrences(of: "inner.vertical = 8", with: "inner.vertical = 10")
-            .replacingOccurrences(of: "start-at-login = false", with: "start-at-login = true") + "\n")
+        #expect(result == raw.replacing("inner.vertical = 8", with: "inner.vertical = 10")
+            .replacing("start-at-login = false", with: "start-at-login = true") + "\n")
     }
 
     @Test func duplicateKeyInFileThrows() {

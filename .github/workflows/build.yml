@@ -56,6 +56,9 @@ jobs:
     steps:
       - run: env # Debug
       - uses: actions/checkout@v7.0.1
+      - uses: ruby/setup-ruby@v1.343.0
+        with:
+          ruby-version: '3.3'
       - run: ./.github/gh-actions-runner-xcode-select.sh
       - run: brew install bash fish
       - run: HOMEBREW_DISABLE_LOAD_FORMULA=1 brew update # Needed for swiftly :(

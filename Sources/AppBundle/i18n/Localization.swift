@@ -40,7 +40,7 @@ private let translations: [String: [String: String]] = Dictionary(uniqueKeysWith
 
 func resolveSystemLanguage(_ preferredLanguages: [String]) -> AppLanguage {
     for identifier in preferredLanguages {
-        let parts = identifier.lowercased().replacingOccurrences(of: "_", with: "-")
+        let parts = identifier.lowercased().replacing("_", with: "-")
         if parts == "en" || parts.hasPrefix("en-") { return .en }
         if parts == "zh" || parts.hasPrefix("zh-hans") || parts.hasPrefix("zh-cn") || parts.hasPrefix("zh-sg") { return .zhHans }
     }
@@ -49,11 +49,10 @@ func resolveSystemLanguage(_ preferredLanguages: [String]) -> AppLanguage {
 
 func L(_ key: String, _ arguments: CVarArg...) -> String {
     let selected = AppLanguage(rawValue: UserDefaults.standard.string(forKey: languagePreferenceKey) ?? "system") ?? .system
-    let language: AppLanguage
-    if selected == .system {
-        language = resolveSystemLanguage(Locale.preferredLanguages)
+    let language: AppLanguage = if selected == .system {
+        resolveSystemLanguage(Locale.preferredLanguages)
     } else {
-        language = selected
+        selected
     }
     let translated = translations[language.rawValue]?[key] ?? key
     return arguments.isEmpty ? translated : unsafe String(format: translated, locale: Locale.current, arguments: arguments)

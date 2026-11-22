@@ -90,7 +90,7 @@ struct WalnutClientTest {
 
         #expect(doc.slug == "getting-started")
         #expect(doc.typeId == "196f23cc-86b6-4a30-ad8b-0d5b0b9862cc")
-        #expect(doc.parentId == "")
+        #expect(doc.parentId?.isEmpty == true)
         #expect(doc.order == 0)
     }
 

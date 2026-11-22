@@ -8,15 +8,6 @@ public final class SupportModel: ObservableObject {
 
         public var id: String { rawValue }
 
-        var title: String {
-            switch self {
-                case .docs: L("Help & Documentation")
-                case .announcements: L("Announcements")
-                case .agreements: L("Agreements")
-                case .contacts: L("Contact Support")
-            }
-        }
-
         var systemImage: String {
             switch self {
                 case .docs: "book"

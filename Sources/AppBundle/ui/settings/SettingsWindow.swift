@@ -216,7 +216,7 @@ private struct SettingsView: View {
                 title: L("Accordion padding"),
                 subtitle: L("Overlap between stacked windows. Only used by accordion containers."),
                 value: model.binding(\.accordionPadding) { .int(["accordion-padding"], $0) },
-                range: 0...500,
+                range: 0 ... 500,
                 unit: "px",
                 isEnabled: model.state.defaultRootContainerLayout == .accordion,
             )
@@ -281,43 +281,43 @@ private struct SettingsView: View {
                 icon: "arrow.left.and.right",
                 title: L("Inner horizontal"),
                 value: model.state.gapsInnerHorizontal,
-                range: 0...500,
-                onChange: { model.intBinding(\.gapsInnerHorizontal, path: ["gaps", "inner", "horizontal"], range: 0...500).wrappedValue = $0 },
+                range: 0 ... 500,
+                onChange: { model.intBinding(\.gapsInnerHorizontal, path: ["gaps", "inner", "horizontal"], range: 0 ... 500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.up.and.down",
                 title: L("Inner vertical"),
                 value: model.state.gapsInnerVertical,
-                range: 0...500,
-                onChange: { model.intBinding(\.gapsInnerVertical, path: ["gaps", "inner", "vertical"], range: 0...500).wrappedValue = $0 },
+                range: 0 ... 500,
+                onChange: { model.intBinding(\.gapsInnerVertical, path: ["gaps", "inner", "vertical"], range: 0 ... 500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.left",
                 title: L("Outer left"),
                 value: model.state.gapsOuterLeft,
-                range: -500...500,
-                onChange: { model.intBinding(\.gapsOuterLeft, path: ["gaps", "outer", "left"], range: -500...500).wrappedValue = $0 },
+                range: -500 ... 500,
+                onChange: { model.intBinding(\.gapsOuterLeft, path: ["gaps", "outer", "left"], range: -500 ... 500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.up",
                 title: L("Outer top"),
                 value: model.state.gapsOuterTop,
-                range: -500...500,
-                onChange: { model.intBinding(\.gapsOuterTop, path: ["gaps", "outer", "top"], range: -500...500).wrappedValue = $0 },
+                range: -500 ... 500,
+                onChange: { model.intBinding(\.gapsOuterTop, path: ["gaps", "outer", "top"], range: -500 ... 500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.down",
                 title: L("Outer bottom"),
                 value: model.state.gapsOuterBottom,
-                range: -500...500,
-                onChange: { model.intBinding(\.gapsOuterBottom, path: ["gaps", "outer", "bottom"], range: -500...500).wrappedValue = $0 },
+                range: -500 ... 500,
+                onChange: { model.intBinding(\.gapsOuterBottom, path: ["gaps", "outer", "bottom"], range: -500 ... 500).wrappedValue = $0 },
             )
             GapRow(
                 icon: "arrow.right",
                 title: L("Outer right"),
                 value: model.state.gapsOuterRight,
-                range: -500...500,
-                onChange: { model.intBinding(\.gapsOuterRight, path: ["gaps", "outer", "right"], range: -500...500).wrappedValue = $0 },
+                range: -500 ... 500,
+                onChange: { model.intBinding(\.gapsOuterRight, path: ["gaps", "outer", "right"], range: -500 ... 500).wrappedValue = $0 },
             )
             ConfigSectionButton(section: .gaps, icon: "display")
             errorBanner
@@ -430,8 +430,8 @@ private struct SettingsView: View {
     }
 
     private func setInnerGaps(_ value: Int) {
-        model.intBinding(\.gapsInnerVertical, path: ["gaps", "inner", "vertical"], range: 0...500).wrappedValue = value
-        model.intBinding(\.gapsInnerHorizontal, path: ["gaps", "inner", "horizontal"], range: 0...500).wrappedValue = value
+        model.intBinding(\.gapsInnerVertical, path: ["gaps", "inner", "vertical"], range: 0 ... 500).wrappedValue = value
+        model.intBinding(\.gapsInnerHorizontal, path: ["gaps", "inner", "horizontal"], range: 0 ... 500).wrappedValue = value
     }
 
     private func reloadConfig() {
@@ -459,13 +459,7 @@ private struct SettingsView: View {
 private struct SettingsPage<Content: View>: View {
     let title: String
     let subtitle: String
-    let content: Content
-
-    init(title: String, subtitle: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.subtitle = subtitle
-        self.content = content()
-    }
+    @ViewBuilder let content: Content
 
     var body: some View {
         ScrollView {
@@ -602,7 +596,7 @@ private struct SettingsSliderCard: View {
             }
             Slider(
                 value: Binding(get: { Double(value) }, set: { value = Int($0.rounded()) }),
-                in: Double(range.lowerBound)...Double(range.upperBound),
+                in: Double(range.lowerBound) ... Double(range.upperBound),
                 step: 1,
             )
             .disabled(!isEnabled)
@@ -649,7 +643,7 @@ private struct GapRow: View {
             if let value {
                 Slider(
                     value: Binding(get: { Double(value) }, set: { onChange(Int($0.rounded())) }),
-                    in: Double(range.lowerBound)...Double(range.upperBound),
+                    in: Double(range.lowerBound) ... Double(range.upperBound),
                     step: 1,
                 )
             } else {

@@ -278,7 +278,8 @@ private func newWindowDestination(
         return (WorkspaceLocks.shared.initialBinding(for: placement, workspace: workspace), placement, true)
     }
     if isStartup, config.restoreWindowWorkspaces, let title, let identity = WorkspaceRestoration.identity(app),
-       let name = WorkspaceRestoration.shared.placement(app: identity, title: title) {
+       let name = WorkspaceRestoration.shared.placement(app: identity, title: title)
+    {
         let workspace = Workspace.get(byName: name)
         if !workspace.isLocked {
             return (unbindAndGetBindingData(type, workspace, window: nil), nil, true)

@@ -22,6 +22,9 @@ jobs:
       SWIFTPM_WARNINGS_AS_ERRORS: 1
     steps:
       - uses: actions/checkout@v7.0.1
+      - uses: ruby/setup-ruby@v1.343.0
+        with:
+          ruby-version: '3.3'
       - name: Validate version
         id: version
         env:
