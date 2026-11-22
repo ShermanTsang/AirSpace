@@ -48,23 +48,26 @@ final class WorkspaceRestoration {
         generation += 1
         let current = generation
         let windows = MacWindow.allWindows.filter { $0.membershipWorkspace != nil }
-        let memberships = Dictionary(uniqueKeysWithValues: windows.compactMap { window in
-            window.membershipWorkspace.map { (window.windowId, $0.name) }
-        })
-        var snapshot: [Entry] = []
+        var snapshot: [(window: MacWindow, entry: Entry)] = []
         for window in windows {
             guard let app = Self.identity(window.app), let workspace = window.membershipWorkspace?.name else { continue }
-            // A single unreadable window must not prevent saving every other window.
+            // Neither an unreadable title nor a window that closes or moves during the read must
+            // prevent saving every other window.
             guard let title = try? await window.getTitle(.nonCancellable) else { continue }
-            guard MacWindow.allWindowsMap[window.windowId] === window, window.membershipWorkspace?.name == workspace else { return }
-            snapshot.append(Entry(app: app, title: title, workspace: workspace))
+            guard MacWindow.allWindowsMap[window.windowId] === window, window.membershipWorkspace?.name == workspace else { continue }
+            snapshot.append((window, Entry(app: app, title: title, workspace: workspace)))
         }
-        let latest = Dictionary(uniqueKeysWithValues: MacWindow.allWindows.compactMap { window in
-            window.membershipWorkspace.map { (window.windowId, $0.name) }
-        })
-        guard current == generation, config.restoreWindowWorkspaces, memberships == latest else { return }
-        entries = snapshot
+        guard current == generation, config.restoreWindowWorkspaces else { return }
+        // Drop entries whose workspace changed after their title was verified. A newer capture
+        // invalidates this one, but unrelated windows opening or closing no longer do.
+        let verified = snapshot.compactMap { item in
+            MacWindow.allWindowsMap[item.window.windowId] === item.window &&
+                item.window.membershipWorkspace?.name == item.entry.workspace
+                ? item.entry
+                : nil
+        }
+        entries = verified
         claimed.removeAll()
-        if let data = try? JSONEncoder().encode(snapshot) { defaults?.set(data, forKey: Self.key) }
+        if let data = try? JSONEncoder().encode(verified) { defaults?.set(data, forKey: Self.key) }
     }
 }

@@ -46,6 +46,8 @@ public final class SupportModel: ObservableObject {
     private let client: WalnutClient
     private var loadedSections: Set<Section> = []
     private var loadedLocales: [Section: String] = [:]
+    private var loadingLocales: [Section: String] = [:]
+    private var requestIDs: [Section: UUID] = [:]
     private var docRequestID = UUID()
 
     private init(client: WalnutClient = .shared) {
@@ -71,12 +73,13 @@ public final class SupportModel: ObservableObject {
     public func loadIfNeeded(_ section: Section) async {
         let locale = AppLanguage.selected.portalLocale
         if loadedSections.contains(section), loadedLocales[section] == locale { return }
-        guard !loadingSections.contains(section) else { return }
+        // Only skip when the request already in flight targets the current locale. A request for a
+        // previous locale must not block the reload that a language change requests.
+        if loadingSections.contains(section), loadingLocales[section] == locale { return }
         await load(section)
     }
 
     public func reload(_ section: Section) async {
-        guard !loadingSections.contains(section) else { return }
         await load(section)
     }
 
@@ -85,6 +88,8 @@ public final class SupportModel: ObservableObject {
         loadedSections.removeAll()
         loadedLocales.removeAll()
         errors.removeAll()
+        docRequestID = UUID()
+        isDocLoading = false
         docDetail = nil
         docError = nil
         selectedDocSlug = nil
@@ -128,35 +133,52 @@ public final class SupportModel: ObservableObject {
 
     private func load(_ section: Section) async {
         let locale = AppLanguage.selected.portalLocale
+        let requestID = UUID()
+        requestIDs[section] = requestID
         loadingSections.insert(section)
+        loadingLocales[section] = locale
         errors[section] = nil
-        defer { loadingSections.remove(section) }
+        defer {
+            if requestIDs[section] == requestID {
+                loadingSections.remove(section)
+                loadingLocales[section] = nil
+            }
+        }
 
         do {
             switch section {
                 case .docs:
-                    docs = try await client.docs(locale: locale).items
+                    let items = try await client.docs(locale: locale).items
+                    guard requestIDs[section] == requestID else { return }
+                    docs = items
                     if selectedDocSlug == nil {
-                        selectedDocSlug = docs.first?.key
+                        selectedDocSlug = items.first?.key
                     }
                 case .announcements:
-                    activities = try await client.activities(locale: locale).items
+                    let items = try await client.activities(locale: locale).items
+                    guard requestIDs[section] == requestID else { return }
+                    activities = items
                     if selectedActivityId == nil {
-                        selectedActivityId = activities.first?.key
+                        selectedActivityId = items.first?.key
                     }
                 case .agreements:
-                    agreements = try await client.agreements(locale: locale)
+                    let items = try await client.agreements(locale: locale)
+                    guard requestIDs[section] == requestID else { return }
+                    agreements = items
                     if selectedAgreementSlug == nil {
-                        selectedAgreementSlug = agreements.first?.key
+                        selectedAgreementSlug = items.first?.key
                     }
                 case .contacts:
-                    contacts = try await client.contacts(locale: locale).items
+                    let items = try await client.contacts(locale: locale).items
+                    guard requestIDs[section] == requestID else { return }
+                    contacts = items
             }
             loadedSections.insert(section)
             loadedLocales[section] = locale
         } catch is CancellationError {
             return
         } catch {
+            guard requestIDs[section] == requestID else { return }
             errors[section] = error.localizedDescription
         }
     }

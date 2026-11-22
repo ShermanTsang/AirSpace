@@ -23,6 +23,43 @@ struct WalnutClientTest {
         #expect(response.downloadURL?.absoluteString == "https://example.com/AirSpace.zip")
     }
 
+    @Test func prefersReleaseArtifactForHostArchitecture() throws {
+        let json = """
+            {"available":true,"artifacts":[\
+            {"platform":"windows","arch":"x86_64","package_type":"zip","filename":"AirSpace-win.zip",\
+            "github_url":"https://example.com/AirSpace-win.zip"},\
+            {"platform":"macos","arch":"x86_64","package_type":"zip","filename":"AirSpace-x86_64.zip",\
+            "github_url":"https://example.com/AirSpace-x86_64.zip"},\
+            {"platform":"macos","arch":"arm64","package_type":"zip","filename":"AirSpace-arm64.zip",\
+            "github_url":"https://example.com/AirSpace-arm64.zip"},\
+            {"platform":"macos","arch":"universal","package_type":"zip","filename":"AirSpace-universal.zip",\
+            "github_url":"https://example.com/AirSpace-universal.zip"}]}
+            """
+        let response = try WalnutClient.makeDecoder()
+            .decode(WalnutClient.ReleaseCheckResponse.self, from: Data(json.utf8))
+
+        let expected = WalnutClient.hostArchitectureAliases.contains("arm64")
+            ? "AirSpace-arm64.zip"
+            : "AirSpace-x86_64.zip"
+        #expect(response.downloadURL?.lastPathComponent == expected)
+    }
+
+    @Test func fallsBackToUniversalArtifactWhenNoArchitectureMatches() throws {
+        let json = """
+            {"available":true,"artifacts":[\
+            {"platform":"windows","arch":"x86_64","filename":"AirSpace-win.zip",\
+            "github_url":"https://example.com/AirSpace-win.zip"},\
+            {"platform":"macos","arch":"sparc","filename":"AirSpace-sparc.zip",\
+            "github_url":"https://example.com/AirSpace-sparc.zip"},\
+            {"platform":"macos","arch":"universal","filename":"AirSpace-universal.zip",\
+            "github_url":"https://example.com/AirSpace-universal.zip"}]}
+            """
+        let response = try WalnutClient.makeDecoder()
+            .decode(WalnutClient.ReleaseCheckResponse.self, from: Data(json.utf8))
+
+        #expect(response.downloadURL?.lastPathComponent == "AirSpace-universal.zip")
+    }
+
     @Test func decodesContactChannelFromGateway() throws {
         let json = """
             {"list":[{"id":"1","code":"github-issues","scene":"customer_service","scene_name":"Customer Support",\

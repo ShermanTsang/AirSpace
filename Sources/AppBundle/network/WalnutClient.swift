@@ -12,6 +12,17 @@ public struct WalnutClient: Sendable {
     public static let appCode = "air-space"
     public static let platform = "macos"
 
+    /// Architecture names in release manifests that can run on this process's slice.
+    public static var hostArchitectureAliases: Set<String> {
+        #if arch(arm64)
+            ["arm64", "aarch64"]
+        #elseif arch(x86_64)
+            ["x86_64", "x64", "amd64", "intel"]
+        #else
+            []
+        #endif
+    }
+
     /// Default production gateway. `WALNUT_BASE_URL` can point a build at another environment.
     public static let defaultBaseURL = URL(string: "https://walnut.ichaseu.com")!
 
@@ -222,12 +233,15 @@ extension WalnutClient {
         public var isAvailable: Bool { available ?? false }
 
         public var downloadURL: URL? {
-            for artifact in artifacts ?? [] {
-                if let raw = artifact.githubUrl?.nilIfBlank, let url = URL(string: raw) {
-                    return url
-                }
-            }
-            return nil
+            let usable = (artifacts ?? []).filter { $0.githubUrl?.nilIfBlank != nil }
+            let preferred = usable.first { $0.isMacOS && $0.archMatchesHost }
+                ?? usable.first { $0.isMacOS && $0.isUniversal }
+                ?? usable.first { $0.isMacOS && $0.hasUnspecifiedArch }
+                ?? usable.first { $0.hasUnspecifiedPlatform && $0.archMatchesHost }
+                ?? usable.first { $0.hasUnspecifiedPlatform && $0.isUniversal }
+                ?? usable.first { $0.isUniversal }
+                ?? usable.first
+            return preferred?.githubUrl?.nilIfBlank.flatMap { URL(string: $0) }
         }
     }
 
@@ -237,6 +251,27 @@ extension WalnutClient {
         public let packageType: String?
         public let filename: String?
         public let githubUrl: String?
+
+        private static let macPlatformAliases: Set<String> = ["macos", "mac", "osx", "darwin"]
+        private static let universalArchAliases: Set<String> = ["universal", "universal2", "any"]
+
+        var isMacOS: Bool {
+            guard let platform = platform?.nilIfBlank else { return false }
+            return Self.macPlatformAliases.contains(platform.lowercased())
+        }
+
+        var hasUnspecifiedPlatform: Bool { platform?.nilIfBlank == nil }
+        var hasUnspecifiedArch: Bool { arch?.nilIfBlank == nil }
+
+        var isUniversal: Bool {
+            guard let arch = arch?.nilIfBlank else { return false }
+            return Self.universalArchAliases.contains(arch.lowercased())
+        }
+
+        var archMatchesHost: Bool {
+            guard let arch = arch?.nilIfBlank else { return false }
+            return WalnutClient.hostArchitectureAliases.contains(arch.lowercased())
+        }
     }
 
     public struct DocsResponse: Decodable, Sendable {
