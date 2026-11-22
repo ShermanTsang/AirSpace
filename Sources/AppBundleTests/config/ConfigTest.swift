@@ -30,6 +30,31 @@ struct ConfigTest {
         assertEquals(result.warnings, [])
     }
 
+    @Test func testParseWindowNavigatorAndCompactMenuBar() {
+        let result = parseConfig(
+            """
+            config-version = 2
+            menu-bar.compact = true
+            window-navigator.enabled = true
+            window-navigator.position = 'dock-left'
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.warnings, [])
+        assertEquals(result.config.menuBar.compact, true)
+        assertEquals(result.config.windowNavigator.enabled, true)
+        assertEquals(result.config.windowNavigator.position, .dockLeft)
+    }
+
+    @Test func testParseWindowNavigatorInvalidPosition() {
+        let errors = parseConfig(
+            """
+            window-navigator.position = 'top'
+            """,
+        ).strErrors
+        assertEquals(errors, ["[ERROR] window-navigator.position: Can't parse window navigator position 'top'"])
+    }
+
     @Test func testConfigVersionOutOfBounds() {
         let result = parseConfig(
             """

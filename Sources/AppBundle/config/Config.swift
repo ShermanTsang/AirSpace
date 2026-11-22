@@ -52,6 +52,8 @@ struct Config: Withable {
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
     var focusFollowsMouse: FocusFollowsMouse = FocusFollowsMouse()
+    var menuBar: MenuBarConfig = MenuBarConfig()
+    var windowNavigator: WindowNavigatorConfig = WindowNavigatorConfig()
 
     var onFocusChanged: Shell<any Command> = .empty
     // var onFocusedWorkspaceChanged: [any Command] = []
@@ -66,6 +68,22 @@ struct Config: Withable {
 
 struct FocusFollowsMouse: Withable {
     var enabled: Bool = false
+}
+
+struct MenuBarConfig: Withable {
+    /// Show only the current space name, without app icons
+    var compact: Bool = false
+}
+
+struct WindowNavigatorConfig: Withable {
+    var enabled: Bool = false
+    var position: WindowNavigatorPosition = .floating
+}
+
+enum WindowNavigatorPosition: String, CaseIterable, Sendable {
+    case floating
+    case dockLeft = "dock-left"
+    case dockRight = "dock-right"
 }
 
 enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvertible {

@@ -50,6 +50,7 @@ struct ReloadConfigResult {
     }
     if parseResult.allowReloadConfig && !args.dryRun {
         TrayMenuModel.shared.lastReloadConfigContainedWarnings = containsWarnings
+        TrayMenuModel.shared.compactMenuBarLabel = parseResult.config.menuBar.compact
         resetHotKeys()
         config = parseResult.config
         configUrl = result.configUrl

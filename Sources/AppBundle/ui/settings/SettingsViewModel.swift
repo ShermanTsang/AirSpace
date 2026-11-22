@@ -22,6 +22,9 @@ struct SettingsState: Equatable {
     var gapsOuterBottom: Int?
     var gapsOuterRight: Int?
     var focusFollowsMouse: Bool
+    var compactMenuBarLabel: Bool
+    var windowNavigatorEnabled: Bool
+    var windowNavigatorPosition: WindowNavigatorPosition
 
     init(config: Config) {
         startAtLogin = config.startAtLogin
@@ -40,6 +43,9 @@ struct SettingsState: Equatable {
         gapsOuterBottom = config.gaps.outer.bottom.constantValue
         gapsOuterRight = config.gaps.outer.right.constantValue
         focusFollowsMouse = config.focusFollowsMouse.enabled
+        compactMenuBarLabel = config.menuBar.compact
+        windowNavigatorEnabled = config.windowNavigator.enabled
+        windowNavigatorPosition = config.windowNavigator.position
     }
 }
 

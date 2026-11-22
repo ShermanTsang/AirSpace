@@ -32,11 +32,13 @@ struct MenuBarLabel: View {
                 .padding(.vertical, 5)
                 .background(foreground.opacity(0.10), in: Capsule())
 
-            ForEach(Array(viewModel.focusedWorkspaceIcons.enumerated()), id: \.offset) { _, icon in
-                Image(nsImage: icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: itemSize, height: itemSize)
+            if !viewModel.compactMenuBarLabel {
+                ForEach(Array(viewModel.focusedWorkspaceIcons.enumerated()), id: \.offset) { _, icon in
+                    Image(nsImage: icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: itemSize, height: itemSize)
+                }
             }
 
             if viewModel.lastReloadConfigContainedWarnings {

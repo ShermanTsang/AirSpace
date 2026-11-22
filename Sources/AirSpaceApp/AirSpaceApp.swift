@@ -23,5 +23,11 @@ struct AirSpaceApp: App {
                     openWindow(id: messageWindowId)
                 }
             }
+            .commands {
+                CommandGroup(replacing: .appSettings) {
+                    Button("Settings…") { openWindow(id: settingsWindowId) }
+                        .keyboardShortcut(",", modifiers: .command)
+                }
+            }
     }
 }

@@ -5,18 +5,27 @@ import PrivateApi
 @MainActor
 func waitForAccessibilityPermission_nonCancellable() async {
     let options = [axTrustedCheckOptionPrompt: true]
+    if TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt, !AXIsProcessTrusted() {
+        // Reset stale TCC entries before prompting. Resetting after AXIsProcessTrustedWithOptions(prompt:)
+        // dismisses the prompt that was just requested. The reset is needed because macOS doesn't reset
+        // the entry for us when the app signature changes.
+        resetAccessibility()
+        // An accessory app without windows cannot become active, and macOS won't show the permission
+        // prompt for a background app. Temporarily become a regular app so the prompt is visible.
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        try? await Task.sleep(for: .milliseconds(500))
+    }
     while true {
-        let status = TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt
-            ? AXIsProcessTrustedWithOptions(options as CFDictionary)
-            : AXIsProcessTrusted()
-        if status {
+        if TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt {
+            TrayMenuModel.shared.axPermissionStatus = .waiting
+            _ = AXIsProcessTrustedWithOptions(options as CFDictionary)
+        }
+        if AXIsProcessTrusted() {
             TrayMenuModel.shared.axPermissionStatus = .granted
+            NSApp.setActivationPolicy(.accessory)
             break
         }
-        if TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt {
-            resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
-        }
-        TrayMenuModel.shared.axPermissionStatus = .waiting
         try? await Task.sleep(for: .seconds(1))
     }
 }

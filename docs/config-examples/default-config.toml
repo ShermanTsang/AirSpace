@@ -64,6 +64,15 @@ on-mode-changed = ""
 
 focus-follows-mouse.enabled = false
 
+# Menu bar label. Compact mode shows only the current space name without app icons,
+# which makes the menu bar item less likely to be hidden on small screens
+menu-bar.compact = false
+
+# A persistent floating navigator that mirrors the spaces panel outside the menu bar.
+# Possible values for position: (floating|dock-left|dock-right)
+window-navigator.enabled = false
+window-navigator.position = 'floating'
+
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'

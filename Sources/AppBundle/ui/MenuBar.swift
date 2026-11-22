@@ -24,8 +24,14 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 }
 
 @MainActor
-private struct WorkspaceMenu: View {
+struct WorkspaceMenu: View {
+    enum Presentation {
+        case menuBar
+        case panel
+    }
+
     @ObservedObject var viewModel: TrayMenuModel
+    let presentation: Presentation
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
     @State private var actionMessage: String?
@@ -46,6 +52,11 @@ private struct WorkspaceMenu: View {
 
     private var hasMultipleSpaces: Bool { viewModel.workspaceGroups.sumOfInt { $0.workspaces.count } > 1 }
     private var showsQuickBar: Bool { hasMultipleSpaces && (isQuickBarPinned || drag != nil) }
+
+    init(viewModel: TrayMenuModel, presentation: Presentation = .menuBar) {
+        self.viewModel = viewModel
+        self.presentation = presentation
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -79,9 +90,15 @@ private struct WorkspaceMenu: View {
                 .fixedSize()
                 .help(L("Sort spaces"))
                 .accessibilityLabel(L("Sort spaces"))
-                Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
-                    .help(L("Settings"))
-                    .accessibilityLabel(L("Settings"))
+                if presentation == .menuBar {
+                    Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
+                        .help(L("Settings"))
+                        .accessibilityLabel(L("Settings"))
+                } else {
+                    Button { openSettingsWindow() } label: { Image(systemName: "gearshape") }
+                        .help(L("Settings"))
+                        .accessibilityLabel(L("Settings"))
+                }
             }
             if viewModel.axPermissionStatus != .granted {
                 Button(L("Grant accessibility permission")) { viewModel.axPermissionStatus = .waitingWithPrompt }
@@ -89,8 +106,18 @@ private struct WorkspaceMenu: View {
                 Text(L("AirSpace is paused. Enable it in Settings.")).foregroundStyle(.secondary)
             } else {
                 if viewModel.lastReloadConfigContainedWarnings {
-                    Button(L("Configuration contains warnings")) { openWindow(id: settingsWindowId) }
-                        .foregroundStyle(.orange)
+                    switch presentation {
+                        case .menuBar:
+                            Button(L("Configuration contains warnings")) { openWindow(id: settingsWindowId) }
+                                .foregroundStyle(.orange)
+                        case .panel:
+                            Button { openSettingsWindow() } label: {
+                                Label(L("Configuration contains warnings"), systemImage: "exclamationmark.triangle.fill")
+                                    .font(.callout)
+                                    .foregroundStyle(.orange)
+                            }
+                            .buttonStyle(.plain)
+                    }
                 }
                 if let actionMessage {
                     Label(actionMessage, systemImage: "exclamationmark.circle")
@@ -103,27 +130,29 @@ private struct WorkspaceMenu: View {
                     scrollableGrid
                 }
             }
-            Divider()
-            HStack(spacing: 12) {
-                Menu {
-                    Button(L("Help & Documentation")) { openSupport(.docs) }
-                    Button(L("Announcements")) { openSupport(.announcements) }
-                    Button(L("Agreements")) { openSupport(.agreements) }
-                    Button(L("Contact Support")) { openSupport(.contacts) }
-                } label: {
-                    Label(L("Help & Support"), systemImage: "questionmark.circle")
+            if presentation == .menuBar {
+                Divider()
+                HStack(spacing: 12) {
+                    Menu {
+                        Button(L("Help & Documentation")) { openSupport(.docs) }
+                        Button(L("Announcements")) { openSupport(.announcements) }
+                        Button(L("Agreements")) { openSupport(.agreements) }
+                        Button(L("Contact Support")) { openSupport(.contacts) }
+                    } label: {
+                        Label(L("Help & Support"), systemImage: "questionmark.circle")
+                    }
+                    .menuIndicator(.hidden)
+                    .fixedSize()
+                    Button {
+                        Task.startUnstructured { await SupportActions.checkForUpdates() }
+                    } label: {
+                        Label(L("Check for Updates"), systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    .buttonStyle(.borderless)
+                    Spacer(minLength: 0)
                 }
-                .menuIndicator(.hidden)
-                .fixedSize()
-                Button {
-                    Task.startUnstructured { await SupportActions.checkForUpdates() }
-                } label: {
-                    Label(L("Check for Updates"), systemImage: "arrow.triangle.2.circlepath")
-                }
-                .buttonStyle(.borderless)
-                Spacer(minLength: 0)
+                .font(.callout)
             }
-            .font(.callout)
         }
         .overlay(alignment: .topLeading) {
             if let drag {

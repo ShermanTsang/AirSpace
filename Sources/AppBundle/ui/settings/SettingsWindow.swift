@@ -5,6 +5,20 @@ import SwiftUI
 
 public let settingsWindowId = "\(aeroSpaceAppName).settingsView"
 
+/// Brings the Settings window to the front. Useful from AppKit-hosted panels (the window
+/// navigator popover) where SwiftUI's `openWindow` environment isn't available.
+@MainActor
+public func openSettingsWindow() {
+    NSApp.activate(ignoringOtherApps: true)
+    if let window = NSApp.windows.first(where: {
+        $0.identifier?.rawValue == settingsWindowId || $0.title == L("Settings")
+    }) {
+        window.makeKeyAndOrderFront(nil)
+    } else {
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+    }
+}
+
 @MainActor
 public func getSettingsWindow(viewModel: TrayMenuModel) -> some Scene {
     SwiftUI.Window(L("Settings"), id: settingsWindowId) {
@@ -150,11 +164,37 @@ private struct SettingsView: View {
                 subtitle: L("Move focus to the window under the pointer without clicking."),
                 isOn: model.binding(\.focusFollowsMouse) { .bool(["focus-follows-mouse", "enabled"], $0) },
             )
-            SettingsInfoCard(
+            SettingsSectionHeader(L("Menu bar and window navigator"))
+            SettingsToggleCard(
                 icon: "menubar.rectangle",
-                title: L("Menu bar"),
-                text: L("The menu bar shows the current space and up to three window icons on macOS 14 or later."),
+                title: L("Compact menu bar label"),
+                subtitle: L("Show only the current space name. The menu bar item is less likely to be hidden on small screens."),
+                isOn: model.binding(\.compactMenuBarLabel) { .bool(["menu-bar", "compact"], $0) },
             )
+            SettingsToggleCard(
+                icon: "macwindow.on.rectangle",
+                title: L("Show window navigator"),
+                subtitle: L("Keep the spaces and windows navigator visible outside the menu bar."),
+                isOn: model.binding(\.windowNavigatorEnabled) { .bool(["window-navigator", "enabled"], $0) },
+            )
+            SettingsCard {
+                SettingsRowLabel(
+                    icon: "rectangle.3.group",
+                    title: L("Navigator position"),
+                    subtitle: L("Choose where the floating navigator sits."),
+                )
+                Spacer(minLength: 12)
+                Picker("", selection: model.binding(\.windowNavigatorPosition) { .string(["window-navigator", "position"], $0.rawValue) }) {
+                    Text(L("Floating")).tag(WindowNavigatorPosition.floating)
+                    Text(L("Dock left")).tag(WindowNavigatorPosition.dockLeft)
+                    Text(L("Dock right")).tag(WindowNavigatorPosition.dockRight)
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+                .fixedSize()
+                .disabled(!model.state.windowNavigatorEnabled)
+                .opacity(model.state.windowNavigatorEnabled ? 1 : 0.5)
+            }
             errorBanner
         }
     }
@@ -683,25 +723,6 @@ private struct GapPresetChip: View {
                 )
         }
         .buttonStyle(.plain)
-    }
-}
-
-private struct SettingsInfoCard: View {
-    let icon: String
-    let title: String
-    let text: String
-
-    var body: some View {
-        SettingsCard {
-            SettingsIconTile(systemName: icon, tint: .secondary)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.body.weight(.medium))
-                Text(text)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
     }
 }
 

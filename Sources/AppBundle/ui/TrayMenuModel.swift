@@ -12,6 +12,9 @@ public final class TrayMenuModel: ObservableObject {
     @Published var workspaceGroups: [WorkspaceDisplayGroup] = []
     var workspaces: [WorkspaceViewModel] { workspaceGroups.flatMap(\.workspaces) }
     @Published var lastReloadConfigContainedWarnings: Bool = false
+    /// Mirrors `config.menuBar.compact`. Kept here because the `MenuBarExtra` label doesn't
+    /// necessarily re-render when the config alone changes
+    @Published var compactMenuBarLabel: Bool = false
     @Published var axPermissionStatus: AxPermissionStatus = .waitingWithPrompt
     /// Incremented every time the config is successfully reloaded. Used by the Settings UI
     /// (see `SettingsViewModel`) to re-sync itself with the config that is actually active
