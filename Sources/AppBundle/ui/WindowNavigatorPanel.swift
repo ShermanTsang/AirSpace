@@ -385,10 +385,8 @@ private struct WindowNavigatorStatusView: View {
         }
         .padding(.horizontal, 9 * scale)
         .padding(.vertical, 4 * scale)
-        .background(.thickMaterial, in: Capsule())
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.85), in: Capsule())
-        .overlay(Capsule().strokeBorder(foreground.opacity(0.16), lineWidth: 1))
-        .shadow(color: .black.opacity(0.18), radius: 8, y: 3)
+        .overlay(Capsule().strokeBorder(foreground.opacity(0.12), lineWidth: 1))
     }
 
     private var expandedControls: some View {
