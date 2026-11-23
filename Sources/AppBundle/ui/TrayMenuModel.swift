@@ -83,6 +83,23 @@ struct WorkspaceApp: Identifiable {
     let windowIDs: [OpaqueWindowId]
 }
 
+extension Workspace {
+    @MainActor
+    func windowToFocus(for app: WorkspaceApp) -> Window? {
+        let candidates = Set(app.windowIDs)
+        func findWindow(in node: TreeNode) -> Window? {
+            if let window = node as? Window {
+                return candidates.contains(window.windowId) && window.app.pid == app.id ? window : nil
+            }
+            for child in node._mruChildren {
+                if let window = findWindow(in: child) { return window }
+            }
+            return nil
+        }
+        return findWindow(in: self)
+    }
+}
+
 struct WorkspaceViewModel {
     let name: String
     let apps: [WorkspaceApp]

@@ -130,8 +130,8 @@ final class MacWindow: Window {
         try await macApp.getMacosWindowNativeState(windowId, cm) ?? .normal
     }
 
-    @MainActor override func nativeFocus() {
-        macApp.nativeFocus(windowId)
+    @MainActor override func nativeFocus(forceRaise: Bool = false) {
+        macApp.nativeFocus(windowId, forceRaise: forceRaise)
     }
 
     override func closeAxWindow() {

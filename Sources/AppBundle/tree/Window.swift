@@ -49,7 +49,7 @@ open class Window: TreeNode, Hashable {
     }
 
     var isHiddenInCorner: Bool { die("Not implemented") }
-    @MainActor func nativeFocus() { die("Not implemented") }
+    @MainActor func nativeFocus(forceRaise: Bool = false) { die("Not implemented") }
     func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
     func getCenter(_ cm: CancellationMode) async throws -> Point? { try await getAxRect(cm)?.center }
 

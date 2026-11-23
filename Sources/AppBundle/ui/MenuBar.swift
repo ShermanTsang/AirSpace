@@ -252,6 +252,7 @@ struct WorkspaceMenu: View {
         WorkspaceTile(
             workspace: workspace,
             focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
+            focusApp: { app in focusApp(app, in: workspace.name) },
             chooseLayout: { mode in runAction { mode.apply(to: Workspace.get(byName: workspace.name)) } },
             restoreLayout: { runAction {
                 let target = Workspace.get(byName: workspace.name)
@@ -397,6 +398,21 @@ struct WorkspaceMenu: View {
         }
     }
 
+    private func focusApp(_ app: WorkspaceApp, in workspaceName: String) {
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        actionMessage = nil
+        Task.startUnstructured {
+            _ = try await runLightSession(.menuBarButton, token, windowToRaise: { $0 }) { () -> Window? in
+                let workspace = Workspace.get(byName: workspaceName)
+                guard let window = workspace.windowToFocus(for: app) else {
+                    _ = workspace.focusWorkspace()
+                    return nil
+                }
+                return window.focusWindow() ? window : nil
+            }
+        }
+    }
+
     private func moveApp(_ item: WorkspaceAppDrag, to targetName: String) {
         guard item.workspace != targetName else { return }
         let source = Workspace.get(byName: item.workspace)
@@ -521,6 +537,7 @@ private struct WorkspaceTile: View {
 
     let workspace: WorkspaceViewModel
     let focus: () -> Void
+    let focusApp: (WorkspaceApp) -> Void
     let chooseLayout: (WorkspaceLayoutMode) -> Void
     let restoreLayout: () -> Void
     let toggleLock: () -> Void
@@ -625,7 +642,8 @@ private struct WorkspaceTile: View {
                                             finishDrag(WorkspaceAppDrag(workspace: workspace.name, app: app, location: value.location))
                                         },
                                 )
-                                .simultaneousGesture(TapGesture().onEnded { focus() })
+                                .simultaneousGesture(TapGesture().onEnded { focusApp(app) })
+                                .accessibilityAction { focusApp(app) }
                         }
                     }
                 }

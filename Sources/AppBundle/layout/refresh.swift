@@ -60,6 +60,7 @@ func runHeavyCompleteRefreshSession(
 func runLightSession<T>(
     _ event: RefreshSessionEvent,
     _: RunSessionGuard,
+    windowToRaise: (T) -> Window? = { _ in nil },
     body: @MainActor () async throws -> T,
 ) async throws -> T {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
@@ -81,7 +82,10 @@ func runLightSession<T>(
         updateTrayText()
         SecureInputPanel.shared.refresh()
         if !event.isFocusFollowsMouse { try await layoutWorkspaces() }
-        if focusBefore != focusAfter {
+        // An explicit reveal from the menu needs a native raise even if logical focus did not change.
+        if let window = windowToRaise(result), window == focusAfter, window == globalFocus.windowOrNil {
+            window.nativeFocus(forceRaise: true)
+        } else if focusBefore != focusAfter {
             focusAfter?.nativeFocus() // syncFocusToMacOs
         }
         await WorkspaceRestoration.shared.capture()

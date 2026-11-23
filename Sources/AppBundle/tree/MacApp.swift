@@ -141,13 +141,13 @@ final class MacApp: AbstractApp {
         return try await MacWindow.getOrRegister(windowId: getOrRegisterOpaqueWindowId(nativeWindowId), macApp: self)
     }
 
-    @MainActor func nativeFocus(_ windowId: OpaqueWindowId) {
+    @MainActor func nativeFocus(_ windowId: OpaqueWindowId, forceRaise: Bool) {
         if serverArgs.isReadOnly { return }
         MacApp.focusJob?.cancel()
         // Performance optimization. If possible avoid doing AX requests
         // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
         // Beware of the macOS bug: https://github.com/nikitabobko/AeroSpace/issues/101
-        if (!NSScreen.screensHaveSeparateSpaces || globalUnsortedMonitorInfos.count == 1) &&
+        if !forceRaise && (!NSScreen.screensHaveSeparateSpaces || globalUnsortedMonitorInfos.count == 1) &&
             (lastFocusedNativeWindowOpaqueId == windowId || windowsCount == 1)
         {
             if #available(macOS 14, *) {
