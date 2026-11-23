@@ -111,6 +111,7 @@ expected_app_dylibs=$(cat <<EOF
 	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+	/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore
 	/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement
 	/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI
 	/System/Library/Frameworks/WebKit.framework/Versions/A/WebKit
