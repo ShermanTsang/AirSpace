@@ -385,8 +385,9 @@ private struct WindowNavigatorStatusView: View {
         }
         .padding(.horizontal, 9 * scale)
         .padding(.vertical, 4 * scale)
-        .background(.regularMaterial, in: Capsule())
-        .overlay(Capsule().strokeBorder(foreground.opacity(0.14), lineWidth: 1))
+        .background(.thickMaterial, in: Capsule())
+        .background(Color(nsColor: .windowBackgroundColor).opacity(0.85), in: Capsule())
+        .overlay(Capsule().strokeBorder(foreground.opacity(0.16), lineWidth: 1))
         .shadow(color: .black.opacity(0.18), radius: 8, y: 3)
     }
 

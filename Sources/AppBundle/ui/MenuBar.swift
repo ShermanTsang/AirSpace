@@ -1,3 +1,4 @@
+import AppKit
 import Common
 import Foundation
 import SwiftUI
@@ -43,7 +44,7 @@ struct WorkspaceMenu: View {
     @State private var contentOffset: CGFloat = 0
     @State private var contentHeight: CGFloat?
     @State private var quickBarContentHeight: CGFloat?
-    @State private var expandedIdleGroups: Set<WorkspaceDisplay.ID> = []
+    @State private var collapsedIdleGroups: Set<WorkspaceDisplay.ID> = []
     @State private var isListHovered = false
     @State private var isQuickBarPinned = false
 
@@ -158,6 +159,9 @@ struct WorkspaceMenu: View {
         .onDisappear { isQuickBarPinned = false }
         .padding(14)
         .frame(width: 520)
+        // MenuBarExtra's window material is very translucent over busy wallpapers.
+        // Keep a near-opaque backdrop so the space tiles stay legible.
+        .background(Color(nsColor: .windowBackgroundColor).opacity(0.94))
     }
 
     private func openSupport(_ section: SupportModel.Section) {
@@ -212,7 +216,7 @@ struct WorkspaceMenu: View {
     private func displaySection(_ group: WorkspaceDisplayGroup, targetName: String?) -> some View {
         let spaces = sorted(group.workspaces)
         let idle = spaces.filter(\.isIdle)
-        let expanded = expandedIdleGroups.contains(group.id)
+        let expanded = !collapsedIdleGroups.contains(group.id)
         let otherDisplays = viewModel.workspaceGroups.filter { $0.id != group.id }.map(\.display)
         return VStack(alignment: .leading, spacing: spacing) {
             Label(group.display.title, systemImage: "display")
@@ -222,9 +226,9 @@ struct WorkspaceMenu: View {
             if !idle.isEmpty {
                 Button {
                     if expanded {
-                        expandedIdleGroups.remove(group.id)
+                        collapsedIdleGroups.insert(group.id)
                     } else {
-                        expandedIdleGroups.insert(group.id)
+                        collapsedIdleGroups.remove(group.id)
                     }
                 } label: {
                     Label("Idle spaces (\(idle.count))", systemImage: expanded ? "chevron.down" : "chevron.right")
