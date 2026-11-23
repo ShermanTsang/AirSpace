@@ -4,17 +4,22 @@ import Common
 import QuartzCore
 import SwiftUI
 
+/// The navigator shows this many space shortcuts; the rest stay in the overflow menu
+private let navigatorMaxSpaceChips = 8
+
 private enum NavigatorControl: Hashable {
     case layoutMode(WorkspaceLayoutMode)
     case workspace(String)
     case overflowSpaces
+    case settings
 }
 
 /// Keeps a compact navigator capsule visible outside the menu bar.
 ///
-/// The capsule always floats. Clicking it expands an inline panel with layout-style and
-/// space-switching controls; dragging moves it. Hovering does not expand it. The panel never
-/// participates in tiling: AirSpace ignores windows of its own process (see
+/// The capsule always floats and shows the focused space's layout mode and name. Clicking the
+/// capsule expands a rectangular action panel underneath it with two titled sections: switching
+/// spaces and switching the layout mode. Dragging the capsule moves it. Hovering does not expand
+/// it. The panel never participates in tiling: AirSpace ignores windows of its own process (see
 /// `MacApp.getOrRegister`), and the panel deliberately has no `Window` counterpart.
 @MainActor
 final class WindowNavigatorPanelController {
@@ -33,6 +38,9 @@ final class WindowNavigatorPanelController {
 
     private var statusPanel: WindowNavigatorStatusPanel?
     private var container: WindowNavigatorStatusContentView?
+    /// Frames reported by SwiftUI, cached so a newly created container starts up to date
+    private var controlFrames: [NavigatorControl: CGRect] = [:]
+    private var pillFrame: CGRect = .null
     private var configReloadSubscription: AnyCancellable?
     private var observers: [NSObjectProtocol] = []
     private var eventMonitors: [Any] = []
@@ -69,13 +77,15 @@ final class WindowNavigatorPanelController {
             expansionGeneration += 1
             isCollapsing = false
             navigator.isExpanded = false
-            container?.controlFrames = [:]
+            retainCollapsedControlFrames()
             statusPanel?.orderOut(nil)
             return
         }
         navigator.size = navigatorConfig.size
         let panel = statusPanel ?? makeStatusPanel()
         statusPanel = panel
+        container?.controlFrames = controlFrames
+        container?.pillFrame = pillFrame
         layoutPanel()
         panel.orderFrontRegardless()
     }
@@ -92,7 +102,12 @@ final class WindowNavigatorPanelController {
                 self?.contentSizeChanged(size)
             },
             onControlFramesChange: { [weak self] frames in
+                self?.controlFrames = frames
                 self?.container?.controlFrames = frames
+            },
+            onPillFrameChange: { [weak self] frame in
+                self?.pillFrame = frame
+                self?.container?.pillFrame = frame
             },
         )
         .environmentObject(TrayMenuModel.shared)
@@ -117,6 +132,8 @@ final class WindowNavigatorPanelController {
         }
         panel.contentView = container
         panel.setContentSize(contentSize)
+        container.controlFrames = controlFrames
+        container.pillFrame = pillFrame
         self.container = container
         return panel
     }
@@ -210,14 +227,20 @@ final class WindowNavigatorPanelController {
                 guard generation == self.expansionGeneration else { return }
                 self.isCollapsing = false
                 self.navigator.isExpanded = false
-                self.container?.controlFrames = [:]
+                self.retainCollapsedControlFrames()
             }
         } else {
             isCollapsing = false
             navigator.isExpanded = false
-            container?.controlFrames = [:]
+            retainCollapsedControlFrames()
             panel.setFrame(target, display: true)
         }
+    }
+
+    /// The pill's settings button stays visible when the action panel collapses
+    private func retainCollapsedControlFrames() {
+        controlFrames = controlFrames.filter { $0.key == .settings }
+        container?.controlFrames = controlFrames
     }
 
     private func collapseIfExpanded() {
@@ -232,6 +255,9 @@ final class WindowNavigatorPanelController {
                 focusWorkspace(named: name)
                 collapse()
             case .overflowSpaces: showOverflowSpacesMenu()
+            case .settings:
+                collapse()
+                openSettingsWindow()
         }
     }
 
@@ -254,7 +280,7 @@ final class WindowNavigatorPanelController {
     }
 
     private func showOverflowSpacesMenu() {
-        let spaces = TrayMenuModel.shared.workspaces.filter { !$0.apps.isEmpty }
+        let spaces = Array(TrayMenuModel.shared.workspaces.dropFirst(navigatorMaxSpaceChips))
         guard !spaces.isEmpty else { return }
         let target = SpacesMenuTarget { [weak self] name in
             self?.focusWorkspace(named: name)
@@ -335,34 +361,37 @@ private struct WindowNavigatorStatusView: View {
 
     let onContentSizeChange: (CGSize) -> Void
     let onControlFramesChange: ([NavigatorControl: CGRect]) -> Void
-
-    private static let maxSpaceChips = 8
+    let onPillFrameChange: (CGRect) -> Void
 
     private var workspace: WorkspaceViewModel? { viewModel.workspaces.first(where: \.isFocused) }
-    private var spacesWithApps: [WorkspaceViewModel] { viewModel.workspaces.filter { !$0.apps.isEmpty } }
-    private var visibleSpaces: [WorkspaceViewModel] { Array(spacesWithApps.prefix(Self.maxSpaceChips)) }
-    private var hiddenSpacesCount: Int { max(0, spacesWithApps.count - Self.maxSpaceChips) }
+    /// The first shortcuts stay on the panel; the remaining spaces live in the +N menu
+    private var visibleSpaces: [WorkspaceViewModel] { Array(viewModel.workspaces.prefix(navigatorMaxSpaceChips)) }
+    private var hiddenSpacesCount: Int { max(0, viewModel.workspaces.count - navigatorMaxSpaceChips) }
     private var scale: CGFloat { navigator.size.scale }
     private var foreground: Color { colorScheme == .dark ? .white : .black }
 
     var body: some View {
-        HStack(spacing: 0) {
-            Spacer(minLength: 0)
+        VStack(alignment: .trailing, spacing: 6 * scale) {
             capsule
-                .padding(8)
                 .fixedSize()
-                .onGeometryChange(for: CGSize.self) { $0.size } action: { onContentSizeChange($0) }
+                .background(NavigatorPillFrameReader())
+            if navigator.isExpanded {
+                actionsPanel
+                    .transition(.opacity)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+        .padding(8)
+        .fixedSize()
+        .onGeometryChange(for: CGSize.self) { $0.size } action: { onContentSizeChange($0) }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         .onPreferenceChange(NavigatorControlFramesKey.self) { onControlFramesChange($0) }
+        .onPreferenceChange(NavigatorPillFrameKey.self) { onPillFrameChange($0) }
         .animation(.easeOut(duration: 0.18), value: navigator.isExpanded)
     }
 
+    /// The fixed identity row: layout mode icon, focused space, and settings
     private var capsule: some View {
         HStack(spacing: 6 * scale) {
-            if navigator.isExpanded {
-                expandedControls
-            }
             if let workspace {
                 Image(systemName: workspace.mode.icon)
                     .font(.system(size: 14 * scale, weight: .semibold))
@@ -382,6 +411,7 @@ private struct WindowNavigatorStatusView: View {
                     .font(.system(size: 15 * scale, weight: .semibold, design: .rounded))
                     .foregroundStyle(foreground)
             }
+            settingsButton
         }
         .padding(.horizontal, 9 * scale)
         .padding(.vertical, 4 * scale)
@@ -389,37 +419,62 @@ private struct WindowNavigatorStatusView: View {
         .overlay(Capsule().strokeBorder(foreground.opacity(0.12), lineWidth: 1))
     }
 
-    private var expandedControls: some View {
-        HStack(spacing: 6 * scale) {
-            ForEach(WorkspaceLayoutMode.allCases, id: \.self) { mode in
-                layoutModeButton(mode)
-            }
-            divider
+    private var settingsButton: some View {
+        Image(systemName: "gearshape")
+            .font(.system(size: 12 * scale, weight: .semibold))
+            .foregroundStyle(foreground.opacity(0.65))
+            .frame(width: 22 * scale, height: 22 * scale)
+            .background(foreground.opacity(0.06), in: RoundedRectangle(cornerRadius: 6 * scale, style: .continuous))
+            .contentShape(Rectangle())
+            .accessibilityLabel(L("Settings"))
+            .accessibilityAddTraits(.isButton)
+            .background(controlFrameReader(.settings))
+    }
+
+    /// The rectangular action space shown under the pill while expanded
+    private var actionsPanel: some View {
+        VStack(alignment: .leading, spacing: 8 * scale) {
             if !visibleSpaces.isEmpty {
-                ForEach(visibleSpaces, id: \.name) { space in
-                    spaceChip(space)
+                section(L("Spaces")) {
+                    HStack(spacing: 6 * scale) {
+                        ForEach(visibleSpaces, id: \.name) { space in
+                            spaceChip(space)
+                        }
+                        if hiddenSpacesCount > 0 {
+                            overflowSpacesChip
+                        }
+                    }
                 }
-                if hiddenSpacesCount > 0 {
-                    overflowSpacesChip
-                }
-                divider
             }
-            if !viewModel.focusedWorkspaceIcons.isEmpty {
-                ForEach(Array(viewModel.focusedWorkspaceIcons.prefix(3).enumerated()), id: \.offset) { _, icon in
-                    Image(nsImage: icon)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24 * scale, height: 24 * scale)
+            section(L("Layout")) {
+                HStack(spacing: 6 * scale) {
+                    ForEach(WorkspaceLayoutMode.allCases, id: \.self) { mode in
+                        layoutModeButton(mode)
+                    }
                 }
             }
         }
+        .padding(.horizontal, 10 * scale)
+        .padding(.vertical, 9 * scale)
+        .background(panelBackground)
     }
 
-    private var divider: some View {
-        Rectangle()
-            .fill(foreground.opacity(0.15))
-            .frame(width: 1, height: 16 * scale)
-            .padding(.horizontal, 2 * scale)
+    private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 5 * scale) {
+            Text(title)
+                .font(.system(size: 10 * scale, weight: .semibold))
+                .textCase(.uppercase)
+                .tracking(0.5)
+                .foregroundStyle(foreground.opacity(0.5))
+            content()
+        }
+    }
+
+    private var panelBackground: some View {
+        let shape = RoundedRectangle(cornerRadius: 12 * scale, style: .continuous)
+        return shape
+            .fill(Color(nsColor: .windowBackgroundColor).opacity(0.95))
+            .overlay(shape.strokeBorder(foreground.opacity(0.12), lineWidth: 1))
     }
 
     private func layoutModeButton(_ mode: WorkspaceLayoutMode) -> some View {
@@ -483,6 +538,30 @@ private struct NavigatorControlFramesKey: PreferenceKey {
     }
 }
 
+/// The pill is the only region that toggles the panel on click; the action panel itself is
+/// pure controls and blank space, so clicking there must not collapse it.
+private struct NavigatorPillFrameKey: PreferenceKey {
+    static let defaultValue: CGRect = .null
+
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        let next = nextValue()
+        if !next.isEmpty {
+            value = next
+        }
+    }
+}
+
+private struct NavigatorPillFrameReader: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear.preference(
+                key: NavigatorPillFrameKey.self,
+                value: geometry.frame(in: .global),
+            )
+        }
+    }
+}
+
 @MainActor
 private final class SpacesMenuTarget: NSObject {
     private let onSelect: (String) -> Void
@@ -515,6 +594,8 @@ private final class WindowNavigatorStatusContentView: NSView {
     var onOpenSettings: (() -> Void)?
     /// Frames of the SwiftUI controls in window (top-left origin) coordinates
     var controlFrames: [NavigatorControl: CGRect] = [:]
+    /// The pill's frame; only a click that starts inside it toggles the panel
+    var pillFrame: CGRect = .null
 
     /// Matches SwiftUI's top-left origin so the reported control frames can be hit-tested as is
     override var isFlipped: Bool { true }
@@ -523,25 +604,29 @@ private final class WindowNavigatorStatusContentView: NSView {
     private var dragStartWindowOrigin = NSPoint.zero
     private var isDraggingWindow = false
     private var isPressingControl = false
+    private var isPressingPill = false
 
     override func mouseDown(with event: NSEvent) {
         guard let window = unsafe self.window else { return }
         let point = convert(event.locationInWindow, from: nil)
+        isPressingPill = false
+        isDraggingWindow = false
         if let control = controlFrames.first(where: { $0.value.contains(point) })?.key {
             isPressingControl = true
             onActivateControl?(control)
             return
         }
         isPressingControl = false
-        isDraggingWindow = false
+        isPressingPill = pillFrame.contains(point)
         dragStartMouseLocation = NSEvent.mouseLocation
         dragStartWindowOrigin = window.frame.origin
     }
 
-    /// The window follows the pointer only after the pointer travels far enough. A short press
-    /// stays a click and opens the navigator; moving is a separate intent.
+    /// Only the pill is a drag handle, and only after the pointer travels far enough. A short
+    /// press on the pill stays a click and opens the navigator; moving is a separate intent.
+    /// The action panel is a pure control surface, so presses there never move the window.
     override func mouseDragged(with event: NSEvent) {
-        guard let window = unsafe self.window else { return }
+        guard let window = unsafe self.window, isPressingPill else { return }
         let location = NSEvent.mouseLocation
         let delta = NSPoint(
             x: location.x - dragStartMouseLocation.x,
@@ -556,6 +641,7 @@ private final class WindowNavigatorStatusContentView: NSView {
     }
 
     override func mouseUp(with event: NSEvent) {
+        defer { isPressingPill = false }
         if isPressingControl {
             isPressingControl = false
             return
@@ -563,7 +649,7 @@ private final class WindowNavigatorStatusContentView: NSView {
         if isDraggingWindow {
             isDraggingWindow = false
             onDragEnd?()
-        } else {
+        } else if isPressingPill {
             onToggleExpansion?()
         }
     }
