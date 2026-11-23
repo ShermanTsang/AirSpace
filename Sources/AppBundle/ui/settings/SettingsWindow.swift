@@ -1118,8 +1118,8 @@ private struct RunningApplicationsSettings: View {
     }
 }
 
-private extension WindowNavigatorSize {
-    var title: String {
+extension WindowNavigatorSize {
+    fileprivate var title: String {
         switch self {
             case .small: L("Small")
             case .medium: L("Medium")

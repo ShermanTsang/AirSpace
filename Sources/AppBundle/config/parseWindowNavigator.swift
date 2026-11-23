@@ -30,9 +30,9 @@ private func parseDeprecatedWindowNavigatorPosition(_ raw: OrderedJson, _ backtr
         switch $0 {
             case "floating": .success(())
             default: .failure(.init(
-                backtrace,
-                "The window navigator is always floating. Please remove 'window-navigator.position' from the config",
-            ))
+                    backtrace,
+                    "The window navigator is always floating. Please remove 'window-navigator.position' from the config",
+                ))
         }
     }
 }
