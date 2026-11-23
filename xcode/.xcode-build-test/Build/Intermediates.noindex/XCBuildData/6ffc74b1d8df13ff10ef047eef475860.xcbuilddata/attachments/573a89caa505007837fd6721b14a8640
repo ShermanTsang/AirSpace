@@ -1,0 +1,16 @@
+{
+  "" : {
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary.dia",
+    "emit-module-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary-emit-module.dia",
+    "pch" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/Macros-primary.swiftdeps"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Macros/MyMacros.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/MyMacros.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/MyMacros.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Macros-t.build/Objects-normal/arm64/MyMacros.o"
+  }
+}

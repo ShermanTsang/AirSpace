@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/swift-collections/Sources/BasicContainers/HashTable/_HTable+Bitmap.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/BasicContainers-t.build/Objects-normal/x86_64/BasicContainers.swiftsourceinfo"
+  }
+}

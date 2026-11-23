@@ -3,7 +3,7 @@ cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
 build_info_file='' # mandatory
-codesign_identity="airspace-codesign-certificate"
+codesign_identity=''
 while test $# -gt 0; do
     case $1 in
         --build-info-file) build_info_file="$2"; shift 2;;
@@ -13,6 +13,14 @@ while test $# -gt 0; do
 done
 
 if test -z "$build_info_file"; then echo "--build-info-file is mandatory" > /dev/stderr; exit 1; fi
+
+if test -z "$codesign_identity"; then
+    if test -f .codesign-identity; then
+        codesign_identity="$(<.codesign-identity)"
+    else
+        codesign_identity="airspace-codesign-certificate"
+    fi
+fi
 
 export SWIFTPM_WARNINGS_AS_ERRORS=1
 swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product airspace)

@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/swift-collections/Sources/InternalCollectionsUtilities/Debugging.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/InternalCollectionsUtilities-t.build/Objects-normal/arm64/InternalCollectionsUtilities.swiftsourceinfo"
+  }
+}

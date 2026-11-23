@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/swift-collections/Sources/OrderedCollections/HashTable/_HashTable+Bucket.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/OrderedCollections-t.build/Objects-normal/arm64/OrderedCollections.swiftsourceinfo"
+  }
+}

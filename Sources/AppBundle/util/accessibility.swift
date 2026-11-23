@@ -6,10 +6,10 @@ import PrivateApi
 func waitForAccessibilityPermission_nonCancellable() async {
     let options = [axTrustedCheckOptionPrompt: true]
     if TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt, !AXIsProcessTrusted() {
-        // Reset stale TCC entries before prompting. Resetting after AXIsProcessTrustedWithOptions(prompt:)
-        // dismisses the prompt that was just requested. The reset is needed because macOS doesn't reset
-        // the entry for us when the app signature changes.
-        resetAccessibility()
+        // Don't reset the TCC entry here. Resetting on every launch makes the permission impossible
+        // to persist: the launch that needs the permission is exactly when the reset would wipe it.
+        // If a stale entry genuinely blocks prompting, run `tccutil reset Accessibility <bundle-id>`
+        // manually. Signing every build with the same certificate keeps the TCC identity stable.
         // An accessory app without windows cannot become active, and macOS won't show the permission
         // prompt for a background app. Temporarily become a regular app so the prompt is visible.
         NSApp.setActivationPolicy(.regular)
@@ -28,10 +28,6 @@ func waitForAccessibilityPermission_nonCancellable() async {
         }
         try? await Task.sleep(for: .seconds(1))
     }
-}
-
-private func resetAccessibility() {
-    _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroSpaceAppId])
 }
 
 protocol ReadableAttr: Sendable {

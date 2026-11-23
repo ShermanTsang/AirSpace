@@ -7,17 +7,19 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
     MenuBarExtra {
         WorkspaceMenu(viewModel: viewModel)
     } label: {
-        switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
-            case (.granted, true):
-                MenuBarLabel().environmentObject(viewModel)
-            case (.granted, false):
-                Image(systemName: "pause.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            case (_, _):
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+        Group {
+            switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
+                case (.granted, true):
+                    MenuBarLabel().environmentObject(viewModel)
+                case (.granted, false):
+                    Image(systemName: "pause.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                case (_, _):
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+            }
         }
     }
     .menuBarExtraStyle(.window)
@@ -90,15 +92,9 @@ struct WorkspaceMenu: View {
                 .fixedSize()
                 .help(L("Sort spaces"))
                 .accessibilityLabel(L("Sort spaces"))
-                if presentation == .menuBar {
-                    Button { openWindow(id: settingsWindowId) } label: { Image(systemName: "gearshape") }
-                        .help(L("Settings"))
-                        .accessibilityLabel(L("Settings"))
-                } else {
-                    Button { openSettingsWindow() } label: { Image(systemName: "gearshape") }
-                        .help(L("Settings"))
-                        .accessibilityLabel(L("Settings"))
-                }
+                Button { openSettingsWindow() } label: { Image(systemName: "gearshape") }
+                    .help(L("Settings"))
+                    .accessibilityLabel(L("Settings"))
             }
             if viewModel.axPermissionStatus != .granted {
                 Button(L("Grant accessibility permission")) { viewModel.axPermissionStatus = .waitingWithPrompt }
@@ -106,18 +102,12 @@ struct WorkspaceMenu: View {
                 Text(L("AirSpace is paused. Enable it in Settings.")).foregroundStyle(.secondary)
             } else {
                 if viewModel.lastReloadConfigContainedWarnings {
-                    switch presentation {
-                        case .menuBar:
-                            Button(L("Configuration contains warnings")) { openWindow(id: settingsWindowId) }
-                                .foregroundStyle(.orange)
-                        case .panel:
-                            Button { openSettingsWindow() } label: {
-                                Label(L("Configuration contains warnings"), systemImage: "exclamationmark.triangle.fill")
-                                    .font(.callout)
-                                    .foregroundStyle(.orange)
-                            }
-                            .buttonStyle(.plain)
+                    Button { openSettingsWindow() } label: {
+                        Label(L("Configuration contains warnings"), systemImage: "exclamationmark.triangle.fill")
+                            .font(.callout)
+                            .foregroundStyle(.orange)
                     }
+                    .buttonStyle(.plain)
                 }
                 if let actionMessage {
                     Label(actionMessage, systemImage: "exclamationmark.circle")

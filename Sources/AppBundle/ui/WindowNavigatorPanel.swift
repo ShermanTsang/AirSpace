@@ -77,8 +77,7 @@ final class WindowNavigatorPanelController {
         }
         let panel = statusPanel ?? makeStatusPanel()
         statusPanel = panel
-        panel.isMovableByWindowBackground = navigatorConfig.position == .floating
-        (panel.contentView as? WindowNavigatorStatusContentView)?.isDraggable = navigatorConfig.position == .floating
+        panel.isMovableByWindowBackground = true
         if lastPosition != navigatorConfig.position {
             popover?.close()
             lastPosition = navigatorConfig.position
@@ -105,22 +104,15 @@ final class WindowNavigatorPanelController {
         container.onTap = { [weak self] in
             self?.togglePopover()
         }
+        container.onDragEnd = { [weak self] in
+            self?.statusPanelDidMove()
+        }
         container.onOpenSettings = {
             openSettingsWindow()
         }
         panel.contentView = container
         panel.setContentSize(hostingView.frame.size)
         statusHostingView = hostingView
-
-        observers.append(NotificationCenter.default.addObserver(
-            forName: NSWindow.didMoveNotification,
-            object: panel,
-            queue: .main,
-        ) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.persistFreeOriginIfNeeded()
-            }
-        })
         return panel
     }
 
@@ -200,9 +192,17 @@ final class WindowNavigatorPanelController {
         return screens.first { $0.frame.contains(origin) } ?? screens.first
     }
 
-    private func persistFreeOriginIfNeeded() {
-        guard config.windowNavigator.position == .floating, let statusPanel else { return }
+    private func statusPanelDidMove() {
+        guard let statusPanel else { return }
         UserDefaults.standard.set(NSStringFromPoint(statusPanel.frame.origin), forKey: Self.freeOriginDefaultsKey)
+        guard config.windowNavigator.position != .floating else { return }
+        // Dragging a docked panel is an explicit request for free placement. Persist it so the
+        // panel doesn't snap back on the next workspace update or config reload.
+        Task.startUnstructured { @MainActor in
+            try? await ConfigFileEditor.applyEdits([
+                .string(["window-navigator", "position"], WindowNavigatorPosition.floating.rawValue),
+            ])
+        }
     }
 
     private func loadFreeOrigin() -> NSPoint? {
@@ -214,7 +214,7 @@ final class WindowNavigatorPanelController {
 @MainActor
 private struct WindowNavigatorStatusView: View {
     var body: some View {
-        MenuBarLabel()
+        MenuBarLabel(showsAppIcon: true)
             .padding(3)
             .background(.regularMaterial, in: Capsule())
             .overlay(Capsule().strokeBorder(Color.primary.opacity(0.12), lineWidth: 1))
@@ -236,19 +236,17 @@ private final class StatusHostingView: NSHostingView<AnyView> {
 
 private final class WindowNavigatorStatusContentView: NSView {
     var onTap: (() -> Void)?
+    var onDragEnd: (() -> Void)?
     var onOpenSettings: (() -> Void)?
-    var isDraggable = true
 
     override func mouseDown(with event: NSEvent) {
         guard let window = unsafe self.window else { return }
-        guard isDraggable else {
-            onTap?()
-            return
-        }
         let initialOrigin = window.frame.origin
         window.performDrag(with: event)
         if window.frame.origin == initialOrigin {
             onTap?()
+        } else {
+            onDragEnd?()
         }
     }
 

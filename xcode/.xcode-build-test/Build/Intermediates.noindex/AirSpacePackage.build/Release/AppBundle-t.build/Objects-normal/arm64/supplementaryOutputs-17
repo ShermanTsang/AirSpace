@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/DerivedSources/resource_bundle_accessor.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/AppBundle-t.build/Objects-normal/arm64/AppBundle.swiftsourceinfo"
+  }
+}

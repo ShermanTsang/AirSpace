@@ -15,7 +15,6 @@ struct AirSpaceApp: App {
 
     var body: some Scene {
         menuBar(viewModel: viewModel)
-        getSettingsWindow(viewModel: viewModel)
         getSupportWindow()
         getMessageWindow(messageModel: messageModel)
             .onChangeCompat(of: messageModel.message) { message in
@@ -25,7 +24,7 @@ struct AirSpaceApp: App {
             }
             .commands {
                 CommandGroup(replacing: .appSettings) {
-                    Button("Settings…") { openWindow(id: settingsWindowId) }
+                    Button("Settings…") { openSettingsWindow() }
                         .keyboardShortcut(",", modifiers: .command)
                 }
             }

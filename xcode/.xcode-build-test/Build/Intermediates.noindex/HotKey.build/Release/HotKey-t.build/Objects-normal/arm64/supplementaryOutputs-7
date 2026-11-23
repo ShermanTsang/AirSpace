@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/HotKey.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.swiftsourceinfo"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "" : {
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.dia",
+    "emit-module-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary-emit-module.dia",
+    "pch" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.swiftdeps"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/ISSoundAdditions/Sources/ISSoundAdditions/Sound.swift" : {
+    "index-unit-output-path" : "/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/Sound.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/Sound.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/Sound.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/ISSoundAdditions/Sources/ISSoundAdditions/SoundOutputManager+Goodies.swift" : {
+    "index-unit-output-path" : "/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Goodies.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Goodies.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Goodies.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/ISSoundAdditions/Sources/ISSoundAdditions/SoundOutputManager+Properties.swift" : {
+    "index-unit-output-path" : "/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Properties.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Properties.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager+Properties.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/ISSoundAdditions/Sources/ISSoundAdditions/SoundOutputManager.swift" : {
+    "index-unit-output-path" : "/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/SoundOutputManager.o"
+  }
+}

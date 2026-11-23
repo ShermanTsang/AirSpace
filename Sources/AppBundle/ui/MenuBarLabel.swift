@@ -3,6 +3,8 @@ import SwiftUI
 
 @MainActor
 struct MenuBarLabel: View {
+    var showsAppIcon = false
+
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject private var viewModel: TrayMenuModel
 
@@ -25,6 +27,13 @@ struct MenuBarLabel: View {
 
     private func capsule(abbreviation: String) -> some View {
         HStack(spacing: 6) {
+            if showsAppIcon {
+                Image(nsImage: NSApplication.shared.applicationIconImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 22, height: 22)
+            }
+
             Text(abbreviation)
                 .font(.system(size: 19, weight: .bold, design: .rounded))
                 .foregroundStyle(foreground)

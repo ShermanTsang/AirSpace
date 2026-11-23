@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/swift-collections/Sources/ContainersPreview/Extensions/OutputSpan+Extras.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/swift-collections.build/Release/ContainersPreview-t.build/Objects-normal/arm64/ContainersPreview.swiftsourceinfo"
+  }
+}

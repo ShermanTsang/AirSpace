@@ -5,34 +5,36 @@ import SwiftUI
 
 public let settingsWindowId = "\(aeroSpaceAppName).settingsView"
 
-/// Brings the Settings window to the front. Useful from AppKit-hosted panels (the window
-/// navigator popover) where SwiftUI's `openWindow` environment isn't available.
+@MainActor private var settingsWindowController: NSWindowController?
+
+/// Brings the Settings window to the front. The window is created directly with AppKit
+/// because the navigator popover is AppKit-hosted, where SwiftUI's `openWindow` isn't available.
 @MainActor
 public func openSettingsWindow() {
     NSApp.activate(ignoringOtherApps: true)
-    if let window = NSApp.windows.first(where: {
-        $0.identifier?.rawValue == settingsWindowId || $0.title == L("Settings")
-    }) {
+    if let window = settingsWindowController?.window
+        ?? NSApp.windows.first(where: { $0.identifier?.rawValue == settingsWindowId })
+    {
         window.makeKeyAndOrderFront(nil)
-    } else {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        return
     }
-}
 
-@MainActor
-public func getSettingsWindow(viewModel: TrayMenuModel) -> some Scene {
-    SwiftUI.Window(L("Settings"), id: settingsWindowId) {
-        SettingsView()
-            .environmentObject(viewModel)
-            .frame(minWidth: 760, minHeight: 560)
-            .onAppear {
-                // AeroSpace is an agent app (LSUIElement). Make sure the window can take keyboard focus
-                NSApp.setActivationPolicy(.accessory)
-                NSApp.activate(ignoringOtherApps: true)
-            }
-    }
-    .windowResizability(.contentMinSize)
-    .defaultSize(width: 860, height: 660)
+    let hostingController = NSHostingController(
+        rootView: SettingsView().environmentObject(TrayMenuModel.shared),
+    )
+    let window = NSWindow(contentViewController: hostingController)
+    window.identifier = NSUserInterfaceItemIdentifier(settingsWindowId)
+    window.title = L("Settings")
+    window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+    window.setContentSize(NSSize(width: 860, height: 660))
+    window.contentMinSize = NSSize(width: 760, height: 560)
+    window.isReleasedWhenClosed = false
+    window.center()
+
+    let controller = NSWindowController(window: window)
+    settingsWindowController = controller
+    controller.showWindow(nil)
+    NSApp.activate(ignoringOtherApps: true)
 }
 
 private enum SettingsCategory: String, CaseIterable, Identifiable {

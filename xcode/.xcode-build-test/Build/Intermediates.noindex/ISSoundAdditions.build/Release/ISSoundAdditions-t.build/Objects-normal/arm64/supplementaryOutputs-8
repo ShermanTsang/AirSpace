@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/ISSoundAdditions/Sources/ISSoundAdditions/Sound.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/ISSoundAdditions.build/Release/ISSoundAdditions-t.build/Objects-normal/arm64/ISSoundAdditions.swiftsourceinfo"
+  }
+}

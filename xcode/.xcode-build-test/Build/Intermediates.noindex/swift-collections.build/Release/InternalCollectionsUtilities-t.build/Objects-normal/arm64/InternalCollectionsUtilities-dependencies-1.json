@@ -1,0 +1,31 @@
+[
+  {
+    "isFramework" : false,
+    "moduleName" : "Swift",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/Swift.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_Concurrency",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/_Concurrency.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_StringProcessing",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/_StringProcessing.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/SwiftShims-5519QEMO9K22N2Q3XY08M4YIS.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "SwiftShims"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_SwiftConcurrencyShims-19VIPMHQHEP1JVR3JUIHRZQEK.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_SwiftConcurrencyShims"
+  }
+]

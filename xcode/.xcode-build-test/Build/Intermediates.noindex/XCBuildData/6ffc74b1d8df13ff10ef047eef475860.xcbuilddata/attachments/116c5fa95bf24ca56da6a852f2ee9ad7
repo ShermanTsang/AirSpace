@@ -1,0 +1,496 @@
+{
+  "" : {
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary.dia",
+    "emit-module-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary-emit-module.dia",
+    "pch" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Common-primary.swiftdeps"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/appMetadata.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/appMetadata.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/appMetadata.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/appMetadata.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/buildInfo.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/buildInfo.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/buildInfo.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/buildInfo.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/ArgParser.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParser.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParser.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParser.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/ArgParserInput.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParserInput.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParserInput.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArgParserInput.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/ExitCode.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExitCode.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExitCode.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExitCode.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/ParsedCliArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCliArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCliArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCliArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/ParsedCmd.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCmd.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCmd.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ParsedCmd.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/SubArgParser.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubArgParser.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubArgParser.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubArgParser.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/cmdArgsManifest.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdArgsManifest.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdArgsManifest.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdArgsManifest.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/BalanceSizesCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BalanceSizesCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BalanceSizesCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BalanceSizesCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/CloseAllWindowsButCurrentCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseAllWindowsButCurrentCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseAllWindowsButCurrentCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseAllWindowsButCurrentCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/CloseCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CloseCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ConfigCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ConfigCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ConfigCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ConfigCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/DebugWindowsCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DebugWindowsCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DebugWindowsCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DebugWindowsCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/EchoCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EchoCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EchoCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EchoCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/EnableCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EnableCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EnableCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EnableCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/EvalCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EvalCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EvalCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EvalCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ExecAndForgetCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExecAndForgetCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExecAndForgetCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ExecAndForgetCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FalseCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FalseCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FalseCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FalseCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FlattenWorkspaceTreeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FlattenWorkspaceTreeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FlattenWorkspaceTreeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FlattenWorkspaceTreeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FocusBackAndForthCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusBackAndForthCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusBackAndForthCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusBackAndForthCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FocusCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FocusMonitorCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusMonitorCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusMonitorCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FocusMonitorCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/FullscreenCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FullscreenCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FullscreenCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/FullscreenCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/JoinWithCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JoinWithCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JoinWithCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JoinWithCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/LayoutCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/LayoutCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/LayoutCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/LayoutCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListAppsCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListAppsCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListAppsCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListAppsCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListExecEnvVarsCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListExecEnvVarsCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListExecEnvVarsCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListExecEnvVarsCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListModesCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListModesCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListModesCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListModesCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListMonitorsCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListMonitorsCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListMonitorsCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListMonitorsCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListWindowsCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWindowsCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWindowsCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWindowsCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ListWorkspacesCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWorkspacesCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWorkspacesCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ListWorkspacesCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MacosNativeFullscreenCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeFullscreenCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeFullscreenCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeFullscreenCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MacosNativeMinimizeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeMinimizeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeMinimizeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MacosNativeMinimizeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ModeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ModeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ModeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ModeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MoveCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MoveMouseCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveMouseCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveMouseCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveMouseCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MoveNodeToMonitorCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToMonitorCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToMonitorCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToMonitorCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MoveNodeToWorkspaceCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToWorkspaceCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToWorkspaceCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveNodeToWorkspaceCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/MoveWorkpsaceToMonitorCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveWorkpsaceToMonitorCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveWorkpsaceToMonitorCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MoveWorkpsaceToMonitorCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ReloadConfigCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ReloadConfigCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ReloadConfigCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ReloadConfigCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/ResizeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResizeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResizeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResizeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/RunCallbackCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/RunCallbackCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/RunCallbackCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/RunCallbackCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/SplitCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SplitCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SplitCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SplitCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/SubscribeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubscribeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubscribeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SubscribeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/SummonWorkspaceCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SummonWorkspaceCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SummonWorkspaceCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SummonWorkspaceCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/SwapCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SwapCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SwapCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SwapCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/TestCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/TestNotCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestNotCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestNotCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TestNotCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/TriggerBindingCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TriggerBindingCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TriggerBindingCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TriggerBindingCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/TrueCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TrueCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TrueCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TrueCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/VolumeCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/VolumeCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/VolumeCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/VolumeCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/WorkspaceBackAndForthCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceBackAndForthCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceBackAndForthCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceBackAndForthCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/impl/WorkspaceCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/joinArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/joinArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/joinArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/joinArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/parseCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/parseSpecificCmdArgs.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseSpecificCmdArgs.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseSpecificCmdArgs.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/parseSpecificCmdArgs.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdArgs/subcommandParsers.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/subcommandParsers.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/subcommandParsers.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/subcommandParsers.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/cmdHelpGenerated.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdHelpGenerated.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdHelpGenerated.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/cmdHelpGenerated.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/AeroSpaceEnvVars.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroSpaceEnvVars.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroSpaceEnvVars.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroSpaceEnvVars.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/AxAppThreadToken.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AxAppThreadToken.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AxAppThreadToken.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AxAppThreadToken.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/CardinalDirection.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalDirection.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalDirection.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalDirection.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/CardinalOrDfsDirection.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalOrDfsDirection.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalOrDfsDirection.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CardinalOrDfsDirection.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/DfsNextPrev.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DfsNextPrev.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DfsNextPrev.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DfsNextPrev.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/Init.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Init.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Init.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Init.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/MonitorDescription.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MonitorDescription.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MonitorDescription.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MonitorDescription.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/NextPrev.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NextPrev.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NextPrev.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NextPrev.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/OpaqueWindowId.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OpaqueWindowId.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OpaqueWindowId.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OpaqueWindowId.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/Orientation.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Orientation.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Orientation.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Orientation.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/WorkspaceName.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceName.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceName.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/WorkspaceName.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/model/clientServer.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/clientServer.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/clientServer.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/clientServer.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/AeroAny.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroAny.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroAny.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AeroAny.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/ArrSlice.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrSlice.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrSlice.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrSlice.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/ArrayEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrayEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrayEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ArrayEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/AsyncStreamEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AsyncStreamEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AsyncStreamEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/AsyncStreamEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/BoolEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BoolEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BoolEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/BoolEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/CaseInsensitiveRegex.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CaseInsensitiveRegex.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CaseInsensitiveRegex.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CaseInsensitiveRegex.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/CollectionEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CollectionEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CollectionEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/CollectionEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/ComparableEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ComparableEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ComparableEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ComparableEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/DictionaryEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DictionaryEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DictionaryEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/DictionaryEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/EquatableNoop.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EquatableNoop.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EquatableNoop.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/EquatableNoop.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/JsonEncoderEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JsonEncoderEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JsonEncoderEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/JsonEncoderEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/Lateinit.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Lateinit.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Lateinit.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Lateinit.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/MainActorEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MainActorEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MainActorEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MainActorEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/MyFileId.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MyFileId.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MyFileId.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/MyFileId.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/NWConnectionEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NWConnectionEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NWConnectionEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NWConnectionEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/NonCopyable.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NonCopyable.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NonCopyable.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/NonCopyable.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/OptionalEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OptionalEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OptionalEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/OptionalEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/ResultEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResultEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResultEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/ResultEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/SequenceEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SequenceEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SequenceEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/SequenceEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/StrictContinuation.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StrictContinuation.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StrictContinuation.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StrictContinuation.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/StringEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/StringLogicalSegments.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringLogicalSegments.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringLogicalSegments.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/StringLogicalSegments.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/TaskEx.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TaskEx.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TaskEx.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/TaskEx.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/Withable.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Withable.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Withable.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/Withable.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/commonUtil.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/commonUtil.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/commonUtil.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/commonUtil.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/util/showMessageInGui.swift" : {
+    "index-unit-output-path" : "/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/showMessageInGui.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/showMessageInGui.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/arm64/showMessageInGui.o"
+  }
+}

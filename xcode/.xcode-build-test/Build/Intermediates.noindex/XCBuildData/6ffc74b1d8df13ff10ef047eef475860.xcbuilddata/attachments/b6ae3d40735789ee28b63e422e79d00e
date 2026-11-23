@@ -1,0 +1,41 @@
+{
+  "" : {
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.dia",
+    "emit-module-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary-emit-module.dia",
+    "pch" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey-primary.swiftdeps"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/HotKey.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKey.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/HotKeysController.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKeysController.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKeysController.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/HotKeysController.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/Key.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/Key.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/Key.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/Key.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/KeyCombo+System.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo+System.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo+System.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo+System.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/KeyCombo.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/KeyCombo.o"
+  },
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/HotKey/Sources/HotKey/NSEventModifierFlags+HotKey.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.o",
+    "llvm-bc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.bc",
+    "object" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/HotKey.build/Release/HotKey-t.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.o"
+  }
+}

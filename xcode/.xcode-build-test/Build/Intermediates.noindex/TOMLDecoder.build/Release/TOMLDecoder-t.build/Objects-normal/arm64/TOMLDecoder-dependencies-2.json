@@ -1,0 +1,325 @@
+[
+  {
+    "isFramework" : true,
+    "moduleName" : "Combine",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Combine-3J3K5OJEASLNF.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "CoreFoundation",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/CoreFoundation-TPB17082772T.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Darwin",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Darwin-35UL41I2O5S9P.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Dispatch",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Dispatch-3G1MH8BN04OYQ.swiftmodule"
+  },
+  {
+    "isFramework" : true,
+    "moduleName" : "Foundation",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Foundation-23KS4FZG3H2X.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "IOKit",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/IOKit-3SW0YFTXMRG36.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "ObjectiveC",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/ObjectiveC-1KUN97ZWGVC4J.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Observation",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/Observation.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "Swift",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/Swift.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "System",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/System-3SAGN8JNN299F.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "XPC",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/XPC-31PHDZ8Z25K78.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_Builtin_float",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/_Builtin_float.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_Concurrency",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/_Concurrency.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation1",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation1-2RCMY5P3RPAKZ.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation2",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation2-2THW0E0J38NRB.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation3",
+    "modulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation3-3TWRM1OMYYUQW.swiftmodule"
+  },
+  {
+    "isFramework" : false,
+    "moduleName" : "_StringProcessing",
+    "modulePath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/macosx\/_StringProcessing.swiftmodule\/arm64-apple-macos.swiftmodule"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/CFNetwork.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/CFNetwork-B7VNI7X3TEFYXHZH4DZG174CE.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CFNetwork"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/CoreFoundation.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/CoreFoundation-AQT67DIPYRPNMXAR233R1OYA.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreFoundation"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/CoreServices.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/CoreServices-5U9W4E57UMU2NH5SLFV4IJLNM.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "CoreServices"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/Darwin.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Darwin-9G0BVY312C0PIEOJVEPK829U2.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Darwin"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/DiskArbitration.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/DiskArbitration-HLBJZK2M6APVW7FJ4SDR3ZOY.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "DiskArbitration"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/dispatch.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Dispatch-C8WB5L05HY1CSHSYD2H1Z6GI1.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Dispatch"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/Foundation.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Foundation-EMRGLSRJSIQS8GSO2ZDJN81OI.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Foundation"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/IOKit.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/IOKit-5X0JF6PHMOGC01ZGZUGNJ26EG.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "IOKit"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinBasic.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/MachO-1RTRWN9A5GLNTQWHCUQX22JB9.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "MachO"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/ObjectiveC.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/ObjectiveC-271WVYF509SSRQM7FPY00JFWW.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ObjectiveC"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/System\/Library\/Frameworks\/Security.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/Security-CGKRDIXUCBR3WX17D7V9AGFC6.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "Security"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/SwiftShims-5519QEMO9K22N2Q3XY08M4YIS.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "SwiftShims"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/xpc.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/XPC-B3USJFVLV36PSG40GUJJ6IHLF.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "XPC"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinFoundation1.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_AvailabilityInternal-D3YB17PZAAAF5YPA3TNXNK6EA.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_AvailabilityInternal"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_float-DH5VKJRG8DOGZTLNOYN6T5A3H.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_float"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_inttypes-65ZJJR6BOQ0RISF2L18CPTZ6V.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_inttypes"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_limits-A38KJN5W35WH5XKHAHZAN29IV.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_limits"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_stdarg-CH0WM4M2V2MNVX2R8A6X5PV6N.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdarg"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_stdbool-AI73HQ59O2T82FAHE26F676JM.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdbool"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_stddef-6D0VMC7O0WCIRHVF2CKA2EMWE.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stddef"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_Builtin_stdint-9Z8BFFPYKOKSQ0O691JATFATI.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_Builtin_stdint"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinFoundation1.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation1-204YKH0YD2GD3LKFMIA8OMMPF.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation1"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinFoundation2.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation2-8AUX8V1YELQSTRVEKVF1VTLAB.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation2"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinFoundation3.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_DarwinFoundation3-36M27GYO01OY01AC3O3BSHYA0.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_DarwinFoundation3"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/swift\/shims\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/_SwiftConcurrencyShims-19VIPMHQHEP1JVR3JUIHRZQEK.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "_SwiftConcurrencyShims"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/launch.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/launch-15YAWFQUPYLBZ30AVXUATA9ZD.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "launch"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/libDER\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/libDER-7BWZ9Z4C7GX065C6P46PWITSE.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "libDER"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/libkern.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/libkern-7B0ZYXB5QERJDDTEJP9QFM092.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "libkern"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/os.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/os_object-52JLS601N4Z3AEA3JWRN79QBW.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "os_object"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/os.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/os_workgroup-1AVJI71EPDV1GXTC2CFTC7O3C.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "os_workgroup"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/ptrauth-DY2W3NUFXTL5TURVNNI9XR5S7.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ptrauth"
+  },
+  {
+    "clangModuleMapPath" : "\/Users\/sherman\/Library\/Developer\/Toolchains\/swift-6.4.2-RELEASE.xctoolchain\/usr\/lib\/clang\/21\/include\/module.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/ptrcheck-A083Z1YPVSKZWL0WBYZS4AYE3.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "ptrcheck"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/c_standard_library.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/string_h-8995KR1NZG0GBG1CEFW942RBX.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "string_h"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode-beta.app\/Contents\/Developer\/Platforms\/MacOSX.platform\/Developer\/SDKs\/MacOSX.sdk\/usr\/include\/DarwinFoundation2.modulemap",
+    "clangModulePath" : "\/Users\/sherman\/Project\/open-source\/@code\/air-space@swift\/xcode\/.xcode-build-test\/ModuleCache.noindex\/sys_types-CMIUN078GEVHU624TW1G9Y4CM.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "sys_types"
+  }
+]

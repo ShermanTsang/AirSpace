@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/Sources/Common/appMetadata.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/AirSpacePackage.build/Release/Common-t.build/Objects-normal/x86_64/Common.swiftsourceinfo"
+  }
+}

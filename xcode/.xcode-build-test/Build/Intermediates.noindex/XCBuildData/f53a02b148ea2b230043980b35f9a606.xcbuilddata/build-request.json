@@ -1,0 +1,74 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "5e1ef1153e07af4bc9da6c8de22de23582d5d0ccb31bfaaa8881a6e355d1dcaa"
+    }
+  ],
+  "containerPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/AirSpace.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "hostTargetedPlatform" : null,
+      "platform" : "macosx",
+      "sdk" : "macosx27.0",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64",
+        "arm64e",
+        "x86_64",
+        "x86_64h"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Products",
+      "derivedDataPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test",
+      "indexDataStoreFolderPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "AEROSPACE_BUILD_INFO_LDFLAGS" : "-sectcreate __TEXT __aero_build ../.build-info.txt",
+          "AEROSPACE_CODE_SIGN_IDENTITY" : "Apple Development: Sherman Tsang (ALLUURR43F)",
+          "CODE_SIGN_STYLE" : "Manual",
+          "DEVELOPMENT_TEAM" : "T67R3UDU5X",
+          "ENABLE_HARDENED_RUNTIME" : "YES",
+          "MARKETING_VERSION" : "0.0.0-local.20261123-test",
+          "OTHER_CODE_SIGN_FLAGS" : "--timestamp",
+          "PROVISIONING_PROFILE_SPECIFIER" : ""
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES",
+          "TOOLCHAINS" : "com.apple.dt.toolchain.Metal.32023.917 $(inherited)"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

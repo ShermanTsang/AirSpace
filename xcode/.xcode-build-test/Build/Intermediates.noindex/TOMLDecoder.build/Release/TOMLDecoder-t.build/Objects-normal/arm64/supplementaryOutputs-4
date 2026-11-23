@@ -1,0 +1,12 @@
+{
+  "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/SourcePackages/checkouts/TOMLDecoder/Sources/TOMLDecoder/DateTime.swift" : {
+    "abi-baseline-json" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder.abi.json",
+    "const-values" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder-primary.swiftconstvalues",
+    "dependencies" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder-primary.d",
+    "diagnostics" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder-primary.dia",
+    "objc-header" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder-Swift.h",
+    "swiftdoc" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder.swiftdoc",
+    "swiftmodule" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder.swiftmodule",
+    "swiftsourceinfo" : "/Users/sherman/Project/open-source/@code/air-space@swift/xcode/.xcode-build-test/Build/Intermediates.noindex/TOMLDecoder.build/Release/TOMLDecoder-t.build/Objects-normal/arm64/TOMLDecoder.swiftsourceinfo"
+  }
+}
