@@ -36,23 +36,40 @@ struct ConfigTest {
             config-version = 2
             menu-bar.compact = true
             window-navigator.enabled = true
-            window-navigator.position = 'dock-left'
+            window-navigator.size = 'large'
             """,
         )
         assertEquals(result.errors, [])
         assertEquals(result.warnings, [])
         assertEquals(result.config.menuBar.compact, true)
         assertEquals(result.config.windowNavigator.enabled, true)
-        assertEquals(result.config.windowNavigator.position, .dockLeft)
+        assertEquals(result.config.windowNavigator.size, .large)
     }
 
-    @Test func testParseWindowNavigatorInvalidPosition() {
+    @Test func testParseWindowNavigatorInvalidSize() {
         let errors = parseConfig(
             """
-            window-navigator.position = 'top'
+            window-navigator.size = 'huge'
             """,
         ).strErrors
-        assertEquals(errors, ["[ERROR] window-navigator.position: Can't parse window navigator position 'top'"])
+        assertEquals(errors, ["[ERROR] window-navigator.size: Can't parse window navigator size 'huge'. Possible values: small, medium, large"])
+    }
+
+    @Test func testParseWindowNavigatorDeprecatedPosition() {
+        let floating = parseConfig(
+            """
+            window-navigator.position = 'floating'
+            """,
+        )
+        assertEquals(floating.errors, [])
+        assertEquals(floating.config.windowNavigator.size, .medium)
+
+        let docked = parseConfig(
+            """
+            window-navigator.position = 'dock-left'
+            """,
+        )
+        assertEquals(docked.strErrors, ["[ERROR] window-navigator.position: The window navigator is always floating. Please remove 'window-navigator.position' from the config"])
     }
 
     @Test func testConfigVersionOutOfBounds() {

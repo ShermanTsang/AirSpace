@@ -216,9 +216,11 @@
   "Show only the current space name. The menu bar item is less likely to be hidden on small screens.": "仅显示当前空间名称。在小屏幕上，菜单栏图标更不容易被隐藏。",
   "Show window navigator": "显示窗口导航器",
   "Keep the spaces and windows navigator visible outside the menu bar.": "让空间与窗口导航器在菜单栏之外保持可见。",
-  "Navigator position": "导航器位置",
-  "Choose where the floating navigator sits.": "选择悬浮导航器的显示位置。",
-  "Floating": "悬浮",
-  "Dock left": "Dock 左侧",
-  "Dock right": "Dock 右侧"
+  "Navigator size": "导航器尺寸",
+  "Choose the size of the floating navigator capsule.": "选择悬浮导航胶囊的尺寸。",
+  "Small": "小",
+  "Medium": "中",
+  "Large": "大",
+  "Click to open the navigator. Drag to move.": "点击展开导航器，拖拽可移动。",
+  "More spaces": "更多空间"
 }

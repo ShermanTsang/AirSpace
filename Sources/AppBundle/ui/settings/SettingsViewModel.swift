@@ -24,7 +24,7 @@ struct SettingsState: Equatable {
     var focusFollowsMouse: Bool
     var compactMenuBarLabel: Bool
     var windowNavigatorEnabled: Bool
-    var windowNavigatorPosition: WindowNavigatorPosition
+    var windowNavigatorSize: WindowNavigatorSize
 
     init(config: Config) {
         startAtLogin = config.startAtLogin
@@ -45,7 +45,7 @@ struct SettingsState: Equatable {
         focusFollowsMouse = config.focusFollowsMouse.enabled
         compactMenuBarLabel = config.menuBar.compact
         windowNavigatorEnabled = config.windowNavigator.enabled
-        windowNavigatorPosition = config.windowNavigator.position
+        windowNavigatorSize = config.windowNavigator.size
     }
 }
 

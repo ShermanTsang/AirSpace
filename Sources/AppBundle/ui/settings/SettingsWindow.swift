@@ -182,14 +182,14 @@ private struct SettingsView: View {
             SettingsCard {
                 SettingsRowLabel(
                     icon: "rectangle.3.group",
-                    title: L("Navigator position"),
-                    subtitle: L("Choose where the floating navigator sits."),
+                    title: L("Navigator size"),
+                    subtitle: L("Choose the size of the floating navigator capsule."),
                 )
                 Spacer(minLength: 12)
-                Picker("", selection: model.binding(\.windowNavigatorPosition) { .string(["window-navigator", "position"], $0.rawValue) }) {
-                    Text(L("Floating")).tag(WindowNavigatorPosition.floating)
-                    Text(L("Dock left")).tag(WindowNavigatorPosition.dockLeft)
-                    Text(L("Dock right")).tag(WindowNavigatorPosition.dockRight)
+                Picker("", selection: model.binding(\.windowNavigatorSize) { .string(["window-navigator", "size"], $0.rawValue) }) {
+                    ForEach(WindowNavigatorSize.allCases, id: \.self) { size in
+                        Text(size.title).tag(size)
+                    }
                 }
                 .labelsHidden()
                 .pickerStyle(.segmented)
@@ -1114,6 +1114,16 @@ private struct RunningApplicationsSettings: View {
                 self.error = error.localizedDescription
                 loadRules()
             }
+        }
+    }
+}
+
+private extension WindowNavigatorSize {
+    var title: String {
+        switch self {
+            case .small: L("Small")
+            case .medium: L("Medium")
+            case .large: L("Large")
         }
     }
 }

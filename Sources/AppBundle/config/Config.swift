@@ -77,13 +77,21 @@ struct MenuBarConfig: Withable {
 
 struct WindowNavigatorConfig: Withable {
     var enabled: Bool = false
-    var position: WindowNavigatorPosition = .floating
+    /// Deprecated floating-only position key. Kept so old configs don't fail to parse
+    var _position: Void = ()
+    var size: WindowNavigatorSize = .medium
 }
 
-enum WindowNavigatorPosition: String, CaseIterable, Sendable {
-    case floating
-    case dockLeft = "dock-left"
-    case dockRight = "dock-right"
+enum WindowNavigatorSize: String, CaseIterable, Sendable {
+    case small, medium, large
+
+    var scale: CGFloat {
+        switch self {
+            case .small: 0.82
+            case .medium: 1
+            case .large: 1.28
+        }
+    }
 }
 
 enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvertible {
