@@ -28,13 +28,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 
 @MainActor
 struct WorkspaceMenu: View {
-    enum Presentation {
-        case menuBar
-        case panel
-    }
-
     @ObservedObject var viewModel: TrayMenuModel
-    let presentation: Presentation
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
     @State private var actionMessage: String?
@@ -56,9 +50,8 @@ struct WorkspaceMenu: View {
     private var hasMultipleSpaces: Bool { viewModel.workspaceGroups.sumOfInt { $0.workspaces.count } > 1 }
     private var showsQuickBar: Bool { hasMultipleSpaces && (isQuickBarPinned || drag != nil) }
 
-    init(viewModel: TrayMenuModel, presentation: Presentation = .menuBar) {
+    init(viewModel: TrayMenuModel) {
         self.viewModel = viewModel
-        self.presentation = presentation
     }
 
     var body: some View {
@@ -121,29 +114,27 @@ struct WorkspaceMenu: View {
                     scrollableGrid
                 }
             }
-            if presentation == .menuBar {
-                Divider()
-                HStack(spacing: 12) {
-                    Menu {
-                        Button(L("Help & Documentation")) { openSupport(.docs) }
-                        Button(L("Announcements")) { openSupport(.announcements) }
-                        Button(L("Agreements")) { openSupport(.agreements) }
-                        Button(L("Contact Support")) { openSupport(.contacts) }
-                    } label: {
-                        Label(L("Help & Support"), systemImage: "questionmark.circle")
-                    }
-                    .menuIndicator(.hidden)
-                    .fixedSize()
-                    Button {
-                        Task.startUnstructured { await SupportActions.checkForUpdates() }
-                    } label: {
-                        Label(L("Check for Updates"), systemImage: "arrow.triangle.2.circlepath")
-                    }
-                    .buttonStyle(.borderless)
-                    Spacer(minLength: 0)
+            Divider()
+            HStack(spacing: 12) {
+                Menu {
+                    Button(L("Help & Documentation")) { openSupport(.docs) }
+                    Button(L("Announcements")) { openSupport(.announcements) }
+                    Button(L("Agreements")) { openSupport(.agreements) }
+                    Button(L("Contact Support")) { openSupport(.contacts) }
+                } label: {
+                    Label(L("Help & Support"), systemImage: "questionmark.circle")
                 }
-                .font(.callout)
+                .menuIndicator(.hidden)
+                .fixedSize()
+                Button {
+                    Task.startUnstructured { await SupportActions.checkForUpdates() }
+                } label: {
+                    Label(L("Check for Updates"), systemImage: "arrow.triangle.2.circlepath")
+                }
+                .buttonStyle(.borderless)
+                Spacer(minLength: 0)
             }
+            .font(.callout)
         }
         .overlay(alignment: .topLeading) {
             if let drag {
