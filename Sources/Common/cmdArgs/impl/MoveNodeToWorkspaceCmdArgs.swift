@@ -5,6 +5,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
         help: move_node_to_workspace_help_generated,
         flags: [
             "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
+            "--create-on": singleValueSubArgParser(\._createOn, WorkspaceCreationTarget.unionLiteral, parseWorkspaceCreationTarget),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": windowIdSubArgParser(),
             "--focus-follows-window": ArgParser(\.focusFollowsWindow, constSubArgParserFun(true)),
@@ -22,6 +23,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     )
 
     public var _wrapAround: Bool?
+    public var _createOn: WorkspaceCreationTarget?
     public var failIfNoop: Bool = false
     public var focusFollowsWindow: Bool = false
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
@@ -34,6 +36,10 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
 extension MoveNodeToWorkspaceCmdArgs {
     public var wrapAround: Bool { _wrapAround ?? false }
     public var useStdin: Bool { commonState.explicitStdinFlag ?? false }
+
+    /// Where a workspace that doesn't exist yet is created. Only affects `<workspace-name>`;
+    /// `(next|prev)` never creates workspaces.
+    public var createOn: WorkspaceCreationTarget { _createOn ?? .focused }
 }
 
 func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
@@ -41,5 +47,6 @@ func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeT
         .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
         .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--window-id is incompatible with (next|prev)") { $0.windowId != nil && $0.target.val.isRelatve }
+        .filterNot("--create-on is incompatible with \(NextPrev.unionLiteral)") { $0._createOn != nil && $0.target.val.isRelatve }
         .filter("--stdin and --no-stdin require using \(NextPrev.unionLiteral) argument") { ($0.commonState.explicitStdinFlag != nil).implies($0.target.val.isRelatve) }
 }

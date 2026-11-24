@@ -729,7 +729,9 @@ The full resolution order, from highest to lowest priority, is:
 The showed workspaces are called "visible" workspaces
 * Different monitors can’t show the same workspace at the same time
 * Each workspace (even invisible, even empty) has a monitor assigned to it
-* By default, all workspaces are assigned to the "main" monitor ("main" as in `System -> Displays -> Use as`)
+* A workspace is created on the display that was focused at the time, and stays there until you move it or the assignment rules change
+* A workspace that doesn't exist yet is created on the display of the focused window or workspace.
+Use `--create-on main` to create it on the "main" monitor instead ("main" as in `System -> Displays -> Use as`, upstream AeroSpace behavior)
 
 When you switch to a workspace:
 
@@ -744,11 +746,9 @@ Thus, using one workspace per secondary monitor and "the rest" on the main monit
 
 [NOTE]
 ====
-The only difference between AirSpace and i3 is switching to empty workspaces.
-When you switch to an empty workspace, AirSpace puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
-
-* I find that AirSpace model works better with <<observation,_the observation_>> listed above.
-* AirSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)
+AirSpace honors `workspace-to-monitor-force-assignment` and keeps existing workspaces on their display.
+A workspace that has never existed before is created on the currently focused display (unless `--create-on main` is passed),
+while i3 always puts workspaces on the currently active monitor.
 ====
 
 [#assign-workspaces-to-monitors]
@@ -784,6 +784,8 @@ You can specify multiple patterns as an array.
 The first matching pattern will be used
 
 xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
+
+The assignment also wins over `--create-on` when a workspace is created for the first time.
 
 == Dialog heuristics
 

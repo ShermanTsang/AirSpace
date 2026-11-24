@@ -13,7 +13,7 @@ airspace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-aro
                                  [--stdin|--no-stdin]
                                  (next|prev)
 airspace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
-                                 [--window-id <window-id>] [--] <workspace-name>
+                                 [--create-on (main|focused)] [--window-id <window-id>] [--] <workspace-name>
 
 // end::synopsis[]
 
@@ -35,6 +35,12 @@ include::./util/conditional-options-header.adoc[]
 --focus-follows-window::
 Make sure that the window in question receives focus after moving.
 This flag is a shortcut for manually running `airspace-workspace`/`airspace-focus` after `move-node-to-workspace` successful execution.
+
+--create-on (main|focused)::
+Where to create the workspace if it doesn't exist yet. `focused` (default) creates it on the display of the window being moved,
+`main` creates it on the main display (upstream AeroSpace behavior).
+Doesn't move an existing workspace, and `workspace-to-monitor-force-assignment` takes precedence.
+Incompatible with `(next|prev)`
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]

@@ -22,6 +22,21 @@ struct WorkspaceCommandTest {
         assertEquals(parseCommand("workspace --stdin foo").errorOrNil, "--stdin and --no-stdin require using (next|prev) argument")
         testParseSingleCommandSucc("workspace --stdin next", WorkspaceCmdArgs(target: .relative(.next)).with(\.commonState.explicitStdinFlag, true))
         testParseSingleCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).with(\.commonState.explicitStdinFlag, false))
+        testParseSingleCommandSucc(
+            "workspace --create-on main W",
+            WorkspaceCmdArgs(target: .direct(.parse("W").getOrDie()), createOn: .main),
+        )
+        testParseSingleCommandSucc(
+            "workspace --create-on focused W",
+            WorkspaceCmdArgs(target: .direct(.parse("W").getOrDie()), createOn: .focused),
+        )
+        assertEquals(parseCommand("workspace --create-on focused next").errorOrNil, "--create-on is incompatible with (next|prev)")
+        testParseCommandFail(
+            "workspace --create-on nowhere W",
+            msg: "ERROR: Failed to parse 'nowhere' CLI argument: Can't parse 'nowhere'.\n       Possible values: (main|focused)",
+            exitCode: 2,
+        )
+        assertEquals(WorkspaceCmdArgs(rawArgs: []).createOn, .focused)
     }
 
     @Test func testParseDoubleDash() {

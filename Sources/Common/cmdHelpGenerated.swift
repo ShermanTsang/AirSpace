@@ -122,7 +122,7 @@ let move_node_to_workspace_help_generated = """
                                   [--stdin|--no-stdin]
                                   (next|prev)
        OR: move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
-                                  [--window-id <window-id>] [--] <workspace-name>
+                                  [--create-on (main|focused)] [--window-id <window-id>] [--] <workspace-name>
     """
 let move_workspace_to_monitor_help_generated = """
     USAGE: move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
@@ -180,6 +180,6 @@ let workspace_back_and_forth_help_generated = """
     USAGE: workspace-back-and-forth [-h|--help]
     """
 let workspace_help_generated = """
-    USAGE: workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] [--] <workspace-name>
+    USAGE: workspace [-h|--help] [--auto-back-and-forth] [--create-on (main|focused)] [--fail-if-noop] [--] <workspace-name>
        OR: workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
     """

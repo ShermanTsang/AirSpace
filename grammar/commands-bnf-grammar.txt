@@ -67,7 +67,7 @@ airspace -h;
     | move-node-to-monitor [<move_node_to_monitor2_flag>]... <monitor_pattern>... [<move_node_to_monitor2_flag>]...
 
     | move-node-to-workspace [--wrap-around|--focus-follows-window|--stdin|--no-stdin]... (next|prev) [--wrap-around|--focus-follows-window|--stdin|--no-stdin]...
-    | move-node-to-workspace [--fail-if-noop|--window-id <window_id>|--focus-follows-window]... <workspace> [--fail-if-noop|--window-id <window_id>|--focus-follows-window]...
+    | move-node-to-workspace [--fail-if-noop|--create-on <workspace_creation_target>|--window-id <window_id>|--focus-follows-window]... <workspace> [--fail-if-noop|--create-on <workspace_creation_target>|--window-id <window_id>|--focus-follows-window]...
 
     | move-workspace-to-monitor [--wrap-around] (left|down|up|right|next|prev) [--wrap-around]
     | move-workspace-to-monitor [--wrap-around] <monitor_pattern>... [--wrap-around]
@@ -97,7 +97,7 @@ airspace -h;
     | volume [--no-gui] (mute-toggle|mute-on|mute-off) [--no-gui]
     | volume [--no-gui] set <number> [--no-gui]
 
-    | workspace [--auto-back-and-forth|--fail-if-noop]... <workspace> [--auto-back-and-forth|--fail-if-noop]...
+    | workspace [--auto-back-and-forth|--create-on <workspace_creation_target>|--fail-if-noop]... <workspace> [--auto-back-and-forth|--create-on <workspace_creation_target>|--fail-if-noop]...
     | workspace [--wrap-around|--stdin|--no-stdin]... (next|prev) [--wrap-around|--stdin|--no-stdin]...
 
     | workspace-back-and-forth
@@ -126,6 +126,7 @@ airspace -h;
 <number> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
 <layouts> ::= h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating;
+<workspace_creation_target> ::= main|focused;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count | --json;
 

@@ -22,7 +22,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                 guard let ws = ws.getOrNil(appendErrorTo: &io.stderr) else { return .fail }
                 targetWorkspace = ws
             case .direct(let name):
-                targetWorkspace = Workspace.get(byName: name.raw)
+                targetWorkspace = Workspace.get(byName: name.raw, createOn: args.createOn.resolveMonitor(target))
         }
         return moveWindowToWorkspace(window, targetWorkspace, io, focusFollowsWindow: args.focusFollowsWindow, failIfNoop: args.failIfNoop)
     }

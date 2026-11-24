@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-airspace workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] [--] <workspace-name>
+airspace workspace [-h|--help] [--auto-back-and-forth] [--create-on (main|focused)] [--fail-if-noop] [--] <workspace-name>
 airspace workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
 
 // end::synopsis[]
@@ -38,6 +38,12 @@ include::util/conditional-options-header.adoc[]
 --auto-back-and-forth::
 Automatic `back-and-forth` when switching to already focused workspace.
 Incompatible with `--fail-if-noop`
+
+--create-on (main|focused)::
+Where to create the workspace if it doesn't exist yet. `focused` (default) creates it on the display of the focused workspace,
+`main` creates it on the main display (upstream AeroSpace behavior).
+Doesn't move an existing workspace, and `workspace-to-monitor-force-assignment` takes precedence.
+Incompatible with `(next|prev)`
 
 --fail-if-noop::
 Exit with non-zero exit code if switch to the already focused workspace.

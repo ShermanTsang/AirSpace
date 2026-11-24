@@ -95,19 +95,21 @@ func testParseCommandFail(_ command: String, msg expectedMsg: String, exitCode e
 }
 
 extension WorkspaceCmdArgs {
-    init(target: WorkspaceTarget, autoBackAndForth: Bool? = nil, wrapAround: Bool? = nil) {
+    init(target: WorkspaceTarget, autoBackAndForth: Bool? = nil, wrapAround: Bool? = nil, createOn: WorkspaceCreationTarget? = nil) {
         self = WorkspaceCmdArgs(rawArgs: [])
         self.target = .initialized(target)
         self._autoBackAndForth = autoBackAndForth
         self._wrapAround = wrapAround
+        self._createOn = createOn
     }
 }
 
 extension MoveNodeToWorkspaceCmdArgs {
-    init(target: WorkspaceTarget, wrapAround: Bool? = nil) {
+    init(target: WorkspaceTarget, wrapAround: Bool? = nil, createOn: WorkspaceCreationTarget? = nil) {
         self = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
         self.target = .initialized(target)
         self._wrapAround = wrapAround
+        self._createOn = createOn
     }
 
     init(workspace: String) {

@@ -13,6 +13,12 @@ struct MoveNodeToWorkspaceCommandTest {
         assertEquals(parseCommand("move-node-to-workspace --stdin foo").errorOrNil, "--stdin and --no-stdin require using (next|prev) argument")
         testParseSingleCommandSucc("move-node-to-workspace --stdin next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).with(\.commonState.explicitStdinFlag, true))
         testParseSingleCommandSucc("move-node-to-workspace --no-stdin next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).with(\.commonState.explicitStdinFlag, false))
+        testParseSingleCommandSucc(
+            "move-node-to-workspace --create-on main foo",
+            MoveNodeToWorkspaceCmdArgs(target: .direct(.parse("foo").getOrDie()), createOn: .main),
+        )
+        assertEquals(parseCommand("move-node-to-workspace --create-on focused next").errorOrNil, "--create-on is incompatible with (next|prev)")
+        assertEquals(MoveNodeToWorkspaceCmdArgs(rawArgs: []).createOn, .focused)
     }
 
     @Test func testParseDoubleDash() {

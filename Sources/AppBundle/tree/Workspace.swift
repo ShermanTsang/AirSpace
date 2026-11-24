@@ -7,10 +7,10 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     let name: String
     nonisolated private let nameLogicalSegments: StringLogicalSegments
 
-    @MainActor private init(_ name: String) {
+    @MainActor private init(_ name: String, on monitor: MonitorInfo) {
         self.name = name
         self.nameLogicalSegments = name.toLogicalSegments()
-        let container = mainMonitorInfo.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
+        let container = monitor.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
         super.init(parent: container, adaptiveWeight: 0, index: 0)
         check(forceAssignedMonitorInfo?.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate().bindWorkspace(self) != false)
     }
@@ -20,10 +20,16 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     }
 
     @MainActor static func get(byName name: String) -> Workspace {
+        get(byName: name, createOn: mainMonitorInfo)
+    }
+
+    /// `createOn` only affects a workspace that doesn't exist yet. An existing workspace is never
+    /// moved to another display, and `workspace-to-monitor-force-assignment` still wins over `createOn`.
+    @MainActor static func get(byName name: String, createOn monitor: MonitorInfo) -> Workspace {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
-            let workspace = Workspace(name)
+            let workspace = Workspace(name, on: monitor)
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }

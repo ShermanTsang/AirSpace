@@ -6,6 +6,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
         help: workspace_help_generated,
         flags: [
             "--auto-back-and-forth": ArgParser(\._autoBackAndForth, constSubArgParserFun(true)),
+            "--create-on": singleValueSubArgParser(\._createOn, WorkspaceCreationTarget.unionLiteral, parseWorkspaceCreationTarget),
             "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
 
@@ -23,6 +24,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
 
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
     public var _autoBackAndForth: Bool?
+    public var _createOn: WorkspaceCreationTarget?
     public var failIfNoop: Bool = false
     public var _wrapAround: Bool?
 }
@@ -33,6 +35,7 @@ func parseWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<WorkspaceCmdArgs> {
         .filterNot("--auto-back-and-forth is incompatible with \(NextPrev.unionLiteral)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with \(NextPrev.unionLiteral)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
+        .filterNot("--create-on is incompatible with \(NextPrev.unionLiteral)") { $0._createOn != nil && $0.target.val.isRelatve }
         .filter("--stdin and --no-stdin require using \(NextPrev.unionLiteral) argument") { ($0.commonState.explicitStdinFlag != nil).implies($0.target.val.isRelatve) }
 }
 
@@ -40,6 +43,10 @@ extension WorkspaceCmdArgs {
     public var wrapAround: Bool { _wrapAround ?? false }
     public var autoBackAndForth: Bool { _autoBackAndForth ?? false }
     public var useStdin: Bool { commonState.explicitStdinFlag ?? false }
+
+    /// Where a workspace that doesn't exist yet is created. Only affects `workspace <workspace-name>`;
+    /// `(next|prev)` never creates workspaces.
+    public var createOn: WorkspaceCreationTarget { _createOn ?? .focused }
 }
 
 public enum WorkspaceTarget: Equatable, Sendable {
