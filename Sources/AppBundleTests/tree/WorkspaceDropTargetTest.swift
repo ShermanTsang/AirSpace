@@ -4,24 +4,28 @@ import Testing
 
 struct WorkspaceDropTargetTest {
     private let listFrame = CGRect(x: 0, y: 50, width: 500, height: 160)
-    private let frames = WorkspaceDropFrames(
-        tiles: [
-            "1": CGRect(x: 0, y: 40, width: 246, height: 78),
-            "2": CGRect(x: 254, y: 40, width: 246, height: 78),
-            "3": CGRect(x: 0, y: 126, width: 246, height: 78),
-            "Z": CGRect(x: 0, y: 212, width: 246, height: 78),
-        ],
-        shortcuts: [
-            "1": CGRect(x: 8, y: 8, width: 30, height: 24),
-            "Z": CGRect(x: 42, y: 8, width: 30, height: 24),
-        ],
-        shortcutBar: CGRect(x: 0, y: 0, width: 500, height: 40),
-    )
+    private let display: WorkspaceDisplay.ID = .physical("main")
+
+    private var frames: WorkspaceDropFrames {
+        WorkspaceDropFrames(
+            tiles: [
+                target("1"): CGRect(x: 0, y: 40, width: 246, height: 78),
+                target("2"): CGRect(x: 254, y: 40, width: 246, height: 78),
+                target("3"): CGRect(x: 0, y: 126, width: 246, height: 78),
+                target("Z"): CGRect(x: 0, y: 212, width: 246, height: 78),
+            ],
+            shortcuts: [
+                target("1"): CGRect(x: 8, y: 8, width: 30, height: 24),
+                target("Z"): CGRect(x: 42, y: 8, width: 30, height: 24),
+            ],
+            shortcutBar: CGRect(x: 0, y: 0, width: 500, height: 40),
+        )
+    }
 
     @Test func targetsEitherColumn() {
-        #expect(target(x: 270, y: 60) == "2")
-        #expect(target(x: 24, y: 60, source: "2") == "1")
-        #expect(target(x: 24, y: 150) == "3")
+        #expect(target(x: 270, y: 60) == target("2"))
+        #expect(target(x: 24, y: 60, source: "2") == target("1"))
+        #expect(target(x: 24, y: 150) == target("3"))
     }
 
     @Test func ignoresSourceAndGaps() {
@@ -37,7 +41,7 @@ struct WorkspaceDropTargetTest {
     }
 
     @Test func targetsAnOffscreenSpaceFromTheShortcutBar() {
-        #expect(target(x: 50, y: 20) == "Z")
+        #expect(target(x: 50, y: 20) == target("Z"))
         #expect(target(x: 24, y: 20) == nil)
     }
 
@@ -45,11 +49,21 @@ struct WorkspaceDropTargetTest {
         var floating = frames
         floating.shortcutBar = floating.shortcutBar.offsetBy(dx: 0, dy: 50)
         floating.shortcuts = floating.shortcuts.mapValues { $0.offsetBy(dx: 0, dy: 50) }
-        #expect(floating.target(source: "1", location: CGPoint(x: 50, y: 70), listFrame: listFrame) == "Z")
+        #expect(floating.target(source: "1", location: CGPoint(x: 50, y: 70), listFrame: listFrame) == target("Z"))
         #expect(floating.target(source: "1", location: CGPoint(x: 270, y: 70), listFrame: listFrame) == nil)
     }
 
-    private func target(x: CGFloat, y: CGFloat, source: String = "1") -> String? {
+    @Test func carriesTheDisplayTheTargetWasDrawnOn() {
+        let external = WorkspaceDropTarget(workspace: "2", display: .physical("external"))
+        let frames = WorkspaceDropFrames(tiles: [external: CGRect(x: 0, y: 40, width: 246, height: 78)])
+        #expect(frames.target(source: "1", location: CGPoint(x: 24, y: 60), listFrame: listFrame) == external)
+    }
+
+    private func target(_ name: String) -> WorkspaceDropTarget {
+        WorkspaceDropTarget(workspace: name, display: display)
+    }
+
+    private func target(x: CGFloat, y: CGFloat, source: String = "1") -> WorkspaceDropTarget? {
         frames.target(source: source, location: CGPoint(x: x, y: y), listFrame: listFrame)
     }
 }

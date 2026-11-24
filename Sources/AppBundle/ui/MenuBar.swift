@@ -31,7 +31,7 @@ struct WorkspaceMenu: View {
     @ObservedObject var viewModel: TrayMenuModel
     @Environment(\.openWindow) private var openWindow
     @AppStorage("spacePanelSortOrder") private var sortOrder: WorkspaceSortOrder = .name
-    @State private var actionMessage: String?
+    @State private var actionNotice: ActionNotice?
     @GestureState private var drag: WorkspaceAppDrag?
     @State private var dropFrames = WorkspaceDropFrames()
     @State private var listFrame: CGRect = .zero
@@ -103,10 +103,18 @@ struct WorkspaceMenu: View {
                     }
                     .buttonStyle(.plain)
                 }
-                if let actionMessage {
-                    Label(actionMessage, systemImage: "exclamationmark.circle")
-                        .font(.callout)
-                        .foregroundStyle(.orange)
+                if let notice = actionNotice {
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Label(notice.text, systemImage: notice.kind == .success ? "checkmark.circle" : "exclamationmark.circle")
+                            .foregroundStyle(notice.kind == .success ? Color.green : Color.orange)
+                        if let workspace = notice.revealWorkspace {
+                            Button(L("Go")) { revealSpace(workspace) }
+                                .buttonStyle(.link)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .font(.callout)
+                    .fixedSize(horizontal: false, vertical: true)
                 }
                 if viewModel.workspaceGroups.isEmpty {
                     Text(L("No spaces yet. Open a window to create one.")).foregroundStyle(.secondary)
@@ -161,13 +169,13 @@ struct WorkspaceMenu: View {
     }
 
     private var scrollableGrid: some View {
-        let targetName = drag.flatMap(dropTarget)
+        let target = drag.flatMap(dropTarget)
         return ScrollViewReader { scroll in
             ScrollView(.vertical, showsIndicators: false) {
                 // Keep the source tile alive when a drag scrolls it out of view.
                 VStack(alignment: .leading, spacing: 14) {
                     ForEach(viewModel.workspaceGroups) { group in
-                        displaySection(group, targetName: targetName)
+                        displaySection(group, target: target)
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)
@@ -204,7 +212,7 @@ struct WorkspaceMenu: View {
         }
     }
 
-    private func displaySection(_ group: WorkspaceDisplayGroup, targetName: String?) -> some View {
+    private func displaySection(_ group: WorkspaceDisplayGroup, target: WorkspaceDropTarget?) -> some View {
         let spaces = sorted(group.workspaces)
         let idle = spaces.filter(\.isIdle)
         let expanded = !collapsedIdleGroups.contains(group.id)
@@ -213,7 +221,7 @@ struct WorkspaceMenu: View {
             Label(group.display.title, systemImage: "display")
                 .font(.subheadline.weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            spaceRows(spaces.filter { !$0.isIdle }, targetName: targetName, otherDisplays: otherDisplays)
+            spaceRows(spaces.filter { !$0.isIdle }, target: target, displayID: group.display.id, otherDisplays: otherDisplays)
             if !idle.isEmpty {
                 Button {
                     if expanded {
@@ -229,16 +237,16 @@ struct WorkspaceMenu: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityValue(expanded ? L("Expanded") : L("Collapsed"))
-                if expanded { spaceRows(idle, targetName: targetName, otherDisplays: otherDisplays) }
+                if expanded { spaceRows(idle, target: target, displayID: group.display.id, otherDisplays: otherDisplays) }
             }
         }
     }
 
-    @ViewBuilder private func spaceRows(_ spaces: [WorkspaceViewModel], targetName: String?, otherDisplays: [WorkspaceDisplay]) -> some View {
+    @ViewBuilder private func spaceRows(_ spaces: [WorkspaceViewModel], target: WorkspaceDropTarget?, displayID: WorkspaceDisplay.ID, otherDisplays: [WorkspaceDisplay]) -> some View {
         ForEach(Array(stride(from: 0, to: spaces.count, by: columnCount)), id: \.self) { start in
             HStack(spacing: spacing) {
                 ForEach(spaces[start ..< min(start + columnCount, spaces.count)], id: \.name) { workspace in
-                    tile(for: workspace, isDropTarget: targetName == workspace.name, otherDisplays: otherDisplays)
+                    tile(for: workspace, isDropTarget: target?.workspace == workspace.name, displayID: displayID, otherDisplays: otherDisplays)
                 }
                 if start + 1 == spaces.count {
                     Color.clear.frame(minWidth: 0, maxWidth: .infinity).frame(height: tileHeight)
@@ -248,7 +256,7 @@ struct WorkspaceMenu: View {
         }
     }
 
-    private func tile(for workspace: WorkspaceViewModel, isDropTarget: Bool, otherDisplays: [WorkspaceDisplay]) -> some View {
+    private func tile(for workspace: WorkspaceViewModel, isDropTarget: Bool, displayID: WorkspaceDisplay.ID, otherDisplays: [WorkspaceDisplay]) -> some View {
         WorkspaceTile(
             workspace: workspace,
             focus: { runAction { _ = Workspace.get(byName: workspace.name).focusWorkspace() } },
@@ -273,21 +281,23 @@ struct WorkspaceMenu: View {
             GeometryReader { geometry in
                 Color.clear.preference(
                     key: WorkspaceDropFramePreference.self,
-                    value: WorkspaceDropFrames(tiles: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
+                    value: WorkspaceDropFrames(tiles: [
+                        WorkspaceDropTarget(workspace: workspace.name, display: displayID): geometry.frame(in: .named(WorkspaceDragArea.panel)),
+                    ]),
                 )
             }
         }
     }
 
     private var quickDropBar: some View {
-        let targetName = drag.flatMap(dropTarget)
+        let target = drag.flatMap(dropTarget)
         return ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(viewModel.workspaceGroups) { group in
                     Text(group.display.title).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 30), spacing: 4)], spacing: 4) {
                         ForEach(sorted(group.workspaces), id: \.name) { workspace in
-                            quickDropTarget(workspace, in: group.display, isTarget: targetName == workspace.name)
+                            quickDropTarget(workspace, in: group.display, isTarget: target?.workspace == workspace.name)
                         }
                     }
                 }
@@ -324,13 +334,15 @@ struct WorkspaceMenu: View {
                 GeometryReader { geometry in
                     Color.clear.preference(
                         key: WorkspaceDropFramePreference.self,
-                        value: WorkspaceDropFrames(shortcuts: [workspace.name: geometry.frame(in: .named(WorkspaceDragArea.panel))]),
+                        value: WorkspaceDropFrames(shortcuts: [
+                            WorkspaceDropTarget(workspace: workspace.name, display: display.id): geometry.frame(in: .named(WorkspaceDragArea.panel)),
+                        ]),
                     )
                 }
             }
     }
 
-    private func dropTarget(_ drag: WorkspaceAppDrag) -> String? {
+    private func dropTarget(_ drag: WorkspaceAppDrag) -> WorkspaceDropTarget? {
         dropFrames.target(source: drag.workspace, location: drag.location, listFrame: listFrame)
     }
 
@@ -362,15 +374,15 @@ struct WorkspaceMenu: View {
         runAction {
             gcMonitors()
             guard let workspace = Workspace.all.first(where: { $0.name == name }) else {
-                actionMessage = "Space \(name) is no longer available."
+                actionNotice = .warning(L("Space %@ is no longer available.", name))
                 return
             }
             guard !workspace.isLocked else {
-                actionMessage = workspaceLockedMessage(name)
+                actionNotice = .warning(workspaceLockedMessage(name))
                 return
             }
             guard let monitor = globalSortedMonitorInfos.first(where: { WorkspaceDisplay.ID($0) == display.id }) else {
-                actionMessage = "\(display.title) is no longer connected."
+                actionNotice = .warning(L("%@ is no longer connected.", display.title))
                 return
             }
             let focus = globalFocus.workspace
@@ -379,11 +391,11 @@ struct WorkspaceMenu: View {
             let shouldShow = workspace == focus || (workspace.isVisible && !destinationIsFocused)
             // Match workspace garbage collection so a move cannot make the space disappear.
             if !shouldShow && workspace.isEffectivelyEmpty && !config.persistentWorkspaces.contains(name) {
-                actionMessage = "Focus space \(name) before moving it. Empty automatic spaces cannot be moved in the background."
+                actionNotice = .warning(L("Focus space %@ before moving it. Empty automatic spaces cannot be moved in the background.", name))
                 return
             }
             guard moveWorkspace(workspace, to: monitor, showOnDestination: shouldShow) else {
-                actionMessage = "Space \(name) is assigned to another display in the configuration."
+                actionNotice = .warning(L("Space %@ is assigned to another display in the configuration.", name))
                 return
             }
             resetClosedWindowsCache()
@@ -392,15 +404,25 @@ struct WorkspaceMenu: View {
 
     private func runAction(_ action: @escaping @MainActor () async -> Void) {
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        actionMessage = nil
+        actionNotice = nil
         Task.startUnstructured {
             try await runLightSession(.menuBarButton, token, body: action)
         }
     }
 
+    private func revealSpace(_ name: String) {
+        runAction {
+            guard let workspace = Workspace.getOrNil(byName: name) else {
+                actionNotice = .warning(L("Space %@ is no longer available.", name))
+                return
+            }
+            _ = workspace.focusWorkspace()
+        }
+    }
+
     private func focusApp(_ app: WorkspaceApp, in workspaceName: String) {
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        actionMessage = nil
+        actionNotice = nil
         Task.startUnstructured {
             _ = try await runLightSession(.menuBarButton, token, windowToRaise: { $0 }) { () -> Window? in
                 let workspace = Workspace.get(byName: workspaceName)
@@ -413,27 +435,63 @@ struct WorkspaceMenu: View {
         }
     }
 
-    private func moveApp(_ item: WorkspaceAppDrag, to targetName: String) {
-        guard item.workspace != targetName else { return }
-        let source = Workspace.get(byName: item.workspace)
-        let target = Workspace.get(byName: targetName)
-        if target.isLocked || source.isLocked {
-            actionMessage = workspaceLockedMessage(target.isLocked ? target.name : source.name)
-            return
-        }
+    private func moveApp(_ item: WorkspaceAppDrag, to target: WorkspaceDropTarget) {
+        guard item.workspace != target.workspace else { return }
         runAction {
+            guard let source = Workspace.getOrNil(byName: item.workspace) else {
+                actionNotice = .warning(L("Space %@ is no longer available.", item.workspace))
+                return
+            }
+            // The menu renders from a snapshot. The refresh that precedes this action may have
+            // garbage collected the target or moved it to another display. Never recreate it by
+            // name here: a fresh workspace binds to the main display and the windows vanish there.
+            guard let destination = Workspace.getOrNil(byName: target.workspace) else {
+                actionNotice = .warning(L("Space %@ disappeared before the drop finished. Drop the app again once it reappears.", target.workspace))
+                return
+            }
+            if let locked = [source, destination].first(where: { $0.isLocked }) {
+                actionNotice = .warning(workspaceLockedMessage(locked.name))
+                return
+            }
+            let monitor = destination.workspaceMonitorInfo
+            guard WorkspaceDisplay.ID(monitor) == target.display else {
+                actionNotice = .warning(L("Space %@ is now on %@. Drop the app there instead.", destination.name, displayTitle(for: monitor)))
+                return
+            }
             let windows = item.app.windowIDs.compactMap { Window.get(byId: $0) }.filter { $0.membershipWorkspace == source }
-            guard !windows.isEmpty else { return }
-            if let locked = lockedWorkspaceForTransfer(windows[0], to: target) {
-                actionMessage = workspaceLockedMessage(locked.name)
+            guard !windows.isEmpty else {
+                actionNotice = .warning(L("%@ no longer has windows in Space %@.", item.app.name, source.name))
+                return
+            }
+            if let locked = lockedWorkspaceForTransfer(windows[0], to: destination) {
+                actionNotice = .warning(workspaceLockedMessage(locked.name))
                 return
             }
             resetClosedWindowsCache()
             let io = CmdIoImpl.emptyStdinIgnoringOut
+            var moved = 0
             for window in windows {
-                _ = moveWindowToWorkspace(window, target, io, focusFollowsWindow: false, failIfNoop: false)
+                if moveWindowToWorkspace(window, destination, io, focusFollowsWindow: false, failIfNoop: false) == .succ {
+                    moved += 1
+                }
             }
+            guard moved > 0 else {
+                actionNotice = .warning(L("Could not move %@ to Space %@.", item.app.name, destination.name))
+                return
+            }
+            let subject = moved == 1 ? item.app.name : L("%ld windows of %@", moved, item.app.name)
+            actionNotice = .success(
+                L("Moved %@ to Space %@ on %@", subject, destination.name, displayTitle(for: monitor)),
+                revealWorkspace: destination.name,
+            )
         }
+    }
+
+    private func displayTitle(for monitor: MonitorInfo) -> String {
+        guard let index = globalSortedMonitorInfos.firstIndex(where: { WorkspaceDisplay.ID($0) == WorkspaceDisplay.ID(monitor) }) else {
+            return monitor.name
+        }
+        return WorkspaceDisplay(monitor: monitor, number: index + 1).title
     }
 }
 
@@ -444,23 +502,44 @@ private enum WorkspaceSortOrder: String {
 private enum WorkspaceDragArea { case panel, list, grid }
 private enum WorkspaceScrollDirection { case up, down }
 
+private struct ActionNotice {
+    enum Kind { case warning, success }
+
+    let kind: Kind
+    let text: String
+    var revealWorkspace: String? = nil
+
+    static func warning(_ text: String) -> Self { Self(kind: .warning, text: text) }
+    static func success(_ text: String, revealWorkspace: String) -> Self {
+        Self(kind: .success, text: text, revealWorkspace: revealWorkspace)
+    }
+}
+
 private struct WorkspaceAppDrag {
     let workspace: String
     let app: WorkspaceApp
     let location: CGPoint
 }
 
+struct WorkspaceDropTarget: Hashable {
+    let workspace: String
+    /// The display the target was rendered on. It is validated again inside the refresh session
+    /// that performs the move: the workspace may have been garbage collected or moved to another
+    /// display between the menu render and the drop.
+    let display: WorkspaceDisplay.ID
+}
+
 struct WorkspaceDropFrames: Equatable {
-    var tiles: [String: CGRect] = [:]
-    var shortcuts: [String: CGRect] = [:]
+    var tiles: [WorkspaceDropTarget: CGRect] = [:]
+    var shortcuts: [WorkspaceDropTarget: CGRect] = [:]
     var shortcutBar: CGRect = .null
 
-    func target(source: String, location: CGPoint, listFrame: CGRect) -> String? {
+    func target(source: String, location: CGPoint, listFrame: CGRect) -> WorkspaceDropTarget? {
         if shortcutBar.contains(location) {
-            return shortcuts.first { $0.key != source && $0.value.contains(location) }?.key
+            return shortcuts.first { $0.key.workspace != source && $0.value.contains(location) }?.key
         }
         guard listFrame.contains(location) else { return nil }
-        return tiles.first { $0.key != source && $0.value.contains(location) }?.key
+        return tiles.first { $0.key.workspace != source && $0.value.contains(location) }?.key
     }
 }
 

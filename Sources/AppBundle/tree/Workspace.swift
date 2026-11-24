@@ -29,6 +29,13 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
         }
     }
 
+    /// Looks up an existing workspace without creating one.
+    /// A newly created workspace binds itself to the main display, so callers that are validating
+    /// a stale name (menu snapshot, drop target) must not use `get(byName:)`.
+    @MainActor static func getOrNil(byName name: String) -> Workspace? {
+        workspaceNameToWorkspace[name]
+    }
+
     nonisolated static func < (lhs: Workspace, rhs: Workspace) -> Bool {
         lhs.nameLogicalSegments < rhs.nameLogicalSegments
     }
