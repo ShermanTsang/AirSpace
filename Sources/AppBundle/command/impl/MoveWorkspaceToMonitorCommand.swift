@@ -23,12 +23,16 @@ struct MoveWorkspaceToMonitorCommand: Command {
     }
 }
 
-@MainActor func moveWorkspace(_ workspace: Workspace, to destination: MonitorInfo, showOnDestination: Bool) -> Bool {
+@MainActor func moveWorkspace(_ workspace: Workspace, to destination: MonitorInfo, showOnDestination: Bool, isAutomaticRestore: Bool = false) -> Bool {
     let source = workspace.workspaceMonitorInfo
-    guard source.rect.topLeftCorner != destination.rect.topLeftCorner else { return true }
+    guard source.rect.topLeftCorner != destination.rect.topLeftCorner else {
+        if !isAutomaticRestore { DisplayWorkspaceRestoration.shared.forget(workspace) }
+        return true
+    }
     let wasVisible = workspace.isVisible
     let moved = showOnDestination ? destination.setVisibleWorkspace(workspace) : destination.bindWorkspace(workspace)
     guard moved else { return false }
+    if !isAutomaticRestore { DisplayWorkspaceRestoration.shared.forget(workspace) }
     if wasVisible {
         let replacement = getStubWorkspace(for: source, excluding: workspace.name)
         check(source.setVisibleWorkspace(replacement), "Fallback workspace must be compatible with its display")

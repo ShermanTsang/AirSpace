@@ -8,6 +8,7 @@ struct SettingsState: Equatable {
     var startAtLogin: Bool
     var autoReloadConfig: Bool
     var restoreWindowWorkspaces: Bool
+    var restoreDisplayWorkspaces: Bool
     var automaticallyUnhideMacosHiddenApps: Bool
     var defaultRootContainerLayout: Layout
     var defaultRootContainerOrientation: DefaultContainerOrientation
@@ -30,6 +31,7 @@ struct SettingsState: Equatable {
         startAtLogin = config.startAtLogin
         autoReloadConfig = config.autoReloadConfig
         restoreWindowWorkspaces = config.restoreWindowWorkspaces
+        restoreDisplayWorkspaces = config.restoreDisplayWorkspaces
         automaticallyUnhideMacosHiddenApps = config.automaticallyUnhideMacosHiddenApps
         defaultRootContainerLayout = config.defaultRootContainerLayout
         defaultRootContainerOrientation = config.defaultRootContainerOrientation

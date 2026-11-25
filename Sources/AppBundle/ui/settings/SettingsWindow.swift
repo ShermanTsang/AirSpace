@@ -155,6 +155,12 @@ private struct SettingsView: View {
                 isOn: model.binding(\.restoreWindowWorkspaces) { .bool(["restore-window-workspaces"], $0) },
             )
             SettingsToggleCard(
+                icon: "display",
+                title: L("Restore spaces when displays reconnect"),
+                subtitle: L("Return spaces and their display-specific layouts when a display reconnects."),
+                isOn: model.binding(\.restoreDisplayWorkspaces) { .bool(["restore-display-workspaces"], $0) },
+            )
+            SettingsToggleCard(
                 icon: "eye",
                 title: L("Unhide macOS hidden apps"),
                 subtitle: L("Show windows of hidden apps when AirSpace focuses them."),

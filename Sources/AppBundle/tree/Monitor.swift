@@ -72,6 +72,7 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     let mainMonitor = pointToMonitor[Point(x: 0, y: 0)] ?? pointToMonitor.first?.value
     while monitors.count > monitorInfos.count, let mainMonitor {
         let monitor = monitors.removeLast()
+        DisplayWorkspaceRestoration.shared.disconnect(monitor)
         for child in monitor.children {
             switch child.nodeCases {
                 case .floatingWindowsContainer,

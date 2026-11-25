@@ -46,6 +46,7 @@ struct SerializedGloballyTrait: SuiteTrait, TestTrait, TestScoping {
 @MainActor
 func setUpWorkspacesForTests() {
     WorkspaceDisplayLayouts.shared.clearForTests()
+    DisplayWorkspaceRestoration.shared.clearForTests()
     config = defaultConfig
     configUrl = defaultConfigUrl
     config.enableNormalizationFlattenContainers = false // Make layout tests more predictable

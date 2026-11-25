@@ -20,6 +20,9 @@ auto-reload-config = false
 # Restore open windows to their previous workspaces when AirSpace starts.
 restore-window-workspaces = true
 
+# Return occupied spaces to their remembered display when it reconnects.
+restore-display-workspaces = true
+
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true

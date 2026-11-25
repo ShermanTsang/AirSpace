@@ -41,6 +41,8 @@ func runHeavyCompleteRefreshSession(
             await refreshModel_nonCancellable()
             try await refresh()
             gcMonitors()
+            DisplayWorkspaceRestoration.shared.restore()
+            DisplayWorkspaceRestoration.shared.capture()
 
             updateTrayText()
             SecureInputPanel.shared.refresh()
@@ -89,6 +91,7 @@ func runLightSession<T>(
             focusAfter?.nativeFocus() // syncFocusToMacOs
         }
         await WorkspaceRestoration.shared.capture()
+        DisplayWorkspaceRestoration.shared.capture()
         if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
         return result
     }
