@@ -5,6 +5,7 @@ import Common
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
     var isMacosFullscreenForTest = false
+    nonisolated(unsafe) var setAxFrameCalls: [(topLeft: Point?, size: CGSize?)] = []
 
     @MainActor
     private init(_ id: OpaqueWindowId, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
@@ -43,6 +44,10 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
+
+    nonisolated override func setAxFrame(_ topLeft: Point?, _ size: CGSize?) {
+        setAxFrameCalls.append((topLeft, size))
+    }
 }
 
 extension OpaqueWindowId: ExpressibleByIntegerLiteral {

@@ -37,8 +37,9 @@ extension MoveNodeToWorkspaceCmdArgs {
     public var wrapAround: Bool { _wrapAround ?? false }
     public var useStdin: Bool { commonState.explicitStdinFlag ?? false }
 
-    /// Where a workspace that doesn't exist yet is created. Only affects `<workspace-name>`;
-    /// `(next|prev)` never creates workspaces.
+    /// Where to place the target workspace. A workspace that doesn't exist yet is created there;
+    /// an existing workspace that is still effectively empty and hidden is moved there before the
+    /// window is bound. Only affects `<workspace-name>`; `(next|prev)` never creates or moves workspaces.
     public var createOn: WorkspaceCreationTarget { _createOn ?? .focused }
 }
 

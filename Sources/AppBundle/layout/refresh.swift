@@ -10,7 +10,9 @@ func scheduleCancellableCompleteRefreshSession(
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
     activeRefreshTask?.cancel()
+    let prev = activeRefreshTask
     activeRefreshTask = Task.startUnstructured { @MainActor in
+        _ = await prev?.result // Don't let heavy sessions interleave. Canceled sessions must fully stop first
         try checkCancellation()
         await runHeavyCompleteRefreshSession(
             event,
@@ -42,13 +44,17 @@ func runHeavyCompleteRefreshSession(
             try await refresh()
             gcMonitors()
             DisplayWorkspaceRestoration.shared.restore()
-            DisplayWorkspaceRestoration.shared.capture()
+            if currentlyManipulatedWithMouseWindowId == nil {
+                DisplayWorkspaceRestoration.shared.capture()
+            }
 
             updateTrayText()
             SecureInputPanel.shared.refresh()
             try await normalizeLayoutReason()
             if shouldLayoutWorkspaces { try await layoutWorkspaces() }
-            await WorkspaceRestoration.shared.capture()
+            if currentlyManipulatedWithMouseWindowId == nil {
+                await WorkspaceRestoration.shared.capture()
+            }
         }
     }
     switch res {
@@ -68,7 +74,6 @@ func runLightSession<T>(
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
     activeRefreshTask?.cancel() // Give priority to runSession
-    activeRefreshTask = nil
     return try await $refreshSessionEvent.withValue(event) {
         let nativeFocused = try await getNativeFocusedWindow(.cancellable)
         if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
@@ -90,8 +95,12 @@ func runLightSession<T>(
         } else if focusBefore != focusAfter {
             focusAfter?.nativeFocus() // syncFocusToMacOs
         }
-        await WorkspaceRestoration.shared.capture()
-        DisplayWorkspaceRestoration.shared.capture()
+        // Don't read every window's title while a window is being dragged with the mouse. The captures
+        // add AX latency to each move notification and make the drag lose its last events.
+        if currentlyManipulatedWithMouseWindowId == nil {
+            await WorkspaceRestoration.shared.capture()
+            DisplayWorkspaceRestoration.shared.capture()
+        }
         if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
         return result
     }

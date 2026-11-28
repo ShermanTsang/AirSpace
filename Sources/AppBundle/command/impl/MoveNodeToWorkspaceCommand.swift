@@ -22,10 +22,35 @@ struct MoveNodeToWorkspaceCommand: Command {
                 guard let ws = ws.getOrNil(appendErrorTo: &io.stderr) else { return .fail }
                 targetWorkspace = ws
             case .direct(let name):
-                targetWorkspace = Workspace.get(byName: name.raw, createOn: args.createOn.resolveMonitor(target))
+                let createOnMonitor = args.createOn.resolveMonitor(target)
+                targetWorkspace = Workspace.get(byName: name.raw, createOn: createOnMonitor)
+                // A workspace with no windows that isn't visible hasn't really been "created" from the
+                // user's perspective. Let it follow the same display as a new workspace, otherwise a
+                // window moved to it crosses displays just because the workspace was left there by an
+                // earlier monitor layout. Don't touch the workspace if the transfer is going to be
+                // rejected: a failed command must not have a display side effect.
+                if window.membershipWorkspace != targetWorkspace,
+                   lockedWorkspaceForTransfer(window, to: targetWorkspace) == nil {
+                    moveIfEffectivelyUnused(targetWorkspace, to: createOnMonitor)
+                }
         }
         return moveWindowToWorkspace(window, targetWorkspace, io, focusFollowsWindow: args.focusFollowsWindow, failIfNoop: args.failIfNoop)
     }
+}
+
+/// Moves an empty, hidden workspace to `monitor` before a window is bound to it.
+/// Workspaces with windows, visible workspaces, locked workspaces and force-assigned workspaces keep
+/// their display. `moveWorkspace` cancels a pending display-restoration snapshot for the workspace,
+/// so this explicit user action wins over a later reconnect.
+@MainActor
+private func moveIfEffectivelyUnused(_ workspace: Workspace, to monitor: MonitorInfo) {
+    guard workspace.isEffectivelyEmpty,
+          !workspace.isVisible,
+          !workspace.isLocked,
+          workspace.forceAssignedMonitorInfo == nil,
+          workspace.workspaceMonitorInfo.rect.topLeftCorner != monitor.rect.topLeftCorner
+    else { return }
+    _ = moveWorkspace(workspace, to: monitor, showOnDestination: false)
 }
 
 @MainActor

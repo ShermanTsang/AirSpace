@@ -731,7 +731,9 @@ The showed workspaces are called "visible" workspaces
 * Each workspace (even invisible, even empty) has a monitor assigned to it
 * A workspace is created on the display that was focused at the time, and stays there until you move it or the assignment rules change
 * A workspace that doesn't exist yet is created on the display of the focused window or workspace.
-Use `--create-on main` to create it on the "main" monitor instead ("main" as in `System -> Displays -> Use as`, upstream AeroSpace behavior)
+`move-node-to-workspace` applies the same rule to an existing workspace that is still effectively empty and hidden,
+so the window isn't sent to a display where the workspace happened to be left.
+Use `--create-on main` to create or re-home it on the "main" monitor instead ("main" as in `System -> Displays -> Use as`, upstream AeroSpace behavior)
 
 When you switch to a workspace:
 
@@ -747,7 +749,8 @@ Thus, using one workspace per secondary monitor and "the rest" on the main monit
 [NOTE]
 ====
 AirSpace honors `workspace-to-monitor-force-assignment` and keeps existing workspaces on their display.
-A workspace that has never existed before is created on the currently focused display (unless `--create-on main` is passed),
+A workspace that has never existed before — and an existing workspace that is still empty and hidden when
+`move-node-to-workspace` targets it — is placed on the currently focused display (unless `--create-on main` is passed),
 while i3 always puts workspaces on the currently active monitor.
 ====
 
@@ -785,7 +788,8 @@ The first matching pattern will be used
 
 xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
 
-The assignment also wins over `--create-on` when a workspace is created for the first time.
+The assignment also wins over `--create-on` when a workspace is created for the first time, or when
+`move-node-to-workspace` would re-home an empty, hidden workspace.
 
 == Dialog heuristics
 

@@ -34,6 +34,9 @@ extension TreeNode {
                 for (window, windowRect) in zip(windows, rects) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
+                    // The window follows the pointer until the button is released. Otherwise a layout pass
+                    // can pull it back to its workspace's monitor before moveWithMouse rebinds it.
+                    if window.windowId == currentlyManipulatedWithMouseWindowId { continue }
                     window.layoutFloatingWindow(context, windowRect)
                 }
             case .window(let window):

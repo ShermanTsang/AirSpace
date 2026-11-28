@@ -24,7 +24,9 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     }
 
     /// `createOn` only affects a workspace that doesn't exist yet. An existing workspace is never
-    /// moved to another display, and `workspace-to-monitor-force-assignment` still wins over `createOn`.
+    /// moved to another display by this function, and `workspace-to-monitor-force-assignment` still
+    /// wins over `createOn`. (`move-node-to-workspace` separately re-homes an effectively empty,
+    /// hidden workspace before binding the window.)
     @MainActor static func get(byName name: String, createOn monitor: MonitorInfo) -> Workspace {
         if let existing = workspaceNameToWorkspace[name] {
             return existing

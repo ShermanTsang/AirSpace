@@ -30,12 +30,28 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
 
 @MainActor
 func resetManipulatedWithMouseIfPossible() async throws {
-    if currentlyManipulatedWithMouseWindowId != nil {
+    let manipulation = currentMouseManipulation
+    currentMouseManipulation = nil
+    guard let windowId = currentlyManipulatedWithMouseWindowId else { return }
+    defer {
         currentlyManipulatedWithMouseWindowId = nil
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
         scheduleCancellableCompleteRefreshSession(.resetManipulatedWithMouse, optimisticallyPreLayoutWorkspaces: true)
+    }
+    guard manipulation == .move, let window = Window.get(byId: windowId) else { return }
+    // The rebinding during the drag (moveWithMouse) can lag behind the pointer, and a lost final
+    // notification would leave the window in the workspace of the display it was dragged from.
+    // Settle it on the display under the pointer before the refresh lays the tree out again.
+    switch window.windowParentCases {
+        case .floatingWindowsContainer:
+            try? await window.bindFloatingWindowToMonitorUnderCenter(notifyIfLocked: false)
+        case .tilingContainer:
+            placeTilingWindowWithMouse(window, at: mouseLocation, isSettling: true)
+        case .macosFullscreenWindowsContainer, .macosMinimizedWindowsContainer, .macosPopupWindowsContainer,
+             .macosHiddenAppsWindowsContainer, nil:
+            break
     }
 }
 
@@ -44,12 +60,20 @@ private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat
 @MainActor
 private func resizeWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
+    // The button may be released while the AX notification and the focus checks are still in flight.
+    // Then the mouse-up handler clears the state; a stale step must not mark the window as resized.
+    guard isLeftMouseButtonDown else { return }
     switch window.windowParentCases {
         case nil: return
         case .floatingWindowsContainer, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Nothing to do for floating, or unconventional windows
         case .tilingContainer:
+            // Resizing changes both size and position (e.g. when dragging the top or left edge), so the
+            // same press also produces moved notifications. Latch the kind before the AX suspension
+            // points so an interleaved moved notification doesn't turn the resize into a move and
+            // settle the window on the display under the pointer at mouse-up.
+            currentMouseManipulation = .resize
             guard let rect = try await window.getAxRect(.cancellable) else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
             let (lParent, lOwnIndex, _) = window.closestParent(hasInhabitedChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil, nil)
